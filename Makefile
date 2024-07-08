@@ -1,26 +1,27 @@
 NAME = miniRT
-FILES =  
+FILES = minirt.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 
 BINS = $(addprefix $(OUT),$(SOURCES:.c=.o))
 
-LIBS_DIRS = libs/libft \
-			libs/gc
-LIBS = libs/libft/libft.a \
-	   libs/gc/garbage-collector-lib.a
+LIBS_DIRS = libs/libft-gc \
+			libs/mlx
+LIBS = libs/libft-gc/libft-gc.a \
+	   libs/mlx/libmlx.a
 
-CFLAGS = -Wall -Werror -Wextra -Wpedantic -g
+CFLAGS = -Wall -Werror -Wextra -Wpedantic -g 
+LFLAGS = -Llibs/mlx -lmlx -L/usr/lib -lXext -lX11 -lm -lz -I/usr/include
 
 .SECONDEXPANSION:
 
 all:	$(LIBS_DIRS) $(NAME)
 
 $(LIBS_DIRS):
-	$(MAKE) -C $@ $(MAKECMDGOALS)
+	- $(MAKE) -C $@ $(MAKECMDGOALS)
 
 $(NAME): $(BINS)
-	$(CC) $^ -o $@ -lreadline $(LIBS)
+	$(CC) $(LFLAGS) $^ -o $@ -lreadline $(LIBS)
 
 $(OUT)%.o:	%.c $$(@D)/.f
 	$(CC) $(CFLAGS) -c $< -o $@
