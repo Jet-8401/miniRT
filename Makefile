@@ -1,5 +1,7 @@
 NAME = miniRT
-FILES = minirt.c
+FILES = minirt.c \
+		utils.c \
+		parsing.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 
@@ -10,8 +12,8 @@ LIBS_DIRS = libs/libft-gc \
 LIBS = libs/libft-gc/libft-gc.a \
 	   libs/mlx/libmlx.a
 
-CFLAGS = -Wall -Werror -Wextra -Wpedantic -g 
-LFLAGS = -Llibs/mlx -lmlx -L/usr/lib -lXext -lX11 -lm -lz -I/usr/include
+CFLAGS = -Wall -Werror -Wextra -Wpedantic -g -O3 -Iheaders
+LFLAGS = -Llibs/mlx -lmlx -L/usr/lib -lXext -lX11 -lm -I/usr/include
 
 .SECONDEXPANSION:
 
@@ -21,7 +23,7 @@ $(LIBS_DIRS):
 	- $(MAKE) -C $@ $(MAKECMDGOALS)
 
 $(NAME): $(BINS)
-	$(CC) $(LFLAGS) $^ -o $@ -lreadline $(LIBS)
+	$(CC) $(LFLAGS) $^ -o $@ $(LIBS)
 
 $(OUT)%.o:	%.c $$(@D)/.f
 	$(CC) $(CFLAGS) -c $< -o $@
