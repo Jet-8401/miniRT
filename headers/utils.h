@@ -6,7 +6,7 @@
 /*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/09 16:09:16 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/09 22:22:40 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct s_cylinder
 	t_rgb	color;
 }	t_cylinder;
 
-// brightness is ratio between 0 and 1
+// brightness is a ratio between 0 and 1
 typedef struct s_light
 {
 	t_vec3	pos;
