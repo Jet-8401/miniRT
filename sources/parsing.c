@@ -6,7 +6,7 @@
 /*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/10 16:05:51 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:59:08 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,7 @@
 }
 */
 
-int	ft_isspace(char c)
-{
-	return (c == '\t' || c == ' ');
-}
-
-int	ft_parse_line(t_scene *scene, const char *line)
+int	ft_parse_line(t_scene *scene, const char *line, long line_c)
 {
 	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
 	static int	(*functions[6])(t_scene*, char**) = {ambient_init, camera_init,
@@ -58,12 +53,13 @@ int	ft_parse_line(t_scene *scene, const char *line)
 		id_len = ft_strlen(identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0
 				&& ft_isspace(line[id_len]))
-			return ((*functions)(scene, ft_split(line, "\t ")), 0);
+			return ((*functions)(scene, ft_split(line, "\t ")));
 	}
 	while (ft_isspace(*line))
 		line++;
 	if (*line != 0 && *line != '\n')
-		return (ft_err("Syntax file error", 0), -1);
+	//	(const char *[]){parent, link, child, NULL}, '\0')
+		return (parser_error((long[2]){0, line_c}, ERR_UNKNOWN_ID), -1);
 	return (0);
 }
 
@@ -97,11 +93,11 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 	if (fd == -1)
 		return (ft_err(file_scene, 1), -1);
 	ft_memset(scene, 0, sizeof(scene));
-	lines_c = 0;
+	lines_c = 1;
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		if (ft_parse_line(scene, line) == -1)
+		if (ft_parse_line(scene, line, lines_c) == -1)
 			return (-1);
 		gc_free(line);
 		lines_c++;

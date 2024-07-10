@@ -6,7 +6,7 @@
 /*   By: jullopez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/10 15:17:10 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/10 19:05:58 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define READ_BUF_SIZE 1024
 
 # define ERR_FILE_EXT "not a .rt extension"
+# define ERR_UNKNOWN_ID "unrecognized identifiers"
 
 typedef struct s_scene
 {
@@ -49,10 +50,12 @@ typedef struct s_scene
 \******************************************************************************/
 
 // parsing.c
-void	ft_err(const char *line, char perror_invoc);
 int		ft_parsing(t_scene *scene, const char *file_scene);
 
 // utils.c
+int		ft_isspace(char c);
+void	ft_err(const char *line, char perror_invoc);
+void	parser_error(long coords[2], const char *message);
 int		end_with(const char *haystack, const char *needle);
 
 // props_init.c
