@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc-free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 18:55:54 by jullopez          #+#    #+#             */
-/*   Updated: 2024/06/20 20:25:15 by mehdi            ###   ########.fr       */
+/*   Updated: 2024/07/09 17:40:48 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	gc_free(void *address)
 	t_gc	*after;
 	t_gc	*copy;
 
+	if (!address)
+		return ;
 	gc = *gc_interface(NULL);
 	after = NULL;
 	while (gc && gc->address != address)
