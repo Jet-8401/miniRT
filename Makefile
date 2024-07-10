@@ -1,7 +1,9 @@
 NAME = miniRT
 FILES = minirt.c \
 		utils.c \
-		parsing.c
+		parsing.c \
+		props_init.c \
+		forms_init.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 

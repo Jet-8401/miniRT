@@ -6,12 +6,12 @@
 /*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/09 22:22:40 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:13:53 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
-# define UTILS_H_H
+# define UTILS_H
 
 typedef unsigned char t_u8b;
 

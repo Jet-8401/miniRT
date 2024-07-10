@@ -6,7 +6,7 @@
 /*   By: Julien Lopez <marvin@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 11:11:07 by Julien Lopez      #+#    #+#             */
-/*   Updated: 2024/02/28 08:54:01 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:48:43 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	*ft_calloc(size_t n, size_t size)
 	r = n * size;
 	if (size && r / size != n)
 		return (NULL);
-	ptr = malloc(n * size);
+	ptr = gc_malloc(n * size);
 	if (ptr)
 		ft_bzero(ptr, n * size);
 	return (ptr);

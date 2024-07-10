@@ -6,7 +6,7 @@
 /*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:16:38 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/09 16:38:11 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:53:48 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
 	(void) argc; // to remove
 	if (ft_parsing(&scene, argv[1]) == -1)
-		return (0);
+		return (gc_dump(NULL), 0);
 	gc_dump(NULL);
 	return (0);
 }

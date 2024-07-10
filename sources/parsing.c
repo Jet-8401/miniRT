@@ -6,13 +6,13 @@
 /*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/10 00:38:50 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:05:51 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-char	*read_file(const char *file)
+/*char	*read_file(const char *file)
 {
 	int		fd;
 	char	buffer[READ_BUF_SIZE];
@@ -37,17 +37,33 @@ char	*read_file(const char *file)
 	}
 	return (data);
 }
+*/
 
-int	ft_parse_line(t_scene *scene, const char *data, long eol)
+int	ft_isspace(char c)
+{
+	return (c == '\t' || c == ' ');
+}
+
+int	ft_parse_line(t_scene *scene, const char *line)
 {
 	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
-	static int	(*functions[6])(t_element) = {ambient_init, camera_init,
+	static int	(*functions[6])(t_scene*, char**) = {ambient_init, camera_init,
 		light_init, sphere_init, plane_init, cylinder_init};
-
-	// read string, at the begining it should have a string value
-	// (only 1 capital letter per files)
-	// delimiters are ['\t' ' ' ','] anything else before eol is considered
-	// unexpected/unrecognized token.
+	int		id;
+	long	id_len;
+	
+	id = -1;
+	while (++id < 6)
+	{
+		id_len = ft_strlen(identifiers[id]);
+		if (ft_strncmp(identifiers[id], line, id_len) == 0
+				&& ft_isspace(line[id_len]))
+			return ((*functions)(scene, ft_split(line, "\t ")), 0);
+	}
+	while (ft_isspace(*line))
+		line++;
+	if (*line != 0 && *line != '\n')
+		return (ft_err("Syntax file error", 0), -1);
 	return (0);
 }
 
@@ -71,22 +87,25 @@ int	ft_parse_line(t_scene *scene, const char *data, long eol)
  */
 int	ft_parsing(t_scene *scene, const char *file_scene)
 {
-	const char	*data;
-	long		eol;
+	int		fd;
+	char	*line;
+	long	lines_c;
 
 	if (!end_with(file_scene, ".rt"))
 		return (ft_err(ERR_FILE_EXT, 0), -1);
-	eol = 0;
-	data = read_file(file_scene);
+	fd = open(file_scene, O_RDONLY);
+	if (fd == -1)
+		return (ft_err(file_scene, 1), -1);
 	ft_memset(scene, 0, sizeof(scene));
-	// redo that check as it is not safe (buffer overflows)
-	while (*data)
+	lines_c = 0;
+	line = get_next_line(fd);
+	while (line != NULL)
 	{
-		while (*data && (*data == '\n' || *data == '\t' || *data == ' '))
-			data++;
-		eol = ft_strchr(data, '\n') - data;
-		ft_parse_line(scene, data, eol);
-		data += eol;
+		if (ft_parse_line(scene, line) == -1)
+			return (-1);
+		gc_free(line);
+		lines_c++;
+		line = get_next_line(fd);
 	}
 	return (0);
 }
