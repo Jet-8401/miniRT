@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:27:54 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/09 16:53:22 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/10 17:09:06 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,14 @@ int	end_with(const char *haystack, const char *needle)
 		if (haystack[base + i] != needle[i])
 			return (0);
 	return (1);
+}
+
+int	ft_strlen2(char **argv)
+{
+	int	i;
+
+	i = 0;
+	while (argv[i] != NULL)
+		i++;
+	return (i - 1);
 }
