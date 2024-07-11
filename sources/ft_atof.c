@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:59:10 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/10 18:00:31 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:45:22 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ double	ft_atof(char *str)
 	neg = 0;
 	ft_atof_bis(str, &res, &neg);
 	if (res > DBL_MAX)
-		error("Number bigger than double");
+		ft_err("Number bigger than double", 0);
 	return (neg ? -res : res);
 }
 
@@ -53,3 +53,4 @@ void	ft_atof_bis(char *str, long double *res, int *neg)
 		str++;
 	}
 }
+

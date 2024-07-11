@@ -6,21 +6,39 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 15:52:28 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 17:19:45 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-int	sphere_init(t_scene *scene, char **args)
+int	light_init(t_scene *scene, char **args)
 {
 	t_sphere *sphere;
 
 	sphere = gc_malloc(sizeof(t_sphere));
 	scene->sphere = sphere;
 	if (ft_strlen2(args) != 4)
-		return (ft_err("Bad arguments number sphere", 0), -1);
+		return (ft_err("Bad arguments number light", 0), -1);
 	if (check_coordinate(args[1]) == -1)
+		return (ft_err("Bad coordinate light", 0), -1);
+	if (check_ratio(args[2]) == -1)
+		return (ft_err("Bad light ratio", 0), -1);
+	if (add_light_value(scene, args) == -1)
+		return (ft_err("Wrong light values", 0), -1);
+	return (0);
+}
+
+int	sphere_init(t_scene *scene, char **args)
+{
+	t_sphere	*sphere;
+
+	sphere = gc_calloc(sizeof(t_sphere));
+	if (!sphere)
+		return (-1);
+	if (ft_strlen2(args) != 4)
+		return (ft_err("Bad arguments number sphere", 0), -1);
+	if (set_vector3D(sphere->pos, args[1]) == -1)
 		return (ft_err("Bad argument coordinate sphere", 0), -1);
 	if (check_HD(args[2]) == -1)
 		return (ft_err("Bad height sphere", 0), -1);
@@ -28,6 +46,7 @@ int	sphere_init(t_scene *scene, char **args)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
 	if (add_sphere_value(scene, args) == -1)
 		return (ft_err("Wrong sphere values", 0), -1);
+	add_object(&scene->sphere->next, sphere);
 	return (0);
 }
 
@@ -41,7 +60,7 @@ int	plane_init(t_scene *scene, char **args)
 		return (ft_err("Bad arguments number plane", 0), -1);
 	if (check_coordinate(args[1]) == -1)
 		return (ft_err("Bad argument coordinate sphere", 0), -1);
-	if (check_3d_vector(args[2]) == -1)
+	if (check_coordinate(args[2]) == -1)
 		return (ft_err("Bad 3d vector plane", 0), -1);
 	if (check_rgb(args[3]) == -1)
 		return (ft_err("Bad rgb plane", 0), -1);
@@ -60,7 +79,7 @@ int	cylinder_init(t_scene *scene, char **args)
 		return (ft_err("Bad arguments number cylinder", 0), -1);
 	if (check_coordinate(args[1]) == -1)
 		return (ft_err("Bad coordinate cylinder", 0), -1);
-	if (check_3d_vector(args[2]) == -1)
+	if (check_coordinate(args[2]) == -1)
 		return (ft_err("Bad 3d vector cylinder", 0), -1);
 	if (check_HD(args[3]) == -1)
 		return (ft_err("Bad diameter", 0), -1);

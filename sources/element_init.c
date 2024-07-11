@@ -6,13 +6,13 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:42:19 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/11 12:58:21 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:08:21 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-int	add_fov(char *fov, int *new_fov)
+int	add_fov(char *fov, t_u8b *new_fov)
 {
 	int	num;
 
@@ -34,7 +34,7 @@ int	add_3dvector(char *vector, t_vec3 *dir)
 	x = ft_atof(new[0]);
 	y = ft_atof(new[1]);
 	z = ft_atof(new[2]);
-	if ((x < -1.0 || x > 1.0) && (y < -1.0 || y > 1.0) && (z < -1.0 || z > 1.0))
+	if ((x < -1.0 || x > 1.0) || (y < -1.0 || y > 1.0) || (z < -1.0 || z > 1.0))
 		return (-1);
 	(*dir).x = x;
 	(*dir).y = y;

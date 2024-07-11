@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:40:03 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/11 17:03:16 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 17:19:42 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,3 @@ int	add_plane_value(t_scene *scene, char **args)
 	return (0);
 }
 
-int	add_cylinder_value(t_scene *scene, char **args)
-{
-	add_coordinate(args[1], &scene->cylinder->pos);
-	if (add_3dvector(args[2], &scene->cylinder->dir) == -1)
-		return (-1);
-	add_diameter(args[3], &scene->cylinder->diameter);
-	add_height(args[4], &scene->cylinder->height);
-	if (add_rgb(args[5], &scene->cylinder->color) == -1)
-		return (-1);
-	return (0);
-}

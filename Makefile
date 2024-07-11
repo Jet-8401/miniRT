@@ -1,5 +1,7 @@
 NAME = miniRT
 FILES = minirt.c \
+		error.c \
+		list_utils.c \
 		utils.c \
 		parsing.c \
 		props_init.c \

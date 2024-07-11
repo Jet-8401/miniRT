@@ -6,63 +6,50 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 17:16:36 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 17:19:47 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-/*char	*read_file(const char *file)
-{
-	int		fd;
-	char	buffer[READ_BUF_SIZE];
-	long	bytes;
-	char	*data;
-	char	*old;
-
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-		return (ft_err(file, 1), NULL);
-	data = "";
-	ft_memset(buffer, 0, READ_BUF_SIZE);
-	bytes = read(fd, buffer, READ_BUF_SIZE - 1);
-	while (bytes > 0)
-	{
-		old = data;
-		data = ft_strjoin(data, buffer);
-		if (!data)
-			return (NULL);
-		gc_free(old);
-		bytes = read(fd, buffer, READ_BUF_SIZE - 1);
-	}
-	return (data);
-}
-*/
-
-int	ft_parse_line(t_scene *scene, const char *line, long line_c)
+int	(*check_identifiers(const char *line))(t_scene *n, char **split)
 {
 	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
-	static int (*functions[6])(t_scene *, char **) = {ambient_init, camera_init,
-		light_init, sphere_init, plane_init, cylinder_init};
-
+	static int	(*functions[6])(t_scene *, char **) = {ambient_init,
+		camera_init, light_init, sphere_init, plane_init, cylinder_init};
 	int			id;
 	long		id_len;
 
-	static int (*functions[6])(t_scene *, char **) = {ambient_init, camera_init,
-		light_init, sphere_init, plane_init, cylinder_init};
 	id = -1;
-	while (++id < 6)
+	while (identifiers[++id])
 	{
 		id_len = ft_strlen(identifiers[id]);
+		printf("id=%p\n",(void *) functions[id]);
+		printf("letter=%s\n", identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0
 			&& ft_isspace(line[id_len]))
-			return ((*functions)(scene, ft_split(line, "\t ")), 0);
+			return (functions[id]);
+	}
+	return (NULL);
+}
+
+int	ft_parse_line(t_scene *scene, const char *line, long line_c)
+{
+	int		(*initiator)(t_scene *n, char**);
+	int		result;
+	char	**split;
+
+	initiator = check_identifiers(line);
+	if (initiator != NULL)
+	{
+		split = ft_split(line, "\t\n ");
+		result = initiator(scene, split);
+		return (free_double_array(split), result);
 	}
 	while (ft_isspace(*line))
 		line++;
 	if (*line != 0 && *line != '\n')
-	//	(const char *[]){parent, link, child, NULL}, '\0')
-		return (parser_error((long[2]){0, line_c}, ERR_UNKNOWN_ID), -1);
+		return (parser_error(line_c, 0, ERR_UNKNOWN_ID), -1);
 	return (0);
 }
 
@@ -95,7 +82,7 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 	fd = open(file_scene, O_RDONLY);
 	if (fd == -1)
 		return (ft_err(file_scene, 1), -1);
-	ft_memset(scene, 0, sizeof(scene));
+	ft_memset(scene, 0, sizeof(t_scene));
 	lines_c = 1;
 	line = get_next_line(fd);
 	while (line != NULL)

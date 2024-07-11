@@ -6,11 +6,12 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:36:17 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/11 11:37:35 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:51:00 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
+#include <math.h>
 
 int	check_fov(char *fov)
 {
@@ -28,46 +29,7 @@ int	check_fov(char *fov)
 	return (0);
 }
 
-int	check_3d_vector(char *vector)
-{
-	char	**new;
-
-	new = ft_split(vector, ",");
-	if (ft_strlen2(new) != 3)
-		return (-1);
-	if (check_3dvector_value(new) == -1)
-		return (-1);
-	return (0);
-}
-
-int	check_3dvector_value(char **vector)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (vector[i] != NULL)
-	{
-		j = 0;
-		if (vector[i][j] == '-')
-			j++;
-		else if (vector[i][j] == '.')
-			return (-1);
-		while (vector[i][j] != '\0')
-		{
-			if (vector[i][j] == '-')
-				return (-1);
-			else if (!(vector[i][j] >= '0' && vector[i][j] <= '9')
-				|| vector[i][j] != '.')
-				return (-1);
-			j++;
-		}
-		i++;
-	}
-	return (0);
-}
-
-int	check_coordinate(char *coordinate)
+int	set_vector3D(t_vec3 *vec, char *coordinate)
 {
 	char	**new;
 
@@ -75,6 +37,19 @@ int	check_coordinate(char *coordinate)
 	if (ft_strlen2(new) != 3)
 		return (-1);
 	if (check_coordinate_value(new) == -1)
+		return (-1);
+	vec->x = ft_atof(new[0]);
+	vec->y = ft_atof(new[1]);
+	vec->z = ft_atof(new[2]);
+	return (0);
+}
+
+int	set_normalized_vector3D(t_vec3 *vec, char *coordinate)
+{
+	if (set_vector3D(vec) == -1)
+		return (-1);
+	if ((vec->x < -1.0 || vec->x > 1.0) || (vec->y < -1.0 || vec->y > 1.0)
+			|| (vec->z < -1.0 || vec->z > 1.0))
 		return (-1);
 	return (0);
 }
@@ -94,10 +69,8 @@ int	check_coordinate_value(char **coordinate)
 			return (-1);
 		while (coordinate[i][j] != '\0')
 		{
-			if ((coordinate[i][j] == '-'))
-				return (-1);
-			else if (!(coordinate[i][j] >= '0' && coordinate[i][j] <= '9')
-				|| coordinate[i][j] != '.')
+			if (!(coordinate[i][j] >= '0' && coordinate[i][j] <= '9')
+				&& coordinate[i][j] != '.')
 				return (-1);
 			j++;
 		}
