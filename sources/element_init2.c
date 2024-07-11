@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.c                                           :+:      :+:    :+:   */
+/*   element_init2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/09 16:16:38 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 10:34:00 by akinzeli         ###   ########.fr       */
+/*   Created: 2024/07/11 12:57:10 by akinzeli          #+#    #+#             */
+/*   Updated: 2024/07/11 12:57:44 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-int	main(int argc, char *argv[])
+int	add_diameter(char *size, float *diameter)
 {
-	t_scene	scene;
+	*diameter = (float)ft_atof(size);
+	return (0);
+}
 
-	(void)argc; // to remove
-	if (ft_parsing(&scene, argv[1]) == -1)
-		return (gc_dump(NULL), 0);
-	gc_dump(NULL);
+int	add_height(char *size, float *height)
+{
+	*height = (float)ft_atof(size);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/10 18:01:02 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 12:59:50 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_scene
 	struct		s_ambient
 	{
 		float	light_ratio;
+		int		flag;
 		t_rgb	color;
 	} * ambient;
 	struct		s_cam
@@ -38,6 +39,7 @@ typedef struct s_scene
 		t_vec3	pos;
 		t_vec3	dir;
 		t_u8b	fov;
+		int		flag;
 	} * cam;
 	t_light		*light;
 	t_sphere	*sphere;
@@ -66,6 +68,39 @@ int				light_init(t_scene *scene, char **args);
 int				sphere_init(t_scene *scene, char **args);
 int				plane_init(t_scene *scene, char **args);
 int				cylinder_init(t_scene *scene, char **args);
+
+// struct_init.c
+
+int				add_camera_value(t_scene *scene, char **args);
+int				add_ambiant_value(t_scene *scene, char **args);
+
+// element_init.c
+
+int				add_fov(char *fov, int *new_fov);
+int				add_3dvector(char *vector, t_vec3 *dir);
+int				add_coordinate(char *coor, t_vec3 *loc);
+int				add_ratio(char *ratio, float *new_ratio);
+int				add_rgb(char *rgb, t_rgb *color);
+
+// element_init2.c
+
+int				add_diameter(char *size, float *diameter);
+int				add_height(char *size, float *height);
+
+// parsing_checker.c
+
+int				check_fov(char *fov);
+int				check_3d_vector(char *vector);
+int				check_3dvector_value(char **vector);
+int				check_coordinate(char *coordinate);
+int				check_coordinate_value(char **coordinate);
+
+// parsing_checker2.c
+
+int				check_ratio(char *ratio);
+int				check_rgb(char *rgb);
+int				check_rgb_value(char **color);
+int				check_HD(char *hd);
 
 // ft_atof.c
 

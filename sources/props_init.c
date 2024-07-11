@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:55:57 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/10 18:18:16 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:04:27 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 int	ambient_init(t_scene *scene, char **args)
 {
+	if (scene->ambient->flag != 0)
+		return (ft_err("Ambiant light already exist", 0), -1);
 	if (ft_strlen2(args) != 3)
-		return (ft_err("Bad arguments number", 0), -1);
+		return (ft_err("Bad arguments number ambiant", 0), -1);
 	if (check_ratio(args[1]) == -1)
-		return (ft_err("Bad ratio number", 0), -1);
+		return (ft_err("Bad ratio number ambiant", 0), -1);
 	if (check_rgb(args[2]) == -1)
-		return (ft_err("Bad RGB arguments", 0), -1);
+		return (ft_err("Bad RGB arguments ambiant", 0), -1);
 	if (add_ambiant_value(scene, args) == -1)
 		return (ft_err("Wrong ambiant values", 0), -1);
 	return (0);
@@ -27,109 +29,32 @@ int	ambient_init(t_scene *scene, char **args)
 
 int	camera_init(t_scene *scene, char **args)
 {
-	(void)scene;
-	(void)args;
+	if (scene->cam->flag != 0)
+		return (ft_err("Camera already exist", 0), -1);
+	if (ft_strlen2(args) != 4)
+		return (ft_err("Bad arguments number camera", 0), -1);
+	if (check_coordinate(args[1]) == -1)
+		return (ft_err("Bad coordinate for camera", 0), -1);
+	if (check_3d_vector(args[2]) == -1)
+		return (ft_err("Bad arguments 3D vector camera", 0), -1);
+	if (check_fov(args[3]) == -1)
+		return (ft_err("Bad fov for camera", 0), -1);
+	if (add_camera_value(scene, args) == -1)
+		return (ft_err("Wrong camera values", 0), -1);
 	return (0);
 }
 
 int	light_init(t_scene *scene, char **args)
 {
-	(void)scene;
-	(void)args;
-	return (0);
-}
-
-int	check_ratio(char *ratio)
-{
-	int	i;
-
-	i = 0;
-	while (ratio[i] != '\0')
-	{
-		if ((ratio[i] >= '0' && ratio[i] <= '1'))
-			i++;
-		if (ratio[i] == '.')
-			i++;
-		if (ratio[i] >= '0' && ratio[i] <= '9')
-		{
-			if (ratio[0] == 1 && ratio[i] != '0')
-				return (-1);
-			i++;
-		}
-		if (ratio[i] == '\0')
-			return (1);
-	}
-	return (-1);
-}
-
-int	check_rgb(char *rgb)
-{
-	char	**color;
-
-	color = ft_split(rgb, ",");
-	if (ft_strlen2(color) != 3)
-		return (-1);
-	if (check_rgb_value(color) == -1)
-		return (-1);
-	return (0);
-}
-
-int	check_rgb_value(char **color)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (color[i] != NULL)
-	{
-		j = 0;
-		while (color[i][j] != '\0')
-		{
-			if (color[i][j] >= '0' && color[i][j] <= '9')
-				j++;
-			else
-				return (-1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-int	add_ambiant_value(t_scene *scene, char **args)
-{
-	if (add_ratio(args[1], &scene->ambient->light_ratio) == -1)
-		return (-1);
-	if (add_rgb(args[2], &scene->ambient->color) == -1)
-		return (-1);
-	return (0);
-}
-
-int	add_ratio(char *ratio, float *new_ratio)
-{
-	float	res;
-
-	res = (float)ft_atof(ratio);
-	if (res < 0.0f || res > 1.0f)
-		return (-1);
-	*new_ratio = res;
-	return (0);
-}
-
-int	add_rgb(char *rgb, t_rgb *color)
-{
-	char **new;
-	int r;
-	int g;
-	int b;
-
-	new = ft_split(rgb, ",");
-	r = ft_atoi(new[0]);
-	g = ft_atoi(new[1]);
-	b = ft_atoi(new[2]);
-	if ((r < 0 || r > 255) && (g < 0 || g > 255) && (b < 0 || b > 255))
-		return (-1);
-	(*color).r = r;
-	(*color).g = g;
-	(*color).b = b;
+	if (scene->light->flag != 0)
+		return (ft_err("light already exist", 0), -1);
+	if (ft_strlen2(args) != 3)
+		return (ft_err("Bad arguments number light", 0), -1);
+	if (check_coordinate(args[1]) == -1)
+		return (ft_err("Bad coordinate light", 0), -1);
+	if (check_ratio(args[2]) == -1)
+		return (ft_err("Bad light ratio", 0), -1);
+	if (add_light_value(scene, args) == -1)
+		return (ft_err("Wrong light values", 0), -1);
 	return (0);
 }
