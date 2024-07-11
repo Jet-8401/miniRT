@@ -3,7 +3,14 @@ FILES = minirt.c \
 		utils.c \
 		parsing.c \
 		props_init.c \
-		forms_init.c
+		forms_init.c \
+		element_init.c \
+		element_init2.c \
+		ft_atof.c \
+		parsing_checker.c \
+		parsing_checker2.c \
+		struct_init.c \
+		struct_init2.c 
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 

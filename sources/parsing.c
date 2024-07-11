@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/10 18:59:08 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:39:57 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,22 @@
 int	ft_parse_line(t_scene *scene, const char *line, long line_c)
 {
 	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
-	static int	(*functions[6])(t_scene*, char**) = {ambient_init, camera_init,
+	static int (*functions[6])(t_scene *, char **) = {ambient_init, camera_init,
 		light_init, sphere_init, plane_init, cylinder_init};
-	int		id;
-	long	id_len;
-	
-	id = -1;
+
+	int			id;
+	long		id_len;
+
+		id = -1;
+	/*scene->ambient->flag = 0;
+	scene->cam->flag = 0;
+	scene->light->flag = 0;*/
 	while (++id < 6)
 	{
 		id_len = ft_strlen(identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0
-				&& ft_isspace(line[id_len]))
-			return ((*functions)(scene, ft_split(line, "\t ")));
+			&& ft_isspace(line[id_len]))
+			return ((*functions)(scene, ft_split(line, "\t ")), 0);
 	}
 	while (ft_isspace(*line))
 		line++;
