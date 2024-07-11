@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 12:59:50 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:08:40 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,13 @@ int				cylinder_init(t_scene *scene, char **args);
 
 int				add_camera_value(t_scene *scene, char **args);
 int				add_ambiant_value(t_scene *scene, char **args);
+int				add_light_value(t_scene *scene, char **args);
+int				add_sphere_value(t_scene *scene, char **args);
+int				add_plane_value(t_scene *scene, char **args);
+
+// struct_init2.c
+
+int				add_cylinder_value(t_scene *scene, char **args);
 
 // element_init.c
 
