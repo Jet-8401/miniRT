@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 12:59:46 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:33:41 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ typedef struct s_light
 {
 	t_vec3				pos;
 	float				brightness;
-	int					flag;
 }						t_light;
 
 #endif

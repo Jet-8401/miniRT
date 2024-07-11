@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 13:01:48 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:54:55 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,6 @@ int	ft_parse_line(t_scene *scene, const char *line)
 	static int (*functions[6])(t_scene *, char **) = {ambient_init, camera_init,
 		light_init, sphere_init, plane_init, cylinder_init};
 	id = -1;
-	scene->ambient->flag = 0;
-	scene->cam->flag = 0;
-	scene->light->flag = 0;
 	while (++id < 6)
 	{
 		id_len = ft_strlen(identifiers[id]);

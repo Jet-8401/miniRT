@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 13:04:36 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:52:28 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 int	sphere_init(t_scene *scene, char **args)
 {
+	t_sphere *sphere;
+
+	sphere = gc_malloc(sizeof(t_sphere));
+	scene->sphere = sphere;
 	if (ft_strlen2(args) != 4)
 		return (ft_err("Bad arguments number sphere", 0), -1);
 	if (check_coordinate(args[1]) == -1)
@@ -29,6 +33,10 @@ int	sphere_init(t_scene *scene, char **args)
 
 int	plane_init(t_scene *scene, char **args)
 {
+	t_plane *plane;
+
+	plane = gc_malloc(sizeof(t_plane));
+	scene->plane = plane;
 	if (ft_strlen2(args) != 4)
 		return (ft_err("Bad arguments number plane", 0), -1);
 	if (check_coordinate(args[1]) == -1)
@@ -44,6 +52,10 @@ int	plane_init(t_scene *scene, char **args)
 
 int	cylinder_init(t_scene *scene, char **args)
 {
+	t_cylinder *cylinder;
+
+	cylinder = gc_malloc(sizeof(t_cylinder));
+	scene->cylinder = cylinder;
 	if (ft_strlen2(args) != 6)
 		return (ft_err("Bad arguments number cylinder", 0), -1);
 	if (check_coordinate(args[1]) == -1)

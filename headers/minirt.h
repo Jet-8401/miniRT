@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 13:08:40 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:33:37 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,14 @@ typedef struct s_scene
 	struct		s_ambient
 	{
 		float	light_ratio;
-		int		flag;
 		t_rgb	color;
-	} * ambient;
+	} ambient;
 	struct		s_cam
 	{
 		t_vec3	pos;
 		t_vec3	dir;
 		t_u8b	fov;
-		int		flag;
-	} * cam;
+	} cam;
 	t_light		*light;
 	t_sphere	*sphere;
 	t_plane		*plane;
