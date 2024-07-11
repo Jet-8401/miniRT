@@ -1,0 +1,4 @@
+Obligation:
+    - One camera
+    - 3 geometric objects
+    - Capitals letters defined once
