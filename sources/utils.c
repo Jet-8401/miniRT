@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:27:54 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 13:40:15 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:41:09 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,46 +17,39 @@ int	ft_isspace(char c)
 	return (c == '\t' || c == ' ');
 }
 
+void	free_double_array(char **split)
+{
+	(void) split;
+	// todo
+}
+
 char	*strs_join(const char **strs)
 {
-}
+	unsigned long	n;
+	long			i;
+	long			bytes;
+	t_lst			*list;
+	char			*string;
 
-void	ft_err(const char *line, char perror_invoc)
-{
-	write(2, PROG_NAME, ft_strlen(PROG_NAME));
-	if (perror_invoc)
-	{
-		perror(line);
-		return ;
-	}
-	write(2, line, ft_strlen(line));
-	write(2, "\n", 1);
-}
-
-void	parser_error(long coords[2], const char *message)
-{
-	static char	*predefined[2] = {" col: ", "(line: "};
-	char	*msg;
-	char		*itoa;
-	const char	*oldmsg;
-	int			i;
-
-	strs_join((const char *[3]){message, predefined[0], predefined[1]});
 	i = -1;
-	oldmsg = message;
-	message = ft_strjoin(") ", message);
-	gc_free((void *) oldmsg);
-	while (++i < 2)
+	bytes = 0;
+	list = NULL;
+	while (strs[++i])
 	{
-		itoa = ft_itoa(coords[i]);
-		msg = ft_strjoin(predefined[i], itoa);
-		oldmsg = message;
-		message = ft_strjoin(msg, message);
-		gc_free((void *) oldmsg);
-		gc_free(itoa);
-		gc_free(msg);
+		n = ft_strlen(strs[i]);
+		list = lst_append(&list, lst_new((void *) n));
+		bytes += n;
 	}
-	ft_err(message, 0);
+	string = gc_calloc((bytes + 1) * sizeof(char));
+	if (!string)
+		return (NULL);
+	while (i-- > 0)
+	{
+		bytes -= (long) list->content;
+		ft_memcpy(&string[bytes], strs[i], (long) list->content);
+		lst_trunc(&list);
+	}
+	return (string);
 }
 
 int	end_with(const char *haystack, const char *needle)
@@ -83,5 +76,5 @@ int	ft_strlen2(char **argv)
 	i = 0;
 	while (argv[i] != NULL)
 		i++;
-	return (i - 1);
+	return (i);
 }

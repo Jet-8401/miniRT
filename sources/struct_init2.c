@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 13:07:55 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/11 13:08:19 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:48:59 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,4 @@ int	add_cylinder_value(t_scene *scene, char **args)
 		return (-1);
 	return (0);
 }
+

@@ -6,7 +6,7 @@
 /*   By: jullopez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:11:45 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/10 15:44:32 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:54:53 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,40 @@
 
 #include <stdio.h>
 
-static int	ft_is_sep(char const *s, char const *sep)
+static int	ft_is_sep(const char *s, const char *sep)
 {
-	long	i;
+	size_t	i;
 
 	i = -1;
 	while (sep[++i])
-		if (*s != sep[i] && (*(s + 1) == sep[i] || *(s + 1) == 0))
+		if (*s == sep[i])
 			return (1);
 	return (0);
 }
 
-static size_t	count_words(char const *s, char const *sep)
+static int	ft_check_word(const char *s, const char *sep)
+{
+	size_t	i;
+
+	i = -1;
+	while (sep[++i])
+		if (!ft_is_sep(s, sep) && (ft_is_sep(&s[1], sep) || *(&s[1]) == 0))
+			return (1);
+	return (0);
+}
+
+static size_t	count_words(const char *s, const char *sep)
 {
 	size_t	words;
 
 	words = 0;
 	while (*s)
-		if (ft_is_sep(s++, sep))
+		if (ft_check_word(s++, sep))
 			words++;
 	return (words);
 }
 
-char	**ft_split(char const *s, char *sep)
+char	**ft_split(const char *s, char *sep)
 {
 	size_t	lsep;
 	char	**strings;
@@ -49,11 +60,12 @@ char	**ft_split(char const *s, char *sep)
 	words = 0;
 	lsep = 0;
 	strings = (char **) gc_calloc((count_words(s, sep) + 1) * sizeof(char *));
+	printf("words=%lu\n", count_words(s, sep));
 	if (strings == NULL)
 		return (NULL);
 	while (s[i])
 	{
-		if (ft_is_sep(s + i, sep))
+		if (ft_check_word(s + i, sep))
 			strings[words++] = ft_substr(s, lsep, i + 1 - lsep);
 		if (ft_is_sep(&s[i], sep))
 			lsep = i + 1;

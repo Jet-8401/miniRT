@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 12:59:46 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/11 17:07:07 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_sphere
 	t_vec3				pos;
 	float				diameter;
 	t_rgb				color;
+	struct s_sphere		*next;
 }						t_sphere;
 
 typedef struct s_plane
@@ -43,6 +44,7 @@ typedef struct s_plane
 	float				diameter;
 	float				height;
 	t_rgb				color;
+	struct s_plane		*next;
 }						t_plane;
 
 typedef struct s_cylinder
@@ -52,14 +54,21 @@ typedef struct s_cylinder
 	float				diameter;
 	float				height;
 	t_rgb				color;
+	struct s_cylinder	*next;
 }						t_cylinder;
 
 // brightness is a ratio between 0 and 1
 typedef struct s_light
 {
-	t_vec3				pos;
+	t_vec2				pos;
 	float				brightness;
-	int					flag;
 }						t_light;
+
+typedef struct s_lst
+{
+	void			*content;
+	struct s_lst	*next;
+	struct s_lst	*prev;
+}	t_lst;
 
 #endif
