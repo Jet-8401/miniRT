@@ -6,26 +6,37 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 13:47:34 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:28:33 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
+int	parser_check_capitals(const char *line)
+{
+	static char	capitals[25];
+
+	if (line[0] >= 'A' && line[0] <= 'Z' && (!line[0] || ft_isspace(line[0])))
+	{
+		if (capitals[line[0] - 'A'])
+			return (parser_error(ERR_MULTIPLE_IDENTIFIERS), -1);
+		capitals[line[0] - 'A'] = line[0];
+	}
+	return (0);
+}
+
 int (*check_identifiers(const char *line))(t_scene *n, char **split)
 {
 	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
+	static int	(*functions[6])(t_scene *, char **) = {ambient_init,
+		camera_init, light_init, sphere_init, plane_init, cylinder_init};
 	int			id;
 	long		id_len;
 
-	static int (*functions[6])(t_scene *, char **) = {ambient_init, camera_init,
-		light_init, sphere_init, plane_init, cylinder_init};
 	id = -1;
 	while (identifiers[++id])
 	{
 		id_len = ft_strlen(identifiers[id]);
-		// printf("id=%p\n",(void *) functions[id]);
-		printf("letter=%s\n", identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0
 			&& ft_isspace(line[id_len]))
 			return (functions[id]);
@@ -33,12 +44,14 @@ int (*check_identifiers(const char *line))(t_scene *n, char **split)
 	return (NULL);
 }
 
-int	ft_parse_line(t_scene *scene, const char *line, long line_c)
+int	ft_parse_line(t_scene *scene, const char *line)
 {
-	int		(*initiator)(t_scene * n, char **);
-	int		result;
-	char	**split;
+	int			(*initiator)(t_scene * n, char **);
+	int			result;
+	char		**split;
 
+	if (parser_check_capitals(line) == -1)
+		return (-1);
 	initiator = check_identifiers(line);
 	if (initiator != NULL)
 	{
@@ -49,7 +62,7 @@ int	ft_parse_line(t_scene *scene, const char *line, long line_c)
 	while (ft_isspace(*line))
 		line++;
 	if (*line != 0 && *line != '\n')
-		return (parser_error(line_c, 0, ERR_UNKNOWN_ID), -1);
+		return (parser_error(ERR_UNKNOWN_ID), -1);
 	return (0);
 }
 
@@ -75,7 +88,7 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 {
 	int		fd;
 	char	*line;
-	long	lines_c;
+	int		lines_c;
 
 	if (!end_with(file_scene, ".rt"))
 		return (ft_err(ERR_FILE_EXT, 0), -1);
@@ -87,7 +100,8 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		if (ft_parse_line(scene, line, lines_c) == -1)
+		parser_err_line(lines_c);
+		if (ft_parse_line(scene, line) == -1)
 			return (-1);
 		gc_free(line);
 		lines_c++;

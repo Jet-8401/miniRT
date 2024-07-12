@@ -19,7 +19,7 @@ int	light_init(t_scene *scene, char **args)
 	light = gc_calloc(sizeof(t_light));
 	if (!light)
 		return (-1);
-	if (ft_strlen2(args) != 4)
+	if (ft_strlen2(args) != 3)
 		return (ft_err("Bad arguments number light", 0), -1);
 	if (set_vector3D(&light->pos, args[1]) == -1)
 		return (ft_err("Bad coordinate light", 0), -1);
@@ -42,7 +42,7 @@ int	sphere_init(t_scene *scene, char **args)
 		return (ft_err("Bad arguments number sphere", 0), -1);
 	if (set_vector3D(&sphere->pos, args[1]) == -1)
 		return (ft_err("Bad argument coordinate sphere", 0), -1);
-	if (set_diameter(args[2], &sphere->diameter) == -1)
+	if (set_float_value(args[2], &sphere->diameter) == -1)
 		return (ft_err("Bad height sphere", 0), -1);
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
@@ -87,9 +87,9 @@ int	cylinder_init(t_scene *scene, char **args)
 		return (ft_err("Bad coordinate cylinder", 0), -1);
 	if (set_normalized_vector3D(&cylinder->dir, args[2]) == -1)
 		return (ft_err("Bad 3d vector cylinder", 0), -1);
-	if (set_diameter(args[3], &cylinder->diameter) == -1)
+	if (set_float_value(args[3], &cylinder->diameter) == -1)
 		return (ft_err("Bad diameter", 0), -1);
-	if (set_height(args[4], &cylinder->height) == -1)
+	if (set_float_value(args[4], &cylinder->height) == -1)
 		return (ft_err("Bad height cylinder", 0), -1);
 	if (set_rgb(args[5], &cylinder->color) == -1)
 		return (ft_err("Bad rgb cylinder", 0), -1);

@@ -16,7 +16,7 @@ int	set_ratio(char *ratio, float *new_ratio)
 {
 	float	res;
 
-	if (check_ratio(ratio) == -1)
+	if (check_value(ratio, true) == -1)
 		return (-1);
 	res = (float)ft_atof(ratio);
 	if (res < 0.0f || res > 1.0f)
@@ -32,13 +32,13 @@ int	set_rgb(char *rgb, t_rgb *color)
 	int		g;
 	int		b;
 
-	if (check_rgb(rgb) == -1)
-		return (-1);
 	new = ft_split(rgb, ",");
+	if (ft_strlen2(new) != 3 || check_numbers_value(new, false) == -1)
+		return (-1);
 	r = ft_atoi(new[0]);
 	g = ft_atoi(new[1]);
 	b = ft_atoi(new[2]);
-	if ((r < 0 || r > 255) && (g < 0 || g > 255) && (b < 0 || b > 255))
+	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
 		return (-1);
 	(*color).r = r;
 	(*color).g = g;
@@ -46,19 +46,11 @@ int	set_rgb(char *rgb, t_rgb *color)
 	return (0);
 }
 
-int	set_diameter(char *size, float *diameter)
+int	set_float_value(char *size, float *value)
 {
-	if (check_HD(size) == -1)
+	if (check_value(size, true) == -1)
 		return (-1);
-	*diameter = (float)ft_atof(size);
-	return (0);
-}
-
-int	set_height(char *size, float *height)
-{
-	if (check_HD(size) == -1)
-		return (-1);
-	*height = (float)ft_atof(size);
+	*value = (float)ft_atof(size);
 	return (0);
 }
 

@@ -10,7 +10,7 @@ FILES = minirt.c \
 		element_init2.c \
 		ft_atof.c \
 		parsing_checker.c \
-		add_list.c 
+		add_list.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 
@@ -21,7 +21,7 @@ LIBS_DIRS = libs/libft-gc \
 LIBS = libs/libft-gc/libft-gc.a \
 	   libs/mlx/libmlx.a
 
-CFLAGS = -Wall -Wextra -Wpedantic -g -O3 -Iheaders
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -O3 -Iheaders
 LFLAGS = -Llibs/mlx -lmlx -L/usr/lib -lXext -lX11 -lm -I/usr/include
 
 .SECONDEXPANSION:

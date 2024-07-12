@@ -17,9 +17,7 @@ int	set_vector3D(t_vec3 *vec, char *coordinate)
 	char	**new;
 
 	new = ft_split(coordinate, ",");
-	if (ft_strlen2(new) != 3)
-		return (-1);
-	if (check_coordinate_value(new) == -1)
+	if (ft_strlen2(new) != 3 || check_numbers_value(new, true) == -1)
 		return (-1);
 	vec->x = ft_atof(new[0]);
 	vec->y = ft_atof(new[1]);
