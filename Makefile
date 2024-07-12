@@ -12,7 +12,8 @@ FILES = minirt.c \
 		parsing_checker.c \
 		parsing_checker2.c \
 		struct_init.c \
-		struct_init2.c 
+		struct_init2.c \
+		add_list.c \
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 

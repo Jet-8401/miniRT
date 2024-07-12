@@ -6,18 +6,19 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:36:17 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/11 16:51:00 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/12 12:58:07 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 #include <math.h>
 
-int	check_fov(char *fov)
+int	set_fov(char *fov, t_u8b *new_fov)
 {
 	int	i;
 
-	i = 0;
+	int num,
+		i = 0;
 	while (fov[i] != '\0')
 	{
 		if (!(fov[i] >= '0' && fov[i] <= '9'))
@@ -26,6 +27,10 @@ int	check_fov(char *fov)
 	}
 	if (i > 3)
 		return (-1);
+	num = ft_atoi(fov);
+	if (num < 0 || num > 180)
+		return (-1);
+	*new_fov = num;
 	return (0);
 }
 
@@ -46,10 +51,10 @@ int	set_vector3D(t_vec3 *vec, char *coordinate)
 
 int	set_normalized_vector3D(t_vec3 *vec, char *coordinate)
 {
-	if (set_vector3D(vec) == -1)
+	if (set_vector3D(vec, coordinate) == -1)
 		return (-1);
 	if ((vec->x < -1.0 || vec->x > 1.0) || (vec->y < -1.0 || vec->y > 1.0)
-			|| (vec->z < -1.0 || vec->z > 1.0))
+		|| (vec->z < -1.0 || vec->z > 1.0))
 		return (-1);
 	return (0);
 }

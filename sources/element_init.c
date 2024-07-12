@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:42:19 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/11 16:08:21 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/12 13:11:34 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,12 @@ int	add_coordinate(char *coor, t_vec3 *loc)
 	return (0);
 }
 
-int	add_ratio(char *ratio, float *new_ratio)
+int	set_ratio(char *ratio, float *new_ratio)
 {
 	float	res;
 
+	if (check_ratio(ratio) == -1)
+		return (-1);
 	res = (float)ft_atof(ratio);
 	if (res < 0.0f || res > 1.0f)
 		return (-1);
@@ -64,13 +66,15 @@ int	add_ratio(char *ratio, float *new_ratio)
 	return (0);
 }
 
-int	add_rgb(char *rgb, t_rgb *color)
+int	set_rgb(char *rgb, t_rgb *color)
 {
 	char	**new;
 	int		r;
 	int		g;
 	int		b;
 
+	if (check_rgb(rgb) == -1)
+		return (-1);
 	new = ft_split(rgb, ",");
 	r = ft_atoi(new[0]);
 	g = ft_atoi(new[1]);
