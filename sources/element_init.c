@@ -6,52 +6,11 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:42:19 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/12 13:11:34 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:08:49 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
-
-int	add_fov(char *fov, t_u8b *new_fov)
-{
-	int	num;
-
-	num = ft_atoi(fov);
-	if (num < 0 || num > 180)
-		return (-1);
-	*new_fov = num;
-	return (0);
-}
-
-int	add_3dvector(char *vector, t_vec3 *dir)
-{
-	char	**new;
-	double	x;
-	double	y;
-	double	z;
-
-	new = ft_split(vector, ",");
-	x = ft_atof(new[0]);
-	y = ft_atof(new[1]);
-	z = ft_atof(new[2]);
-	if ((x < -1.0 || x > 1.0) || (y < -1.0 || y > 1.0) || (z < -1.0 || z > 1.0))
-		return (-1);
-	(*dir).x = x;
-	(*dir).y = y;
-	(*dir).z = z;
-	return (0);
-}
-
-int	add_coordinate(char *coor, t_vec3 *loc)
-{
-	char	**new;
-
-	new = ft_split(coor, ",");
-	(*loc).x = ft_atof(new[0]);
-	(*loc).y = ft_atof(new[1]);
-	(*loc).z = ft_atof(new[2]);
-	return (0);
-}
 
 int	set_ratio(char *ratio, float *new_ratio)
 {
@@ -84,5 +43,42 @@ int	set_rgb(char *rgb, t_rgb *color)
 	(*color).r = r;
 	(*color).g = g;
 	(*color).b = b;
+	return (0);
+}
+
+int	set_diameter(char *size, float *diameter)
+{
+	if (check_HD(size) == -1)
+		return (-1);
+	*diameter = (float)ft_atof(size);
+	return (0);
+}
+
+int	set_height(char *size, float *height)
+{
+	if (check_HD(size) == -1)
+		return (-1);
+	*height = (float)ft_atof(size);
+	return (0);
+}
+
+int	set_fov(char *fov, t_u8b *new_fov)
+{
+	int	i;
+	int	num;
+
+	i = 0;
+	while (fov[i] != '\0')
+	{
+		if (!(fov[i] >= '0' && fov[i] <= '9'))
+			return (-1);
+		i++;
+	}
+	if (i > 3)
+		return (-1);
+	num = ft_atoi(fov);
+	if (num < 0 || num > 180)
+		return (-1);
+	*new_fov = num;
 	return (0);
 }

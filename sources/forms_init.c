@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 13:20:22 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/12 13:42:44 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	light_init(t_scene *scene, char **args)
 		return (ft_err("Bad coordinate light", 0), -1);
 	if (set_ratio(args[2], &light->brightness) == -1)
 		return (ft_err("Bad light ratio", 0), -1);
+	scene->light = light;
 	// if (add_light_value(scene, args) == -1)
 	// return (ft_err("Wrong light values", 0), -1);
 	return (0);
@@ -45,7 +46,7 @@ int	sphere_init(t_scene *scene, char **args)
 		return (ft_err("Bad height sphere", 0), -1);
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
-	add_sphere(&scene->sphere, sphere);
+	add_sphere(scene, sphere);
 	// if (add_sphere_value(scene, args) == -1)
 	// return (ft_err("Wrong sphere values", 0), -1);
 	// add_object(&scene->sphere->next, sphere);
@@ -67,7 +68,7 @@ int	plane_init(t_scene *scene, char **args)
 		return (ft_err("Bad 3d vector plane", 0), -1);
 	if (set_rgb(args[3], &plane->color) == -1)
 		return (ft_err("Bad rgb plane", 0), -1);
-	add_plane(&scene->plane, plane);
+	add_plane(scene, plane);
 	// if (add_plane_value(scene, args) == -1)
 	// return (ft_err("wrong plane values", 0), -1);
 	return (0);
@@ -92,7 +93,7 @@ int	cylinder_init(t_scene *scene, char **args)
 		return (ft_err("Bad height cylinder", 0), -1);
 	if (set_rgb(args[5], &cylinder->color) == -1)
 		return (ft_err("Bad rgb cylinder", 0), -1);
-	add_cylinder(&scene->cylinder, cylinder);
+	add_cylinder(scene, cylinder);
 	// if (add_cylinder_value(scene, args) == -1)
 	// return (ft_err("wrong cylinder values", 0), -1);
 	return (0);

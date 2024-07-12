@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 13:22:09 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:14:55 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,14 @@ typedef struct s_scene
  *                          function declarations                             *
 \******************************************************************************/
 
+// main.c
+
+void			print_all(t_scene *scene);
+void			print_form_list(t_scene *scene);
+void			print_sphere_list(t_scene *scene);
+void			print_plane_list(t_scene *scene);
+void			print_cylinder_list(t_scene *scene);
+
 // parsing.c
 int				ft_parsing(t_scene *scene, const char *file_scene);
 
@@ -79,38 +87,27 @@ int				sphere_init(t_scene *scene, char **args);
 int				plane_init(t_scene *scene, char **args);
 int				cylinder_init(t_scene *scene, char **args);
 
-// struct_init.c
-int				add_camera_value(t_scene *scene, char **args);
-int				add_ambiant_value(t_scene *scene, char **args);
-int				add_light_value(t_scene *scene, char **args);
-int				add_sphere_value(t_scene *scene, char **args);
-int				add_plane_value(t_scene *scene, char **args);
-
-// struct_init2.c
-int				add_cylinder_value(t_scene *scene, char **args);
-
 // element_init.c
-int				add_fov(char *fov, t_u8b *new_fov);
-int				add_3dvector(char *vector, t_vec3 *dir);
-int				add_coordinate(char *coor, t_vec3 *loc);
+
 int				set_ratio(char *ratio, float *new_ratio);
 int				set_rgb(char *rgb, t_rgb *color);
-
-// element_init2.c
 int				set_diameter(char *size, float *diameter);
 int				set_height(char *size, float *height);
-
-// parsing_checker.c
 int				set_fov(char *fov, t_u8b *new_fov);
+
+// element_init2.c
+
 int				set_vector3D(t_vec3 *vec, char *coordinate);
 int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
-int				check_coordinate_value(char **coordinate);
 
-// parsing_checker2.c
+// parsing_checker.c
+
+int				check_coordinate_value(char **coordinate);
 int				check_ratio(char *ratio);
 int				check_rgb(char *rgb);
 int				check_rgb_value(char **color);
 int				check_HD(char *hd);
+
 
 // add_list.c
 

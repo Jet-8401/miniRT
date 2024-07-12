@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:59:10 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/11 13:45:22 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/12 13:40:45 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 double	ft_atof(char *str)
 {
 	long double	res;
-	double		scale;
 	int			neg;
 
 	res = 0;
-	scale = 1;
 	neg = 0;
 	ft_atof_bis(str, &res, &neg);
 	if (res > DBL_MAX)
@@ -29,8 +27,8 @@ double	ft_atof(char *str)
 
 void	ft_atof_bis(char *str, long double *res, int *neg)
 {
-	int dote;
-	double scale;
+	int		dote;
+	double	scale;
 
 	dote = 0;
 	scale = 1;
@@ -53,4 +51,3 @@ void	ft_atof_bis(char *str, long double *res, int *neg)
 		str++;
 	}
 }
-

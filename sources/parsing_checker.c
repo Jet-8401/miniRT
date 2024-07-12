@@ -6,58 +6,12 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:36:17 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/12 12:58:07 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:08:10 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 #include <math.h>
-
-int	set_fov(char *fov, t_u8b *new_fov)
-{
-	int	i;
-
-	int num,
-		i = 0;
-	while (fov[i] != '\0')
-	{
-		if (!(fov[i] >= '0' && fov[i] <= '9'))
-			return (-1);
-		i++;
-	}
-	if (i > 3)
-		return (-1);
-	num = ft_atoi(fov);
-	if (num < 0 || num > 180)
-		return (-1);
-	*new_fov = num;
-	return (0);
-}
-
-int	set_vector3D(t_vec3 *vec, char *coordinate)
-{
-	char	**new;
-
-	new = ft_split(coordinate, ",");
-	if (ft_strlen2(new) != 3)
-		return (-1);
-	if (check_coordinate_value(new) == -1)
-		return (-1);
-	vec->x = ft_atof(new[0]);
-	vec->y = ft_atof(new[1]);
-	vec->z = ft_atof(new[2]);
-	return (0);
-}
-
-int	set_normalized_vector3D(t_vec3 *vec, char *coordinate)
-{
-	if (set_vector3D(vec, coordinate) == -1)
-		return (-1);
-	if ((vec->x < -1.0 || vec->x > 1.0) || (vec->y < -1.0 || vec->y > 1.0)
-		|| (vec->z < -1.0 || vec->z > 1.0))
-		return (-1);
-	return (0);
-}
 
 int	check_coordinate_value(char **coordinate)
 {
@@ -79,6 +33,79 @@ int	check_coordinate_value(char **coordinate)
 				return (-1);
 			j++;
 		}
+		i++;
+	}
+	return (0);
+}
+
+int	check_ratio(char *ratio)
+{
+	int	i;
+
+	i = 0;
+	while (ratio[i] != '\0')
+	{
+		if ((ratio[i] >= '0' && ratio[i] <= '1'))
+			i++;
+		if (ratio[i] == '.')
+			i++;
+		if (ratio[i] >= '0' && ratio[i] <= '9')
+		{
+			if (ratio[0] == 1 && ratio[i] != '0')
+				return (-1);
+			i++;
+		}
+		if (ratio[i] == '\0')
+			return (1);
+	}
+	return (-1);
+}
+
+int	check_rgb(char *rgb)
+{
+	char	**color;
+
+	color = ft_split(rgb, ",");
+	if (ft_strlen2(color) != 3)
+		return (-1);
+	if (check_rgb_value(color) == -1)
+		return (-1);
+	return (0);
+}
+
+int	check_rgb_value(char **color)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (color[i] != NULL)
+	{
+		j = 0;
+		while (color[i][j] != '\0')
+		{
+			if (color[i][j] >= '0' && color[i][j] <= '9')
+				j++;
+			else
+				return (-1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	check_HD(char *hd)
+{
+	int	i;
+
+	i = 0;
+	printf("hd = %s.\n", hd);
+	if (hd[i] == '.')
+		return (-1);
+	while (hd[i] != '\0')
+	{
+		if (!(hd[i] >= '0' && hd[i] <= '9') && hd[i] != '.')
+			return (-1);
 		i++;
 	}
 	return (0);
