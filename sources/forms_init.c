@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 13:42:44 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/13 19:26:47 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	light_init(t_scene *scene, char **args)
 	light = gc_calloc(sizeof(t_light));
 	if (!light)
 		return (-1);
-	if (ft_strlen2(args) != 3)
+	if (ft_strlen2(args) != 4)
 		return (ft_err("Bad arguments number light", 0), -1);
 	if (set_vector3D(&light->pos, args[1]) == -1)
 		return (ft_err("Bad coordinate light", 0), -1);
