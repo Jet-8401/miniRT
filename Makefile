@@ -17,10 +17,10 @@ OUT = bins/
 BINS = $(addprefix $(OUT),$(SOURCES:.c=.o))
 
 LIBS_DIRS = libs/libft-gc
-LIBS = libs/libft-gc/libft-gc.a libs/mlx/libmlx.a
+LIBS = libs/mlx/libmlx.a libs/libft-gc/libft-gc.a
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -O3
-LFLAGS = -Llibs/mlx -lXext -lX11 -lm
+CFLAGS = -g -O3 -Wall -Werror -Wextra -Wpedantic
+FLAGS = -Llibs/mlx -L/usr/lib -lmlx -lXext -lX11 -lm -I/usr/include
 
 .SECONDEXPANSION:
 
@@ -31,7 +31,7 @@ $(LIBS_DIRS):
 
 $(NAME): $(BINS)
 	make -C libs/mlx
-	$(CC) $(LFLAGS) $^ -o $@ $(LIBS)
+	$(CC) $^ $(FLAGS) -o $@ $(LIBS)
 
 $(OUT)%.o:	%.c $$(@D)/.f
 	$(CC) $(CFLAGS) -c $< -o $@
