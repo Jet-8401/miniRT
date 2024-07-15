@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 03:34:08 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:29:55 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,25 @@ typedef struct s_lst
 	struct s_lst		*next;
 	struct s_lst		*prev;
 }						t_lst;
+
+
+
+/*   mlx lib  */
+
+typedef struct s_image
+{
+	void				*img;
+	char				*addr;
+	int					bpp;
+	int					line_len;
+	int					endian;
+}						t_image;
+
+typedef struct s_mlx
+{
+	void				*mlx;
+	void				*win;
+	t_image				img;
+}						t_mlx;
 
 #endif

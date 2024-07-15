@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:16:38 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/13 19:24:39 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:38:15 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	main(int argc, char *argv[])
 
 	(void)argc; // to remove
 	if (ft_parsing(&scene, argv[1]) == -1)
+		return (gc_dump(NULL), 0);
+	if (init_mlx_all(&scene) == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
 	gc_dump(NULL);

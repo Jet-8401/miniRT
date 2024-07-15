@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 17:28:03 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/15 15:43:25 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 # define ERR_UNKNOWN_ID "unrecognized identifier"
 # define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
 
+# define WIDTH 1280
+# define HEIGHT 720
+
 typedef struct s_scene
 {
 	struct s_ambient
@@ -45,6 +48,7 @@ typedef struct s_scene
 	t_sphere	*sphere;
 	t_plane		*plane;
 	t_cylinder	*cylinder;
+	t_mlx		*mlx;
 }	t_scene;
 
 /******************************************************************************\
@@ -107,6 +111,12 @@ int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
 void			add_sphere(t_scene *scene, t_sphere *object);
 void			add_plane(t_scene *scene, t_plane *object);
 void			add_cylinder(t_scene *scene, t_cylinder *object);
+
+// mlx_init.c
+
+int				init_mlx_all(t_scene *scene);
+int				init_mlx_window(t_mlx *mlx);
+void			destroy_mlx(t_mlx *mlx);
 
 // ft_atof.c
 double			ft_atof(char *str);
