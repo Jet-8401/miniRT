@@ -3,14 +3,15 @@ FILES = minirt.c \
 		error.c \
 		list_utils.c \
 		utils.c \
+		parsing_checker.c \
 		parsing.c \
+		ft_atof.c \
+		3Dvector.c \
+		elements_setter.c \
 		props_init.c \
 		forms_init.c \
-		element_init.c \
-		element_init2.c \
-		ft_atof.c \
-		parsing_checker.c \
-		add_list.c
+		add_list.c \
+		display.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 

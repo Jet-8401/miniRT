@@ -12,18 +12,6 @@
 
 #include "../headers/minirt.h"
 
-int	main(int argc, char *argv[])
-{
-	t_scene	scene;
-
-	(void)argc; // to remove
-	if (ft_parsing(&scene, argv[1]) == -1)
-		return (gc_dump(NULL), 0);
-	print_all(&scene);
-	gc_dump(NULL);
-	return (0);
-}
-
 void	print_all(t_scene *scene)
 {
 	printf("Ambient light: %f\n", scene->ambient.light_ratio);
@@ -87,4 +75,21 @@ void print_cylinder_list(t_scene *scene)
 		printf("Cylinder color: %d %d %d\n", cylinder->color.r, cylinder->color.g, cylinder->color.b);
 		cylinder = cylinder->next;
 	}
+}
+
+int	main(int argc, char *argv[])
+{
+	t_scene		scene;
+	t_display	display;
+
+	(void) argc;
+	if (ft_parsing(&scene, argv[1]) == -1)
+		return (gc_dump(NULL), 0);
+	if (ft_init_display(&display, 680, 420, "miniRT") == -1)
+		return (gc_dump(NULL), 0);
+	print_all(&scene);
+	sleep(5);
+	ft_destroy_display(&display);
+	gc_dump(NULL);
+	return (0);
 }

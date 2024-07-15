@@ -17,16 +17,24 @@
 # include "../libs/mlx/mlx.h"
 # include "utils.h"
 # include <fcntl.h>
-# include <float.h>
 # include <math.h>
-# include <stdio.h> // for perror !
 # include <stdbool.h>
+# include <float.h> // don't work for norminette
+# include <stdio.h> // for perror
 
 # define PROG_NAME "minirt: "
 
 # define ERR_FILE_EXT "not a .rt extension"
 # define ERR_UNKNOWN_ID "unrecognized identifier"
 # define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
+
+typedef struct s_screen
+{
+	void	*mlx_ptr;
+	void	*window;
+	int		height;
+	int		widht;
+}	t_display;
 
 typedef struct s_scene
 {
@@ -93,13 +101,13 @@ int				sphere_init(t_scene *scene, char **args);
 int				plane_init(t_scene *scene, char **args);
 int				cylinder_init(t_scene *scene, char **args);
 
-// element_init.c
+// elements_setter.c
 int				set_ratio(char *ratio, float *new_ratio);
 int				set_rgb(char *rgb, t_rgb *color);
 int				set_float_value(char *size, float *value);
 int				set_fov(char *fov, t_u8b *new_fov);
 
-// element_init2.c
+// 3Dvector.c
 int				set_vector3D(t_vec3 *vec, char *coordinate);
 int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
 
@@ -111,5 +119,10 @@ void			add_cylinder(t_scene *scene, t_cylinder *object);
 // ft_atof.c
 double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
+
+// display.c
+int				ft_init_display(t_display *screen, int size_x, int size_y,
+					char *title);
+void			ft_destroy_display(t_display *screen);
 
 #endif

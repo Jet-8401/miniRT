@@ -34,7 +34,7 @@ int (*check_identifiers(const char *line))(t_scene *n, char **split)
 	long		id_len;
 
 	id = -1;
-	while (identifiers[++id])
+	while (++id < 6)
 	{
 		id_len = ft_strlen(identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0
