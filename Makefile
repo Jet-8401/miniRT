@@ -3,41 +3,36 @@ FILES = minirt.c \
 		error.c \
 		list_utils.c \
 		utils.c \
+		parsing_checker.c \
 		parsing.c \
-		props_init.c \
-		forms_init.c \
+		ft_atof.c \
 		element_init.c \
 		element_init2.c \
-		ft_atof.c \
-		parsing_checker.c \
+		props_init.c \
+		forms_init.c \
 		add_list.c \
-		mlx_init.c
-
+		mlx_init.c 
 SOURCES = $(addprefix sources/,$(FILES))
-
 OUT = bins/
 
 BINS = $(addprefix $(OUT),$(SOURCES:.c=.o))
 
-LIBS_DIRS = libs/libft-gc \
-			libs/mlx
+LIBS_DIRS = libs/libft-gc
+LIBS = libs/mlx/libmlx.a libs/libft-gc/libft-gc.a
 
-LIBS = libs/libft-gc/libft-gc.a \
-	   libs/mlx/libmlx.a
-
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -O3 -Iheaders -I/usr/include -Ilibs/libft-gc -Ilibs/mlx
-
-LFLAGS = -Llibs/mlx -lmlx -L/usr/lib/ -I/usr/include -Ilibs/mlx -lXext -lX11 -lm -lz
+CFLAGS = -g -O3 -Wall -Werror -Wextra -Wpedantic
+FLAGS = -Llibs/mlx -L/usr/lib -lmlx -lXext -lX11 -lm -I/usr/include
 
 .SECONDEXPANSION:
 
 all:	$(LIBS_DIRS) $(NAME)
 
 $(LIBS_DIRS):
-	- $(MAKE) -C $@ $(MAKECMDGOALS)
+	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 $(NAME): $(BINS)
-	$(CC) $(LFLAGS) $^ -o $@ $(LIBS)
+	make -C libs/mlx
+	$(CC) $^ $(FLAGS) -o $@ $(LIBS)
 
 $(OUT)%.o:	%.c $$(@D)/.f
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -46,6 +41,7 @@ $(OUT)%.o:	%.c $$(@D)/.f
 	mkdir -p $(dir $@)
 
 clean: $(LIBS_DIRS)
+	make -C libs/mlx clean
 	rm -rf $(OUT)
 
 fclean: $(LIBS_DIRS) clean
