@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 17:28:33 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:27:11 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,20 @@ int	ft_parse_line(t_scene *scene, const char *line)
 	return (0);
 }
 
+/* Check mandatory elements like a camera/ambient light and at least
+ * one of the forms: plane, sphere, cylinder
+ */
+int	ft_check_scene(t_scene *scene)
+{
+	if (!scene->cam)
+		return (ft_err("You must add a camera into the scene", 0), -1);
+	if (!scene->ambient)
+		return (ft_err("You must add an ambient lighting", 0), -1);
+	if (!scene->plane && !scene->sphere && !scene->cylinder)
+		return (ft_err("You must add at least one object", 0), -1);
+	return (0);
+}
+
 /* Search for a line by skipping every line_breaks=['\n' '\t' ' '],
  * when something else if found parse from that char to a '\n'
  * and create a parameter for each time there is a word.
@@ -100,12 +114,11 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		parser_err_line(lines_c);
+		parser_err_line(lines_c++);
 		if (ft_parse_line(scene, line) == -1)
 			return (-1);
 		gc_free(line);
-		lines_c++;
 		line = get_next_line(fd);
 	}
-	return (0);
+	return (ft_check_scene(scene));
 }

@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:16:38 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 14:14:39 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:26:50 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 void	print_all(t_scene *scene)
 {
-	printf("Ambient light: %f\n", scene->ambient.light_ratio);
-	printf("Ambient color: %d %d %d\n", scene->ambient.color.r, scene->ambient.color.g, scene->ambient.color.b);
-	printf("Camera position: %f %f %f\n", scene->cam.pos.x, scene->cam.pos.y, scene->cam.pos.z);
-	printf("Camera direction: %f %f %f\n", scene->cam.dir.x, scene->cam.dir.y, scene->cam.dir.z);
-	printf("Camera fov: %d\n", scene->cam.fov);
+	printf("Ambient light: %f\n", scene->ambient->light_ratio);
+	printf("Ambient color: %d %d %d\n", scene->ambient->color.r, scene->ambient->color.g, scene->ambient->color.b);
+	printf("Camera position: %f %f %f\n", scene->cam->pos.x, scene->cam->pos.y, scene->cam->pos.z);
+	printf("Camera direction: %f %f %f\n", scene->cam->dir.x, scene->cam->dir.y, scene->cam->dir.z);
+	printf("Camera fov: %d\n", scene->cam->fov);
 	printf("Light position: %f %f %f\n", scene->light->pos.x, scene->light->pos.y, scene->light->pos.z);
 	printf("Light brightness: %f\n", scene->light->brightness);
 	print_form_list(scene);

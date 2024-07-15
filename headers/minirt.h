@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 17:28:03 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:28:11 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,20 @@ typedef struct s_screen
 	int		widht;
 }	t_display;
 
+// make camera as a mandatory part
 typedef struct s_scene
 {
 	struct s_ambient
 	{
 		float	light_ratio;
 		t_rgb	color;
-	}	ambient;
+	}	*ambient;
 	struct s_cam
 	{
 		t_vec3	pos;
 		t_vec3	dir;
 		t_u8b	fov;
-	}	cam;
+	}	*cam;
 	t_light		*light;
 	t_sphere	*sphere;
 	t_plane		*plane;
