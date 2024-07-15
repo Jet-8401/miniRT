@@ -16,22 +16,21 @@ OUT = bins/
 
 BINS = $(addprefix $(OUT),$(SOURCES:.c=.o))
 
-LIBS_DIRS = libs/libft-gc \
-			libs/mlx
-LIBS = libs/libft-gc/libft-gc.a \
-	   libs/mlx/libmlx.a
+LIBS_DIRS = libs/libft-gc
+LIBS = libs/libft-gc/libft-gc.a libs/mlx/libmlx.a
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -O3 -Iheaders
-LFLAGS = -Llibs/mlx -lmlx -L/usr/lib -lXext -lX11 -lm -I/usr/include
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g -O3
+LFLAGS = -Llibs/mlx -lXext -lX11 -lm
 
 .SECONDEXPANSION:
 
 all:	$(LIBS_DIRS) $(NAME)
 
 $(LIBS_DIRS):
-	- $(MAKE) -C $@ $(MAKECMDGOALS)
+	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 $(NAME): $(BINS)
+	make -C libs/mlx
 	$(CC) $(LFLAGS) $^ -o $@ $(LIBS)
 
 $(OUT)%.o:	%.c $$(@D)/.f
@@ -41,6 +40,7 @@ $(OUT)%.o:	%.c $$(@D)/.f
 	mkdir -p $(dir $@)
 
 clean: $(LIBS_DIRS)
+	make -C libs/mlx clean
 	rm -rf $(OUT)
 
 fclean: $(LIBS_DIRS) clean
