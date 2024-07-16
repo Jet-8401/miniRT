@@ -16,6 +16,7 @@
 # include "../libs/libft-gc/libft-gc.h"
 # include "../libs/mlx/mlx.h"
 # include "utils.h"
+# include <stdint.h>
 # include <fcntl.h>
 # include <math.h>
 # include <stdbool.h>
@@ -27,13 +28,24 @@
 # define ERR_FILE_EXT "not a .rt extension"
 # define ERR_UNKNOWN_ID "unrecognized identifier"
 # define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
+# define ERR_MLX_PTR "cannot connect to X server"
+# define ERR_MLX_WINDOW "cannot create mlx window"
+# define ERR_RENDER_IMG "an error ocured while creating mlx image"
 
+/* bpp = bits_per_pixel
+ * lsize = line_size
+ */
 typedef struct s_screen
 {
 	void	*mlx_ptr;
 	void	*window;
+	void	*render_img;
+	unsigned char	*stream;
 	int		height;
 	int		widht;
+	int		bpp;
+	int		lsize;
+	int		big_endian;
 }	t_display;
 
 // make camera as a mandatory part

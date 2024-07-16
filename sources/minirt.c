@@ -85,10 +85,23 @@ int	main(int argc, char *argv[])
 	(void) argc;
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
-	if (ft_init_display(&display, 680, 420, "miniRT") == -1)
+	if (ft_init_display(&display, 256, 256, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
-	sleep(5);
+	printf("bpp = %d\n", display.bpp);
+	printf("endian mode: %s\n", display.big_endian ? "big" : "little");
+	unsigned char	*stream;
+	int	i = 0;
+	stream = display.stream;
+	for(int x = 0; x < display.widht; x++) {
+		for (int y = 0; y < display.height; y++) {
+			*((int *) stream) = i++;
+			stream += 4;
+		}
+	}
+	mlx_put_image_to_window(display.mlx_ptr, display.window, display.render_img,
+		0, 0);
+	sleep(50);
 	ft_destroy_display(&display);
 	gc_dump(NULL);
 	return (0);
