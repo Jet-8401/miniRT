@@ -12,8 +12,6 @@
 
 #include "libft-gc.h"
 
-#include <stdio.h>
-
 static int	ft_is_sep(const char *s, const char *sep)
 {
 	size_t	i;
@@ -60,7 +58,6 @@ char	**ft_split(const char *s, char *sep)
 	words = 0;
 	lsep = 0;
 	strings = (char **) gc_calloc((count_words(s, sep) + 1) * sizeof(char *));
-	printf("words=%lu\n", count_words(s, sep));
 	if (strings == NULL)
 		return (NULL);
 	while (s[i])

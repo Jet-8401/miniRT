@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 16:02:54 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:28:11 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,39 @@
 # include "../libs/mlx/mlx.h"
 # include "utils.h"
 # include <fcntl.h>
-# include <float.h>
 # include <math.h>
-# include <stdio.h> // for perror !
+# include <stdbool.h>
+# include <float.h> // don't work for norminette
+# include <stdio.h> // for perror
 
 # define PROG_NAME "minirt: "
-# define READ_BUF_SIZE 1024
 
 # define ERR_FILE_EXT "not a .rt extension"
-# define ERR_UNKNOWN_ID "unrecognized identifiers"
+# define ERR_UNKNOWN_ID "unrecognized identifier"
+# define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
 
+typedef struct s_screen
+{
+	void	*mlx_ptr;
+	void	*window;
+	int		height;
+	int		widht;
+}	t_display;
+
+// make camera as a mandatory part
 typedef struct s_scene
 {
-	struct		s_ambient
+	struct s_ambient
 	{
 		float	light_ratio;
 		t_rgb	color;
-	}	ambient;
-	struct		s_cam
+	}	*ambient;
+	struct s_cam
 	{
 		t_vec3	pos;
 		t_vec3	dir;
 		t_u8b	fov;
-	}	cam;
+	}	*cam;
 	t_light		*light;
 	t_sphere	*sphere;
 	t_plane		*plane;
@@ -50,69 +60,70 @@ typedef struct s_scene
  *                          function declarations                             *
 \******************************************************************************/
 
+// main.c
+void			print_all(t_scene *scene);
+void			print_form_list(t_scene *scene);
+void			print_sphere_list(t_scene *scene);
+void			print_plane_list(t_scene *scene);
+void			print_cylinder_list(t_scene *scene);
+
 // parsing.c
-int		ft_parsing(t_scene *scene, const char *file_scene);
+int				ft_parsing(t_scene *scene, const char *file_scene);
 
 // error.c
-void	ft_err(const char *line, char perror_invoc);
-void	parser_error(long l, long c, const char *message);
+void			ft_err(const char *line, char perror_invoc);
+int				parser_err_line(int n);
+int				parser_err_col(int n);
+void			parser_error(const char *message);
 
 // list_utils.c
-t_lst	*lst_trunc(t_lst **origin);
-t_lst	*lst_new(void *content);
-t_lst	*lst_append(t_lst **origin, t_lst *list);
+t_lst			*lst_trunc(t_lst **origin);
+t_lst			*lst_new(void *content);
+t_lst			*lst_append(t_lst **origin, t_lst *list);
 
 // utils.c
-int		ft_isspace(char c);
-char	*strs_join(const char **strs);
-void    free_double_array(char **split);
-int		end_with(const char *haystack, const char *needle);
-int		ft_strlen2(char **argv);
-
-// props_init.c
-int		ambient_init(t_scene *scene, char **args);
-int		camera_init(t_scene *scene, char **args);
-int		light_init(t_scene *scene, char **args);
-
-// forms_init.c
-int		sphere_init(t_scene *scene, char **args);
-int		plane_init(t_scene *scene, char **args);
-int		cylinder_init(t_scene *scene, char **args);
-
-// struct_init.c
-int		add_camera_value(t_scene *scene, char **args);
-int		add_ambiant_value(t_scene *scene, char **args);
-int		add_light_value(t_scene *scene, char **args);
-int		add_sphere_value(t_scene *scene, char **args);
-int		add_plane_value(t_scene *scene, char **args);
-
-// struct_init2.c
-int		add_cylinder_value(t_scene *scene, char **args);
-
-// element_init.c
-int		add_fov(char *fov, t_u8b *new_fov);
-int		add_3dvector(char *vector, t_vec3 *dir);
-int		add_coordinate(char *coor, t_vec3 *loc);
-int		add_ratio(char *ratio, float *new_ratio);
-int		add_rgb(char *rgb, t_rgb *color);
-
-// element_init2.c
-int		add_diameter(char *size, float *diameter);
-int		add_height(char *size, float *height);
+int				ft_isspace(char c);
+char			*strs_join(const char **strs);
+void			free_double_array(char **split);
+int				end_with(const char *haystack, const char *needle);
+int				ft_strlen2(char **argv);
 
 // parsing_checker.c
-int		check_fov(char *fov);
-int		check_coordinate(char *coordinate);
-int		check_coordinate_value(char **coordinate);
+int				check_value(char *number, bool have_floating_point);
+int				check_numbers_value(char **numbers, bool have_floating_point);
 
-// parsing_checker2.c
-int		check_ratio(char *ratio);
-int		check_rgb(char *rgb);
-int		check_rgb_value(char **color);
-int		check_HD(char *hd);
+// props_init.c
+int				ambient_init(t_scene *scene, char **args);
+int				camera_init(t_scene *scene, char **args);
+int				light_init(t_scene *scene, char **args);
+
+// forms_init.c
+int				sphere_init(t_scene *scene, char **args);
+int				plane_init(t_scene *scene, char **args);
+int				cylinder_init(t_scene *scene, char **args);
+
+// elements_setter.c
+int				set_ratio(char *ratio, float *new_ratio);
+int				set_rgb(char *rgb, t_rgb *color);
+int				set_float_value(char *size, float *value);
+int				set_fov(char *fov, t_u8b *new_fov);
+
+// 3Dvector.c
+int				set_vector3D(t_vec3 *vec, char *coordinate);
+int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
+
+// add_list.c
+void			add_sphere(t_scene *scene, t_sphere *object);
+void			add_plane(t_scene *scene, t_plane *object);
+void			add_cylinder(t_scene *scene, t_cylinder *object);
 
 // ft_atof.c
-double	ft_atof(char *str);
-void	ft_atof_bis(char *str, long double *res, int *neg);
+double			ft_atof(char *str);
+void			ft_atof_bis(char *str, long double *res, int *neg);
+
+// display.c
+int				ft_init_display(t_display *screen, int size_x, int size_y,
+					char *title);
+void			ft_destroy_display(t_display *screen);
 
 #endif

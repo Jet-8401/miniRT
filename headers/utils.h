@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 17:07:07 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/12 03:34:08 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,15 @@ typedef struct s_cylinder
 // brightness is a ratio between 0 and 1
 typedef struct s_light
 {
-	t_vec2				pos;
+	t_vec3				pos;
 	float				brightness;
 }						t_light;
 
 typedef struct s_lst
 {
-	void			*content;
-	struct s_lst	*next;
-	struct s_lst	*prev;
-}	t_lst;
+	void				*content;
+	struct s_lst		*next;
+	struct s_lst		*prev;
+}						t_lst;
 
 #endif
