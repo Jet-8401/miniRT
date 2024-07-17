@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/15 14:29:55 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:52:33 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,22 @@ typedef struct s_lst
 	struct s_lst		*prev;
 }						t_lst;
 
+typedef struct s_screen
+{
+	size_t screen_width;
+	size_t screen_height;
+	double aspect_ratio;
+	double scalar_fov;
+	t_vec3 camera_position;
+	t_vec3 camera_direction;
+} t_screen;
+
+typedef struct s_obj
+{
+	t_sphere	*sphere;
+	t_plane		*plane;
+	t_cylinder	*cylinder;
+}				t_obj;
 
 
 /*   mlx lib  */

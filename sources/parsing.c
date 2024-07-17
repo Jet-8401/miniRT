@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 17:28:33 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:12:20 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ int (*check_identifiers(const char *line))(t_scene *n, char **split)
 	int			id;
 	long		id_len;
 
-	id = -1;
-	while (identifiers[++id])
+	id = 0;
+	while (id < 6)
 	{
 		id_len = ft_strlen(identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0
 			&& ft_isspace(line[id_len]))
 			return (functions[id]);
+		id++;
 	}
 	return (NULL);
 }

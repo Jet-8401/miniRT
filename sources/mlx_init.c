@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 14:31:08 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/15 14:43:42 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:04:59 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int init_mlx_all(t_scene *scene)
     if (init_mlx_window(mlx) == -1)
         return (-1);
     scene->mlx = mlx;
+    init_camera(scene);
+    init_objects(scene);
     return (0);
 }
 
@@ -52,4 +54,17 @@ void destroy_mlx(t_mlx *mlx)
     if (mlx->mlx)
         mlx_destroy_display(mlx->mlx);
     gc_free(mlx);
+}
+
+void init_objects(t_scene *scene)
+{
+    t_obj *obj;
+
+    obj = gc_calloc(sizeof(t_obj));
+    if (!obj)
+        return ;
+    obj->sphere = scene->sphere;
+    obj->plane = scene->plane;
+    obj->cylinder = scene->cylinder;
+    scene->obj = obj;
 }

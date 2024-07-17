@@ -11,7 +11,8 @@ FILES = minirt.c \
 		props_init.c \
 		forms_init.c \
 		add_list.c \
-		mlx_init.c 
+		mlx_init.c \
+		render.c 
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 

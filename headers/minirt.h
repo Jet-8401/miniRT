@@ -6,19 +6,25 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/15 15:43:25 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:08:11 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
+#ifndef M_PI
+#   define M_PI 3.1415926535897932384626433832
+#endif
+
+# include <math.h>
+# include <stdlib.h>
+# include <unistd.h>
 # include "../libs/libft-gc/libft-gc.h"
 # include "../libs/mlx/mlx.h"
 # include "utils.h"
 # include <fcntl.h>
 # include <float.h>
-# include <math.h>
 # include <stdio.h> // for perror !
 # include <stdbool.h>
 
@@ -49,6 +55,8 @@ typedef struct s_scene
 	t_plane		*plane;
 	t_cylinder	*cylinder;
 	t_mlx		*mlx;
+	t_screen	*screen;
+	t_obj		*obj;
 }	t_scene;
 
 /******************************************************************************\
@@ -117,9 +125,25 @@ void			add_cylinder(t_scene *scene, t_cylinder *object);
 int				init_mlx_all(t_scene *scene);
 int				init_mlx_window(t_mlx *mlx);
 void			destroy_mlx(t_mlx *mlx);
+void init_objects(t_scene *scene);
+
+// render.c
+
+void			init_camera(t_scene *scene);
+void			normalize(t_vec3 *v);
+void			render_scene(t_scene *scene);
+t_vec3			ray_direction(t_scene *scene);
+void			raytrace(t_scene *scene, t_vec3 ray, t_vec3 *r);
+int intersect_sphere(t_sphere *sphere, t_vec3 camera_position, t_vec3 ray, t_vec3 *intersection, t_vec3 *normal);
+int intersect_plane(t_plane *plane, t_vec3 camera_position, t_vec3 ray, t_vec3 *intersection, t_vec3 *normal);
+void draw_pixel(t_scene *scene, t_vec3 r, t_rgb color);
+int dot(t_vec3 a, t_vec3 b);
+int get_color(t_rgb color);
+void mlx_pixel_img_put(t_scene *scene, int x, int y, int color);
 
 // ft_atof.c
 double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
 
 #endif
+
