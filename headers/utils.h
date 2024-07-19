@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/17 12:52:33 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/19 04:31:10 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,9 @@ typedef struct s_screen
 	double aspect_ratio;
 	double scalar_fov;
 	t_vec3 camera_position;
-	t_vec3 camera_direction;
+	t_vec3 forward;
+	t_vec3 up;
+	t_vec3 right;
 } t_screen;
 
 typedef struct s_obj
@@ -106,5 +108,29 @@ typedef struct s_mlx
 	void				*win;
 	t_image				img;
 }						t_mlx;
+
+
+typedef struct s_ray_view
+{
+	t_vec3				origin;
+	t_vec3				direction;
+} t_ray_view;
+
+typedef struct s_render
+{
+	t_screen			screen;
+	double				a;
+	double				b;
+	t_ray_view			ray;
+	t_vec3				color_ambiant;
+} t_render;
+
+typedef struct s_hit
+{
+	double h;
+	t_rgb col;
+	t_vec3 hit;
+	t_vec3 norm;
+} t_hit;
 
 #endif
