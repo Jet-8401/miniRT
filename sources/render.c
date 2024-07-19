@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/19 04:48:56 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:59:31 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,29 @@
 
 void init_camera(t_scene *scene)
 {
-    scene->screen = gc_calloc(sizeof(t_screen));
-    scene->screen->screen_width = WIDTH;
-    scene->screen->screen_height = HEIGHT;
-    scene->screen->aspect_ratio = (float)WIDTH / (float)HEIGHT;
-    scene->screen->scalar_fov = tan((scene->cam.fov * M_PI / 180) / 2);
-    scene->screen->forward = scene->cam.dir;
-    scene->screen->forward.x += 0.0001;
-    scene->screen->camera_position = scene->cam.pos;
-    scene->screen->up = new_normalized(merge_vect(scene->screen->forward, (t_vec3){0, 1, 0}));
-    scene->screen->right = new_normalized(merge_vect(scene->screen->forward, scene->screen->up));
+    t_screen *screen;
+
+    screen = gc_calloc(sizeof(t_screen));
+    screen->screen_width = WIDTH;
+    screen->screen_height = HEIGHT;
+    screen->aspect_ratio = (float)WIDTH / (float)HEIGHT;
+    screen->scalar_fov = (scene->cam.fov * M_PI / 180);
+    screen->height = tan(screen->scalar_fov / 2);
+    screen->width = screen->aspect_ratio * screen->height;
+    screen->forward = scene->cam.dir;
+    screen->forward.x += EPSILON;
+    screen->camera_position = scene->cam.pos;
+    screen->up = new_normalized(merge_vect(screen->forward, (t_vec3){0.0, 1.0, 0.0}));
+    screen->right = new_normalized(merge_vect(screen->forward, screen->up));
+    scene->screen = screen;
+    //return (*scene->screen);
 }
 
 void render_scene(t_scene *scene)
 {
     t_render render;
 
-    render.screen = *(scene)->screen;
+    render.screen = (*scene->screen);
     pixel_draw(scene, render);
     mlx_put_image_to_window(scene->mlx->mlx, scene->mlx->win, scene->mlx->img.img, 0, 0);
     mlx_loop(scene->mlx->mlx);
@@ -61,15 +67,32 @@ void pixel_draw(t_scene *scene, t_render render)
 
 int new_rgb(int r, int g, int b)
 {
-    return (r << 16 | g << 8 | b);
+    return (((r & 0xff)  << 16) + ((g & 0xff) << 8) + (b & 0xff));
 }
 
-void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
+/*void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
 {
     char *dst;
 
     dst = mlx->img.addr + (y * mlx->img.line_len + x * (mlx->img.bpp / 8));
     *(unsigned int *)dst = color;
+}*/
+
+void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
+{
+    char *pixel;
+    int i;
+
+    i = mlx->img.bpp - 8;
+    pixel = mlx->img.addr + (y * mlx->img.line_len + x * (mlx->img.bpp / 8));
+    while (i >= 0)
+    {
+        if (mlx->img.endian != 0)
+            *pixel++ = (color >> i) & 0xFF;
+        else
+            *pixel++ = (color >> (mlx->img.bpp - 8 - i)) & 0xFF;
+        i -= 8;
+    }
 }
 
 t_vec3 ambiant_color(t_ray_view *ray, t_scene *scene)
@@ -115,11 +138,11 @@ t_hit intersect(t_ray_view *ray, t_scene *scene)
 
 t_vec3 new_color(t_scene *scene, t_hit hit, t_vec3 light_dir)
 {
-    t_vec3 ret;
+    t_vec3 ret = {0, 0, 0};
     t_vec3 light;
     double h;
 
-    init_ret(&ret);
+    //init_ret(&ret);
     if (new_shader(scene, hit, scene->light))
         ret = add_color(ret, light_dir);
     else
@@ -180,16 +203,18 @@ double final_shadow(t_vec3 in)
     return (sqrt(pow(in.x, 2) + pow(in.y, 2) + pow(in.z, 2)));
 }
 
-void init_ret(t_vec3 *ret)
+/*void init_ret(t_vec3 *ret)
 {
-    ret->x = 0;
-    ret->y = 0;
-    ret->z = 0;
-}
+    (*ret)->x = 0;
+    (*ret)->y = 0;
+    (*ret)->z = 0;
+}*/
 
 int in_scene(t_vec3 ray, t_vec3 norm)
 {
-    return (dot(ray, norm) > 0);
+    if (dot(ray, norm) > 0)
+        return (1);
+    return (0);
 }
 
 t_hit intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit hit)
@@ -255,16 +280,39 @@ double cylinder_inside(t_ray_view *ray, t_cylinder *cylinder)
 
     n = new_normalized(cylinder->dir);
     oc = sub_vec3(ray->origin, cylinder->pos);
-    a = dot(ray->direction, ray->direction) - pow(dot(ray->direction, n), 2);
-    b = 2 * (dot(ray->direction, oc) - dot(ray->direction, n) * dot(oc, n));
-    c = dot(oc, oc) - pow(dot(oc, n), 2) - pow(cylinder->diameter / 2, 2);
+    a = dot(ray->direction, ray->direction) - (dot(ray->direction, n) * dot(ray->direction, n));
+    b = 2 * (dot(ray->direction, oc) - (dot(ray->direction, n) * dot(oc, n)));
+    c = dot(oc, oc) - (dot(oc, n) * dot(oc, n)) - (cylinder->diameter / 2 * cylinder->diameter / 2);
     delta = b * b - 4 * a * c;
     if (delta < EPSILON)
         return (-1.0);
-    h = (-b - sqrt(delta)) / (2 * a);
-    if (h < EPSILON)
-        h = (-b + sqrt(delta)) / (2 * a);
+    h = pick_inter_cylinder(a, b, delta, ray, n, oc, cylinder);
     return (h);
+}
+
+double pick_inter_cylinder(double a, double b, double delta, t_ray_view *ray, t_vec3 n, t_vec3 oc, t_cylinder *cylinder)
+{
+    double num1;
+    double num2;
+    //double h;
+    double x1;
+    double x2;
+
+    num1 = (-b * sqrt(delta)) / (2.0 * a);
+    num2 = (-b * sqrt(delta)) / (2.0 * a);
+    if (num1 < EPSILON)
+        return (-1.0);
+    /*if (num1 > num2)
+        h = num2;
+    else
+        h = num1;*/
+    x1 = dot(ray->direction, n) * num2 + dot(oc, n);
+    x2 = dot(ray->direction, n) * num1 + dot(oc, n);
+    if (x1 >= EPSILON && x1 <= cylinder->height)
+        return (num2);
+    if (x2 >= EPSILON && x2 <= cylinder->height)
+        return (num1);
+    return (-1);
 }
 
 
@@ -281,9 +329,11 @@ double plane_inside(t_ray_view *ray, t_plane *plane)
     d = dot(ray->direction, n);
     if (d != 0)
     {
-        t = -dot(oc, n) / d;
-        if (t > EPSILON)
-            return (t);
+        t = dot(oc, n);
+        t = -t / d;
+        if (t < EPSILON)
+            return (-1.0);
+        return (t);
     }
     return (-1.0);
 }
@@ -297,20 +347,30 @@ double sphere_inside(t_ray_view *ray, t_sphere *sphere)
     double b;
     double c;
     double delta;
-    double h;
+    //double h;
+    double num1;
+    double num2;
 
     oc = sub_vec3(ray->origin, sphere->pos);
     a = dot(ray->direction, ray->direction);
     b = 2 * dot(oc, ray->direction);
-    c = dot(oc, oc) - sphere->diameter * sphere->diameter;
+    c = dot(oc, oc) - (sphere->diameter / 2.0) * (sphere->diameter / 2.0);
     delta = b * b - (4 * a * c);
     if (delta < EPSILON)
         return (-1.0);
-    h = (-b - sqrt(delta)) / (2 * a);
-    if (h < EPSILON)
-        h = (-b + sqrt(delta)) / (2 * a);
-    return (h);
+    num1 = (b * (-1.0) - sqrt(delta)) / (2.0 * a);
+    num2 = (b * (-1.0) + sqrt(delta)) / (2.0 * a);
+    if (num1 * num2 > EPSILON)
+    {
+        if (num1 > EPSILON)
+            return (num1 > num2 ? num2 : num1);
+        return (-1);
+    }
+    if (num1 > EPSILON)
+        return (num1);
+    return (num2);
 }
+
 
 t_vec3 vec3_ambiant(t_rgb col, t_rgb color, float light_ratio)
 {
@@ -372,7 +432,7 @@ t_ray_view new_ray(t_scene *scene, t_render render)
     t_ray_view ray;
 
     ray.origin = scene->cam.pos;
-    ray.direction = add_vec3(add_vec3(mult_vec3(scene->screen->up, render.a * scene->screen->screen_height), mult_vec3(scene->screen->right, render.b * scene->screen->screen_width)), scene->screen->forward);
+    ray.direction = add_vec3(add_vec3(mult_vec3(scene->screen->up, render.a * scene->screen->height), mult_vec3(scene->screen->right, render.b * scene->screen->width)), scene->screen->forward);
     ray.direction = new_normalized(ray.direction);
     return (ray);
 }
