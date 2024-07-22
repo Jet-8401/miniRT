@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
+#include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
 
 void	print_all(t_scene *scene)
 {
@@ -77,32 +80,40 @@ void print_cylinder_list(t_scene *scene)
 	}
 }
 
+int	render_scene(t_display *display)
+{
+	static uint32_t	red;
+	static uint32_t	green;
+
+	for(int y = 0; y < display->height; y++) {
+		for (int x = 0; x < display->width; x++) {
+			red = (uint8_t)((x / (float) display->width) * 255);
+			green = (uint8_t)((y / (float) display->height) * 255);
+			display->data[x + y * display->width] = red << 16 | green << 8;
+		}
+	}
+	mlx_put_image_to_window(display->mlx_ptr, display->window,
+		display->render_img, 0, 0);
+	fps_display(display);
+	//usleep(500000);
+	//sleep(1);
+	return (0);
+}
+
 int	main(int argc, char *argv[])
 {
-	t_scene		scene;
-	t_display	display;
+	t_scene			scene;
+	t_display		display;
 
 	(void) argc;
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
-	if (ft_init_display(&display, 256, 256, "miniRT") == -1)
+	if (ft_init_display(&display, 800, 800, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
 	printf("bpp = %d\n", display.bpp);
 	printf("endian mode: %s\n", display.big_endian ? "big" : "little");
-	unsigned char	*stream;
-	int	i = 0;
-	stream = display.stream;
-	for(int x = 0; x < display.widht; x++) {
-		for (int y = 0; y < display.height; y++) {
-			*((int *) stream) = i++;
-			stream += 4;
-		}
-	}
-	mlx_put_image_to_window(display.mlx_ptr, display.window, display.render_img,
-		0, 0);
-	sleep(50);
-	ft_destroy_display(&display);
-	gc_dump(NULL);
+	mlx_loop_hook(display.mlx_ptr, &render_scene, &display);
+	mlx_loop(display.mlx_ptr);
 	return (0);
 }

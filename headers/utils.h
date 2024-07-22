@@ -13,6 +13,7 @@
 #ifndef UTILS_H
 # define UTILS_H
 
+#include <stdint.h>
 typedef unsigned char	t_u8b;
 
 typedef struct s_vec3
@@ -70,5 +71,14 @@ typedef struct s_lst
 	struct s_lst		*next;
 	struct s_lst		*prev;
 }						t_lst;
+
+typedef struct s_fpscounter
+{
+	t_lst		*snapshots;
+	t_u8b		snapshots_samples;
+	t_u8b		current_snapshots;
+	uint64_t	last_tick;
+	uint64_t	total;
+}	t_fpscounter;
 
 #endif

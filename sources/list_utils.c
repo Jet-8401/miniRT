@@ -12,6 +12,7 @@
 
 #include "../headers/minirt.h"
 
+// Remove last element
 t_lst	*lst_trunc(t_lst **origin)
 {
 	t_lst	*copy;

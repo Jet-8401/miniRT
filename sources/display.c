@@ -18,15 +18,19 @@ int	ft_init_display(t_display *display, int size_x, int size_y, char *title)
 	if (!display->mlx_ptr)
 		return (ft_err(ERR_MLX_PTR, 0), -1);
 	display->height = size_y;
-	display->widht = size_x;
+	display->width = size_x;
 	display->window = mlx_new_window(display->mlx_ptr, size_x, size_y, title);
 	if (!display->window)
 		return (ft_err(ERR_MLX_WINDOW, 0), -1);
 	display->render_img = mlx_new_image(display->mlx_ptr, size_x, size_y);
 	if (!display->render_img)
 		return (ft_err(ERR_RENDER_IMG, 0), -1);
-	display->stream = (unsigned char *) mlx_get_data_addr(display->render_img,
+	display->data = (uint32_t *) mlx_get_data_addr(display->render_img,
 		&display->bpp, &display->lsize, &display->big_endian);
+	display->fps_counter = gc_calloc(sizeof(t_fpscounter));
+	if (!display->fps_counter)
+		return (ft_err(ERR_COUNTER_INIT, 0), -1);
+	fps_counter_init(display->fps_counter, FPS_SNAPSHOT_SAMPLES);
 	return (0);
 }
 
