@@ -49,9 +49,9 @@ uint64_t	get_time()
 // get the time between the last frame and the current tick
 // add that to the average
 // return the average divided by the number of snapshots
-int	fps_count(t_fpscounter *counter)
+float	fps_count(t_fpscounter *counter)
 {
-	static int		result;
+	static float	result;
 	static uint64_t	delta;
 	static uint64_t	now;
 
@@ -74,11 +74,12 @@ int	fps_count(t_fpscounter *counter)
 	//printf("snapshots=%d\n", counter->current_snapshots);
 	// check if the number of snapshots is the same as asked.
 	// if not, it return to prevent from substracting the lastest delta
-	if (counter->current_snapshots < counter->snapshots_samples)
-		return (counter->current_snapshots++, -1);
-	result = counter->total / counter->current_snapshots;
+	if (counter->n_snapshots < counter->snapshots_samples)
+		return (counter->n_snapshots++,
+			1e6 / ((float) counter->total / counter->n_snapshots));
+	result = (float) counter->total / counter->n_snapshots;
 	counter->total -= *((uint64_t *) counter->snapshots->prev->content);
-	return (1 / (result / 1e6) + 1);
+	return (1e6 / result);
 }
 
 void	fps_display(t_display *display)
@@ -87,5 +88,6 @@ void	fps_display(t_display *display)
 
 	string = ft_itoa(fps_count(display->fps_counter));
 	mlx_string_put(display->mlx_ptr, display->window, 0, 10, WHITE, string);
-	free(string);
+	gc_free(string);
+	string = NULL;
 }

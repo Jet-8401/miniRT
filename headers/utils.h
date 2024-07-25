@@ -76,7 +76,7 @@ typedef struct s_fpscounter
 {
 	t_lst		*snapshots;
 	t_u8b		snapshots_samples;
-	t_u8b		current_snapshots;
+	t_u8b		n_snapshots;
 	uint64_t	last_tick;
 	uint64_t	total;
 }	t_fpscounter;

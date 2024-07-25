@@ -12,7 +12,9 @@ FILES = minirt.c \
 		forms_init.c \
 		add_list.c \
 		display.c \
-		fps_counter.c
+		fps_counter.c \
+		mlx_events.c \
+		render.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 

@@ -23,6 +23,8 @@
 # include <float.h> // don't work for norminette
 # include <stdio.h> // for perror
 # include <sys/time.h>
+# include <X11/X.h>
+# include <X11/keysym.h>
 
 // for debug
 #define WHITE 2147483647
@@ -50,6 +52,7 @@ typedef struct s_display
 	t_fpscounter	*fps_counter;
 	int				height;
 	int				width;
+	int				aspect_ratio;
 	int				bpp;
 	int				lsize;
 	int				big_endian;
@@ -73,6 +76,7 @@ typedef struct s_scene
 	t_sphere	*sphere;
 	t_plane		*plane;
 	t_cylinder	*cylinder;
+	t_display	display;
 }	t_scene;
 
 /******************************************************************************\
@@ -130,6 +134,8 @@ int				set_fov(char *fov, t_u8b *new_fov);
 // 3Dvector.c
 int				set_vector3D(t_vec3 *vec, char *coordinate);
 int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
+void			vec3D_normalize(t_vec3 *vec);
+double			vec3D_dot(t_vec3 *a, t_vec3 *b);
 
 // add_list.c
 void			add_sphere(t_scene *scene, t_sphere *object);
@@ -141,13 +147,20 @@ double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
 
 // display.c
-int				ft_init_display(t_display *screen, int size_x, int size_y,
+int				ft_init_display(t_display *display, int size_x, int size_y,
 					char *title);
-void			ft_destroy_display(t_display *screen);
+void			ft_destroy_display(t_display *display);
 
 // fps_couter.c
 int				fps_counter_init(t_fpscounter *counter, t_u8b samples);
-int				fps_count(t_fpscounter *counter);
+float			fps_count(t_fpscounter *counter);
 void			fps_display(t_display *display);
+
+// mlx_events.c
+int				close_window(t_display *display);
+int				key_handler(int keycode, t_scene *scene);
+
+// render.c
+int				render_scene(t_scene *scene);
 
 #endif
