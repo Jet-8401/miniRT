@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
+#include <X11/X.h>
 
 void	print_all(t_scene *scene)
 {
@@ -79,30 +80,19 @@ void print_cylinder_list(t_scene *scene)
 
 int	main(int argc, char *argv[])
 {
-	t_scene		scene;
-	t_display	display;
+	t_scene			scene;
 
 	(void) argc;
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
-	if (ft_init_display(&display, 256, 256, "miniRT") == -1)
+	if (ft_init_display(&scene.display, 200, 200, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
-	printf("bpp = %d\n", display.bpp);
-	printf("endian mode: %s\n", display.big_endian ? "big" : "little");
-	unsigned char	*stream;
-	int	i = 0;
-	stream = display.stream;
-	for(int x = 0; x < display.widht; x++) {
-		for (int y = 0; y < display.height; y++) {
-			*((int *) stream) = i++;
-			stream += 4;
-		}
-	}
-	mlx_put_image_to_window(display.mlx_ptr, display.window, display.render_img,
-		0, 0);
-	sleep(50);
-	ft_destroy_display(&display);
-	gc_dump(NULL);
+	printf("bpp = %d\n", scene.display.bpp);
+	printf("endian mode: %s\n", scene.display.big_endian ? "big" : "little");
+	mlx_hook(scene.display.window, 17, 0, close_window, &scene.display);
+	mlx_hook(scene.display.window, KeyPress, KeyPressMask, key_handler, &scene);
+	mlx_loop_hook(scene.display.mlx_ptr, &render_scene, &scene);
+	mlx_loop(scene.display.mlx_ptr);
 	return (0);
 }

@@ -34,3 +34,19 @@ int	set_normalized_vector3D(t_vec3 *vec, char *coordinate)
 		return (-1);
 	return (0);
 }
+
+void	vec3D_normalize(t_vec3 *vec)
+{
+	double	magnitude;
+
+	magnitude = sqrt(((vec->x * vec->x) + (vec->y * vec->y) +
+		(vec->z * vec->z)));
+	vec->x /= magnitude;
+	vec->y /= magnitude;
+	vec->z /= magnitude;
+}
+
+double	vec3D_dot(t_vec3 *a, t_vec3 *b)
+{
+	return ((a->x * b->x) + (a->y * b->y) + (a->z * b->z));
+}
