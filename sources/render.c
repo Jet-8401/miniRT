@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/19 16:59:31 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/14 16:21:51 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,16 @@ void init_camera(t_scene *scene)
     screen->screen_height = HEIGHT;
     screen->aspect_ratio = (float)WIDTH / (float)HEIGHT;
     screen->scalar_fov = (scene->cam.fov * M_PI / 180);
-    screen->height = tan(screen->scalar_fov / 2);
-    screen->width = screen->aspect_ratio * screen->height;
-    screen->forward = scene->cam.dir;
-    screen->forward.x += EPSILON;
-    screen->camera_position = scene->cam.pos;
-    screen->up = new_normalized(merge_vect(screen->forward, (t_vec3){0.0, 1.0, 0.0}));
-    screen->right = new_normalized(merge_vect(screen->forward, screen->up));
+    screen->scale = tan(screen->scalar_fov / 2.0);
+    if (fabs(scene->cam.dir.y) > 1.0 - 1e-4)
+        screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 0, -1.0}, scene->cam.dir)), screen->scale);
+    else
+        screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 1.0, 0}, scene->cam.dir)), screen->scale);
+    screen->qy = mult_vec3(normalize(merge_vect(screen->qx, scene->cam.dir)) ,dot_len(screen->qx) * HEIGHT / WIDTH);
+    screen->px = mult_vec3(screen->qx, -2.0 / (screen->screen_width - 1));
+    screen->py = mult_vec3(screen->qy, -2.0 / (screen->screen_height - 1));
+    screen->pos = add_vec3(add_vec3(scene->cam.pos, scene->cam.dir), add_vec3(screen->qx, screen->qy));
     scene->screen = screen;
-    //return (*scene->screen);
 }
 
 void render_scene(t_scene *scene)
@@ -49,20 +50,25 @@ void pixel_draw(t_scene *scene, t_render render)
     size_t y;
 
     y = 0;
+    render.ray.origin = scene->cam.pos;
     while (y < HEIGHT)
     {
         x = 0;
         while (x < WIDTH)
         {
-            render.a = (double)x * 2 / WIDTH - 1;
-            render.b = (double)y * 2 / HEIGHT - 1;
-            render.ray = new_ray(scene, render);
+            render.pixel_pos = add_vec3(render.screen.pos, mult_vec3_comb(x + ft_rand(), render.screen.px, render.screen.screen_height - 1 - y + ft_rand(), render.screen.py));
+            render.ray.direction = normalize(sub_vec3(render.pixel_pos, render.ray.origin));
             render.color_ambiant = ambiant_color(&render.ray, scene);
             new_mlx_pixel_put(scene->mlx, x, y, new_rgb(render.color_ambiant.x, render.color_ambiant.y, render.color_ambiant.z));
             x++;
         }
         y++;
     }
+}
+
+double ft_rand(void)
+{
+    return (rand() / ((double) RAND_MAX + 1.0));
 }
 
 int new_rgb(int r, int g, int b)
@@ -411,6 +417,11 @@ t_vec3 mult_vec3(t_vec3 a, double b)
     return (mult);
 }
 
+t_vec3 mult_vec3_comb(double a_1, t_vec3 a, double b_1, t_vec3 b)
+{
+    return (add_vec3(mult_vec3(a, a_1), mult_vec3(b, b_1)));
+}
+
 t_vec3 sub_vec3(t_vec3 a, t_vec3 b)
 {
     t_vec3 sub;
@@ -426,15 +437,9 @@ double dot(t_vec3 a, t_vec3 b)
     return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
-
-t_ray_view new_ray(t_scene *scene, t_render render)
+double dot_len(t_vec3 a)
 {
-    t_ray_view ray;
-
-    ray.origin = scene->cam.pos;
-    ray.direction = add_vec3(add_vec3(mult_vec3(scene->screen->up, render.a * scene->screen->height), mult_vec3(scene->screen->right, render.b * scene->screen->width)), scene->screen->forward);
-    ray.direction = new_normalized(ray.direction);
-    return (ray);
+    return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }
 
 t_vec3 new_normalized(t_vec3 new)
@@ -446,14 +451,12 @@ t_vec3 new_normalized(t_vec3 new)
     return (normalized);
 }
 
-void normalize(t_vec3 *new)
+t_vec3 normalize(t_vec3 new)
 {
     double length;
 
-    length = sqrt(new->x * new->x + new->y * new->y + new->z * new->z);
-    new->x /= length;
-    new->y /= length;
-    new->z /= length;
+    length = 1.0 / sqrt(new.x * new.x + new.y * new.y + new.z * new.z);
+    return ((t_vec3){new.x * length, new.y * length, new.z * length});
 }
 
 t_vec3 merge_vect(t_vec3 a, t_vec3 b)
@@ -465,3 +468,4 @@ t_vec3 merge_vect(t_vec3 a, t_vec3 b)
     merged.z = (a.x * b.y) - (a.y * b.x);
     return (merged);
 }
+

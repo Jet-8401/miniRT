@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/19 15:26:35 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:13:05 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,9 +158,10 @@ t_vec3 sub_vec3(t_vec3 a, t_vec3 b);
 double dot(t_vec3 a, t_vec3 b);
 t_ray_view new_ray(t_scene *scene, t_render render);
 t_vec3 new_normalized(t_vec3 new);
-void normalize(t_vec3 *new);
+t_vec3 normalize(t_vec3 new);
 t_vec3 merge_vect(t_vec3 a, t_vec3 b);
 double pick_inter_cylinder(double a, double b, double delta, t_ray_view *ray, t_vec3 n, t_vec3 oc, t_cylinder *cylinder);
+double dot_len(t_vec3 a);
 
 // ft_atof.c
 double			ft_atof(char *str);
