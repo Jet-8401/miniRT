@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/14 14:13:05 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/17 01:34:02 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 
 # define WIDTH 1280
 # define HEIGHT 720
-# define EPSILON 0.0001
+# define EPSILON 1e-6
 
 typedef struct s_scene
 {
@@ -58,6 +58,7 @@ typedef struct s_scene
 	t_mlx		*mlx;
 	t_screen	*screen;
 	t_obj		*obj;
+	double cam_matrix[4][4];
 }	t_scene;
 
 /******************************************************************************\
@@ -126,42 +127,48 @@ void			add_cylinder(t_scene *scene, t_cylinder *object);
 int				init_mlx_all(t_scene *scene);
 int				init_mlx_window(t_mlx *mlx);
 void			destroy_mlx(t_mlx *mlx);
-void init_objects(t_scene *scene);
+void init_objects(t_scene *scene, char type);
+void add_plane_obj(t_scene *scene, t_obj *object);
+void add_sphere_obj(t_scene *scene, t_obj *object);
+void add_cylinder_obj(t_scene *scene, t_obj *object);
 
 // render.c
 
 void init_camera(t_scene *scene);
 void render_scene(t_scene *scene);
-void pixel_draw(t_scene *scene, t_render render);
+void pixel_draw(t_scene *scene, t_render *render);
+double ft_rand(void);
 int new_rgb(int r, int g, int b);
+int color_rgb(t_rgb color);
 void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color);
-t_vec3 ambiant_color(t_ray_view *ray, t_scene *scene);
-t_hit intersect(t_ray_view *ray, t_scene *scene);
+t_rgb ambiant_color(t_render *render, t_scene *scene, int depth);
+t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit);
+int new_intersect(t_render *render, t_obj *obj, t_hit *hit);
 t_vec3 new_color(t_scene *scene, t_hit hit, t_vec3 light_dir);
 t_vec3 share_light(t_hit hit, t_light *light, double h);
 t_vec3 add_color(t_vec3 a, t_vec3 b);
-int new_shader(t_scene *scene, t_hit hit, t_light *light);
 double final_shadow(t_vec3 in);
-void init_ret(t_vec3 *ret);
 int in_scene(t_vec3 ray, t_vec3 norm);
-t_hit intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit hit);
-t_hit intersect_plane(t_ray_view *ray, t_plane *plane, t_hit hit);
-t_hit intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit hit);
-double cylinder_inside(t_ray_view *ray, t_cylinder *cylinder);
-double plane_inside(t_ray_view *ray, t_plane *plane);
-double sphere_inside(t_ray_view *ray, t_sphere *sphere);
+bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit);
+bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit hit);
+bool intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit hit);
 t_vec3 vec3_ambiant(t_rgb col, t_rgb color, float light_ratio);
 t_vec3 add_vec3(t_vec3 a, t_vec3 b);
 t_vec3 mult_color_vec3(t_rgb color, double b);
 t_vec3 mult_vec3(t_vec3 a, double b);
+t_vec3 mult_vec3_comb(double a_1, t_vec3 a, double b_1, t_vec3 b);
 t_vec3 sub_vec3(t_vec3 a, t_vec3 b);
 double dot(t_vec3 a, t_vec3 b);
-t_ray_view new_ray(t_scene *scene, t_render render);
-t_vec3 new_normalized(t_vec3 new);
-t_vec3 normalize(t_vec3 new);
-t_vec3 merge_vect(t_vec3 a, t_vec3 b);
-double pick_inter_cylinder(double a, double b, double delta, t_ray_view *ray, t_vec3 n, t_vec3 oc, t_cylinder *cylinder);
 double dot_len(t_vec3 a);
+t_vec3 normalize(t_vec3 new);
+t_vec3 *normalize_bis(t_vec3 *new);
+t_vec3 merge_vect(t_vec3 a, t_vec3 b);
+t_vec3 new_vector(double x, double y, double z);
+void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y);
+void cam_dir(t_scene *scene);
+t_vec3 new_vector(double x, double y, double z);
+t_vec3 world_cam(double cam_matrix[4][4], t_vec3 *direction);
+
 
 // ft_atof.c
 double			ft_atof(char *str);

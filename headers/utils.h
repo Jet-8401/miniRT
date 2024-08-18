@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/14 15:03:46 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/16 17:11:23 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,23 @@ typedef struct s_screen
 	t_vec3 qy;
 } t_screen;
 
+typedef struct s_object_union
+{
+	t_sphere sphere;
+	t_plane plane;
+	t_cylinder cylinder;
+} t_object_union;
+
 typedef struct s_obj
 {
-	t_sphere	*sphere;
-	t_plane		*plane;
-	t_cylinder	*cylinder;
+	t_vec3				pos;
+	t_vec3				dir;
+	t_object_union 		object;
+	float				diameter;
+	float				height;
+	t_rgb				color;
+	char				type;
+	struct s_obj		*next;
 }				t_obj;
 
 
@@ -124,9 +136,10 @@ typedef struct s_render
 	t_screen			screen;
 	double				a;
 	double				b;
-	t_ray_view			ray;
-	t_vec3				color_ambiant;
+	t_ray_view			prime_ray;
+	int				color_ambiant;
 	t_vec3				pixel_pos;
+	t_obj				*obj_closest;
 } t_render;
 
 typedef struct s_hit
@@ -135,6 +148,9 @@ typedef struct s_hit
 	t_rgb col;
 	t_vec3 hit;
 	t_vec3 norm;
+	t_vec3 closest_hit;
 } t_hit;
+
+
 
 #endif
