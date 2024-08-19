@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/17 13:12:20 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/19 16:01:18 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 	if (fd == -1)
 		return (ft_err(file_scene, 1), -1);
 	ft_memset(scene, 0, sizeof(t_scene));
+	init_pointer_objects(scene);
 	lines_c = 1;
 	line = get_next_line(fd);
 	while (line != NULL)
@@ -109,4 +110,15 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 		line = get_next_line(fd);
 	}
 	return (0);
+}
+
+void init_pointer_objects(t_scene *scene)
+{
+	scene->light = NULL;
+	scene->sphere = NULL;
+	scene->plane = NULL;
+	scene->cylinder = NULL;
+	scene->mlx = NULL;
+	scene->screen = NULL;
+	scene->obj = NULL;
 }

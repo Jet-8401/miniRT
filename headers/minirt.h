@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/17 01:34:02 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/19 16:23:21 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int				ft_strlen2(char **argv);
 int				check_value(char *number, bool have_floating_point);
 int				check_numbers_value(char **numbers, bool have_floating_point);
 
+void init_pointer_objects(t_scene *scene); // TO DELETE AFTER TESTING IF OBJECT ARE NOT ADDING TO LIST
+
 // props_init.c
 int				ambient_init(t_scene *scene, char **args);
 int				camera_init(t_scene *scene, char **args);
@@ -118,7 +120,7 @@ int				set_vector3D(t_vec3 *vec, char *coordinate);
 int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
 
 // add_list.c
-void			add_sphere(t_scene *scene, t_sphere *object);
+void	add_sphere(t_sphere **scene, t_sphere *new_sphere);
 void			add_plane(t_scene *scene, t_plane *object);
 void			add_cylinder(t_scene *scene, t_cylinder *object);
 
@@ -128,9 +130,11 @@ int				init_mlx_all(t_scene *scene);
 int				init_mlx_window(t_mlx *mlx);
 void			destroy_mlx(t_mlx *mlx);
 void init_objects(t_scene *scene, char type);
-void add_plane_obj(t_scene *scene, t_obj *object);
-void add_sphere_obj(t_scene *scene, t_obj *object);
-void add_cylinder_obj(t_scene *scene, t_obj *object);
+void add_plane_obj(t_scene *scene, char type, t_obj *object);
+void add_sphere_obj(t_scene *scene, char type, t_obj *object);
+void add_cylinder_obj(t_scene *scene, char type, t_obj *object);
+void print_all_objects(t_obj *obj);
+void init_objects_all(t_scene *scene);
 
 // render.c
 
@@ -175,4 +179,3 @@ double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
 
 #endif
-

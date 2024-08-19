@@ -6,24 +6,24 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 13:17:11 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/12 13:19:32 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/19 16:43:36 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-void	add_sphere(t_scene *scene, t_sphere *object)
+void	add_sphere(t_sphere **scene, t_sphere *new_sphere)
 {
-	t_sphere	*tmp;
+	t_sphere *tmp;
 
-	tmp = scene->sphere;
-	if (tmp == NULL)
-		scene->sphere = object;
+	if (*scene == NULL)
+		*scene = new_sphere;
 	else
 	{
-		while (tmp->next != NULL)
+		tmp = *scene;
+		while (tmp->next)
 			tmp = tmp->next;
-		tmp->next = object;
+		tmp->next = new_sphere;
 	}
 }
 

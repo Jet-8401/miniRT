@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:16:38 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/16 17:00:27 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/19 16:46:31 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int	main(int argc, char *argv[])
 		return (gc_dump(NULL), 0);
 	if (init_mlx_all(&scene) == -1)
 		return (gc_dump(NULL), 0);
-	render_scene(&scene);
 	print_all(&scene);
+	//render_scene(&scene);
 	//gc_dump(NULL);
 	return (0);
 }
@@ -49,7 +49,7 @@ void print_form_list(t_scene *scene)
 void print_sphere_list(t_scene *scene)
 {
 	t_sphere *sphere;
-	int i = 0;
+	int i = 1;
 
 	sphere = scene->sphere;
 	while (sphere)
@@ -65,7 +65,7 @@ void print_sphere_list(t_scene *scene)
 void print_plane_list(t_scene *scene)
 {
 	t_plane *plane;
-	int i = 0;
+	int i = 1;
 
 	plane = scene->plane;
 	while (plane)
@@ -83,7 +83,7 @@ void print_plane_list(t_scene *scene)
 void print_cylinder_list(t_scene *scene)
 {
 	t_cylinder *cylinder;
-	int i = 0;
+	int i = 1;
 
 	cylinder = scene->cylinder;
 	while (cylinder)

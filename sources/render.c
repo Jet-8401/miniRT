@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/17 01:38:24 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:45:58 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void init_camera(t_scene *scene)
     screen->aspect_ratio = (float)WIDTH / (float)HEIGHT;
     screen->scalar_fov = (scene->cam.fov * M_PI / 180);
     screen->scale = tan(scene->cam.fov / 2 * M_PI / 180);
-    printf("screen cam.dir: %f %f %f\n", scene->cam.dir.x, scene->cam.dir.y, scene->cam.dir.z);
+    //printf("screen cam.dir: %f %f %f\n", scene->cam.dir.x, scene->cam.dir.y, scene->cam.dir.z);
     if (fabs(scene->cam.dir.y) > 1.0 - 1e-4)
         screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 0, -1.0}, scene->cam.dir)), screen->scale);
     else
@@ -32,14 +32,14 @@ void init_camera(t_scene *scene)
     screen->py = mult_vec3(screen->qy, -2.0 / (screen->screen_height - 1));
     screen->pos = add_vec3(add_vec3(scene->cam.pos, scene->cam.dir), add_vec3(screen->qx, screen->qy));
     cam_dir(scene);
-    printf("screen.pos a init camera: %f %f %f\n", screen->pos.x, screen->pos.y, screen->pos.z);
+    /*printf("screen.pos a init camera: %f %f %f\n", screen->pos.x, screen->pos.y, screen->pos.z);
     printf("screen.px a init camera: %f %f %f\n", screen->px.x, screen->px.y, screen->px.z);
     printf("screen.py a init camera: %f %f %f\n", screen->py.x, screen->py.y, screen->py.z);
     printf("screen.qx a init camera: %f %f %f\n", screen->qx.x, screen->qx.y, screen->qx.z);
     printf("screen.qy a init camera: %f %f %f\n", screen->qy.x, screen->qy.y, screen->qy.z);
     printf("screen.scale a init camera: %f\n", screen->scale);
     printf("screen.scalar_fov a init camera: %f\n", screen->scalar_fov);
-    printf("screen.aspect_ratio a init camera: %f\n", screen->aspect_ratio);
+    printf("screen.aspect_ratio a init camera: %f\n", screen->aspect_ratio);*/
     scene->screen = screen;
     //render->screen = *screen;
 }
@@ -95,8 +95,8 @@ void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
     tmp_scene = scene;
     prime_ray->origin = new_vector(tmp_scene->cam.pos.x, tmp_scene->cam.pos.y, tmp_scene->cam.pos.z);
     prime_ray->direction.x = (2.0 * (x + 0.5) / (float)WIDTH - 1.0) * tmp_scene->screen->aspect_ratio * tmp_scene->screen->scale;
-    prime_ray->direction.y = (1.0 - 2.0 * (y + 0.5) / (float)HEIGHT) * tmp_scene->screen->scale;
-    prime_ray->direction.z = 0.5;
+    prime_ray->direction.y = (1.0 - 2.0 * (y + 0.5) / (float)HEIGHT) * tmp_scene->screen->scale;;
+    prime_ray->direction.z = -1;
     prime_ray->direction = world_cam(scene->cam_matrix, &prime_ray->direction);
     normalize_bis(&prime_ray->direction);
 }
@@ -201,13 +201,13 @@ t_rgb ambiant_color(t_render *render, t_scene *scene, int depth)
     //o = render->obj_closest;
     if (!render->obj_closest)
         return (color);
-    printf("closest obj: %c\n", render->obj_closest->type);
-    printf("Mais ici je passe qu'une fois\n");
+    //printf("closest obj: %c\n", render->obj_closest->type);
+    //printf("Mais ici je passe qu'une fois\n");
     --depth;
     //if (depth < 0)
         //o = NULL;
     //color = o->color;
-    printf("color: %d\n", color_rgb(render->obj_closest->color));
+    //printf("color: %d\n", color_rgb(render->obj_closest->color));
     return (render->obj_closest->color);
 }
 
@@ -230,7 +230,7 @@ t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit)
                 min_distance = tmp_hit.h;
                 obj_closest = obj;
                 *hit = tmp_hit;
-                printf("tmp_hit.h: %f\n", tmp_hit.h);
+                //printf("tmp_hit.h: %f\n", tmp_hit.h);
             }
         }
         obj = obj->next;
@@ -345,25 +345,25 @@ bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit)
     //printf("ray->origin: %f %f %f\n", ray->origin.x, ray->origin.y, ray->origin.z);
     //printf("sphere->pos: %f %f %f\n", sphere->pos.x, sphere->pos.y, sphere->pos.z);
 
-    oc = sub_vec3(ray->origin, sphere->pos);
+    oc = sub_vec3(ray->origin, sphere->pos); 
     a = dot(oc, ray->direction);
     //printf("sphere diameter: %f\n", sphere->diameter);
     radius = pow(sphere->diameter / 2, 2);
-    printf("radius: %f\n", radius);
+    //printf("radius: %f\n", radius);
     //printf("a: %f\n", a);
     //printf("oc: %f %f %f\n", oc.x, oc.y, oc.z);
     if (a < 0)
         return (false);
     b = dot(oc, oc) - a * a;
-    printf("b: %f\n", b);
-    if (b > radius)
+    //printf("b: %f\n", b);
+    if (b > radius) 
         return (false);
     c = sqrt(radius - b);
     hit->h = a - c;
     delta = a + c;
-    printf("c: %f\n", c);
-    printf("hit.h: %f\n", hit->h);
-    printf("delta: %f\n", delta);
+    //printf("c: %f\n", c);
+    //printf("hit.h: %f\n", hit->h);
+    //printf("delta: %f\n", delta);
     if (hit->h < EPSILON && delta < EPSILON)
         return (false);
     if (hit->h < EPSILON || hit->h > delta)

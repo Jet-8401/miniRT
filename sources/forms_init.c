@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/13 19:26:47 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/19 16:43:33 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	sphere_init(t_scene *scene, char **args)
 		return (ft_err("Bad height sphere", 0), -1);
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
-	add_sphere(scene, sphere);
+	add_sphere(&scene->sphere, sphere);
 	// if (add_sphere_value(scene, args) == -1)
 	// return (ft_err("Wrong sphere values", 0), -1);
 	// add_object(&scene->sphere->next, sphere);
