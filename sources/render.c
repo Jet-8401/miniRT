@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/19 15:45:58 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:46:23 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,17 @@ void init_camera(t_scene *scene)
     screen->screen_width = WIDTH;
     screen->screen_height = HEIGHT;
     screen->aspect_ratio = (float)WIDTH / (float)HEIGHT;
-    screen->scalar_fov = (scene->cam.fov * M_PI / 180);
-    screen->scale = tan(scene->cam.fov / 2 * M_PI / 180);
+    screen->scalar_fov = (scene->cam->fov * M_PI / 180);
+    screen->scale = tan(scene->cam->fov / 2 * M_PI / 180);
     //printf("screen cam.dir: %f %f %f\n", scene->cam.dir.x, scene->cam.dir.y, scene->cam.dir.z);
-    if (fabs(scene->cam.dir.y) > 1.0 - 1e-4)
-        screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 0, -1.0}, scene->cam.dir)), screen->scale);
+    if (fabs(scene->cam->dir.y) > 1.0 - 1e-4)
+        screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 0, -1.0}, scene->cam->dir)), screen->scale);
     else
-        screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 1.0, 0}, scene->cam.dir)), screen->scale);
-    screen->qy = mult_vec3(normalize(merge_vect(screen->qx, scene->cam.dir)) ,dot_len(screen->qx) * HEIGHT / WIDTH);
+        screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 1.0, 0}, scene->cam->dir)), screen->scale);
+    screen->qy = mult_vec3(normalize(merge_vect(screen->qx, scene->cam->dir)) ,dot_len(screen->qx) * HEIGHT / WIDTH);
     screen->px = mult_vec3(screen->qx, -2.0 / (screen->screen_width - 1));
     screen->py = mult_vec3(screen->qy, -2.0 / (screen->screen_height - 1));
-    screen->pos = add_vec3(add_vec3(scene->cam.pos, scene->cam.dir), add_vec3(screen->qx, screen->qy));
+    screen->pos = add_vec3(add_vec3(scene->cam->pos, scene->cam->dir), add_vec3(screen->qx, screen->qy));
     cam_dir(scene);
     /*printf("screen.pos a init camera: %f %f %f\n", screen->pos.x, screen->pos.y, screen->pos.z);
     printf("screen.px a init camera: %f %f %f\n", screen->px.x, screen->px.y, screen->px.z);
@@ -63,7 +63,7 @@ void pixel_draw(t_scene *scene, t_render *render)
 
     y = 0;
     init_camera(scene);
-    render->prime_ray.origin = scene->cam.pos;
+    render->prime_ray.origin = scene->cam->pos;
     while (y < HEIGHT)
     {
         x = 0;
@@ -86,18 +86,103 @@ void pixel_draw(t_scene *scene, t_render *render)
         }
         y++;
     }
+    //fps_display(scene->mlx);
+}
+
+
+int	fps_counter_init(t_fpscounter *counter, t_u8b samples)
+{
+	t_u8b	i;
+	t_lst	*snapshot;
+
+	i = 0;
+	snapshot = NULL;
+	counter->snapshots_samples = samples;
+	if (counter->snapshots_samples == 0)
+		return (-1);
+	while (i++ < counter->snapshots_samples)
+	{
+		snapshot = lst_new(gc_calloc(sizeof(uint64_t)));
+		if (!snapshot)
+			return (-1);
+		lst_append(&counter->snapshots, snapshot);
+	}
+	snapshot->next = counter->snapshots;
+	counter->snapshots->prev = snapshot;
+	return (0);
+}
+
+uint64_t	get_time()
+{
+	static struct timeval	tv;
+	static uint64_t			timestamp;
+
+	gettimeofday(&tv, NULL);
+	// change multiplication by bitshifting
+	timestamp = tv.tv_sec * 1e6 + tv.tv_usec;
+	return (timestamp);
+}
+
+
+float	fps_count(t_fpscounter *counter)
+{
+	static float	result;
+	static uint64_t	delta;
+	static uint64_t	now;
+
+	// if there now last_tick, set it and skip
+	if (!counter->last_tick)
+		return (counter->last_tick = get_time(), 0);
+	now = get_time();
+	// calculate the delta from the difference
+	// of the last_tick and the new tick
+	//printf("last_tick=%ld\n", counter->last_tick);
+	//printf("now      =%ld\n", now);
+	delta = now - counter->last_tick;
+	//printf("delta=%ld\n", delta);
+	*(uint64_t *) counter->snapshots->content = delta;
+	// skip for the next snapshot
+	counter->snapshots = counter->snapshots->next;
+	counter->last_tick = now;
+	counter->total += delta;
+	//printf("total=%ld\n", counter->total);
+	//printf("snapshots=%d\n", counter->current_snapshots);
+	// check if the number of snapshots is the same as asked.
+	// if not, it return to prevent from substracting the lastest delta
+	if (counter->n_snapshots < counter->snapshots_samples)
+		return (counter->n_snapshots++,
+			1e6 / ((float) counter->total / counter->n_snapshots));
+	result = (float) counter->total / counter->n_snapshots;
+	counter->total -= *((uint64_t *) counter->snapshots->prev->content);
+	return (1e6 / result);
+}
+
+void	fps_display(t_mlx *display)
+{
+	static char	*string;
+
+	string = ft_itoa(fps_count(display->fps_counter));
+	mlx_string_put(display->mlx, display->win, 0, 10, WHITE, string);
+	gc_free(string);
+	string = NULL;
 }
 
 void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
 {
     t_scene *tmp_scene;
+    //t_vec3 coord;
 
     tmp_scene = scene;
-    prime_ray->origin = new_vector(tmp_scene->cam.pos.x, tmp_scene->cam.pos.y, tmp_scene->cam.pos.z);
+    prime_ray->origin = new_vector(tmp_scene->cam->pos.x, tmp_scene->cam->pos.y, tmp_scene->cam->pos.z);
+    /*coord = new_vector(x / tmp_scene->screen->screen_width, y / tmp_scene->screen->screen_height, tmp_scene->screen->aspect_ratio);
+    coord.x = coord.x * 2.0f - 1.0f;
+    coord.y = coord.y * 2.0f - 1.0f;
+    coord.x *= tmp_scene->screen->aspect_ratio;
+    prime_ray->direction = new_vector(coord.x, coord.y, -1.0f);*/
     prime_ray->direction.x = (2.0 * (x + 0.5) / (float)WIDTH - 1.0) * tmp_scene->screen->aspect_ratio * tmp_scene->screen->scale;
     prime_ray->direction.y = (1.0 - 2.0 * (y + 0.5) / (float)HEIGHT) * tmp_scene->screen->scale;;
-    prime_ray->direction.z = -1;
-    prime_ray->direction = world_cam(scene->cam_matrix, &prime_ray->direction);
+    prime_ray->direction.z = -1.0f;
+    //prime_ray->direction = world_cam(scene->cam_matrix, &prime_ray->direction);
     normalize_bis(&prime_ray->direction);
 }
 
@@ -119,7 +204,7 @@ void cam_dir(t_scene *scene)
     t_vec3 tmp;
 
     tmp = new_vector(0, 1, 0);
-    forward = scene->cam.dir;
+    forward = scene->cam->dir;
     normalize_bis(&forward);
     right = merge_vect(forward, tmp);
     up = merge_vect(right, forward);
@@ -142,6 +227,16 @@ t_vec3 new_vector(double x, double y, double z)
     new.y = y;
     new.z = z;
     return (new);
+}
+
+t_rgb vect_to_rgb(t_vec3 vec)
+{
+    t_rgb color;
+
+    color.r = (int)vec.x;
+    color.g = (int)vec.y;
+    color.b = (int)vec.z;
+    return (color);
 }
 
 double ft_rand(void)
@@ -201,6 +296,7 @@ t_rgb ambiant_color(t_render *render, t_scene *scene, int depth)
     //o = render->obj_closest;
     if (!render->obj_closest)
         return (color);
+    color = light_handler(scene, render, &hit);
     //printf("closest obj: %c\n", render->obj_closest->type);
     //printf("Mais ici je passe qu'une fois\n");
     --depth;
@@ -208,9 +304,48 @@ t_rgb ambiant_color(t_render *render, t_scene *scene, int depth)
         //o = NULL;
     //color = o->color;
     //printf("color: %d\n", color_rgb(render->obj_closest->color));
-    return (render->obj_closest->color);
+    return (color);
 }
 
+t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit)
+{
+    double d;
+    t_rgb color;
+
+    (void)render;
+    d = dot(hit->norm, new_normalized(sub_vec3(scene->light->pos, hit->hit)));
+    if (d < 0)
+        d = 0;
+    color = vect_to_rgb(vec3_ambiant(hit->col, (t_rgb){255, 255, 255}, d * scene->light->brightness));
+    color = add_all_light(color, scene->ambient->color, scene->ambient->light_ratio);
+    return (color);
+}
+
+t_rgb add_all_light(t_rgb color, t_rgb ambiant, float light_ratio)
+{
+    t_rgb new;
+
+    if (light_ratio > 1)
+        light_ratio = 1;
+    if (light_ratio < 0)
+        light_ratio = 0;
+    new.r = color.r * ambiant.r * light_ratio;
+    new.g = color.g * ambiant.g * light_ratio;
+    new.b = color.b * ambiant.b * light_ratio;
+    if (new.r > 1)
+        new.r = 1;
+    if (new.g > 1)
+        new.g = 1;
+    if (new.b > 1)
+        new.b = 1;
+    if (new.r < 0)
+        new.r = 0;
+    if (new.g < 0)
+        new.g = 0;
+    if (new.b < 0)
+        new.b = 0;
+    return (new);
+}
 
 t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit)
 {
@@ -245,9 +380,9 @@ int new_intersect(t_render *render, t_obj *obj, t_hit *hit)
     //printf("obj->type: %c\n", obj->type);
     if (obj->type == 's')
         return (intersect_sphere(&render->prime_ray, &obj->object.sphere, hit));
-    /*else if (obj->type == 'p')
-        return (intersect_plane(&render->ray, &obj->object.plane, *hit));
-    else if (obj->type == 'c')
+    else if (obj->type == 'p')
+        return (intersect_plane(&render->prime_ray, &obj->object.plane, hit));
+    /*else if (obj->type == 'c')
         return (intersect_cylinder(&render->ray, &obj->object.cylinder, *hit));*/
     return (0);
 }
@@ -335,17 +470,35 @@ int in_scene(t_vec3 ray, t_vec3 norm)
 
 bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit)
 {
-    t_vec3 oc;
+    //t_vec3 oc;
     double a;
     double b;
     double c;
     double delta;
     double radius;
+    double t0;
+    //double t1;
 
-    //printf("ray->origin: %f %f %f\n", ray->origin.x, ray->origin.y, ray->origin.z);
-    //printf("sphere->pos: %f %f %f\n", sphere->pos.x, sphere->pos.y, sphere->pos.z);
+    radius = sphere->diameter / 2.0f;
+    //oc = sub_vec3(ray->origin, sphere->pos);
+    a = dot(ray->direction, ray->direction);
+    b = 2.0f * dot(sub_vec3(ray->origin, sphere->pos), ray->direction);
+    c = dot(sub_vec3(ray->origin, sphere->pos), sub_vec3(ray->origin, sphere->pos)) - radius * radius;
 
-    oc = sub_vec3(ray->origin, sphere->pos); 
+    delta = b * b - 4.0f * a * c;
+    if (delta >= 0.0f)
+    {
+        t0 = (-b - sqrt(delta)) / (2.0f * a);
+        //t1 = (-b + sqrt(delta)) / (2.0f * a);
+        hit->hit = add_vec3(sub_vec3(ray->origin, sphere->pos), mult_vec3(ray->direction, t0));
+        hit->norm = sub_vec3(hit->hit, sphere->pos);
+        normalize_bis(&hit->norm);
+        hit->h = t0;
+        return (true);
+    }
+    return (false);
+
+    /*oc = sub_vec3(ray->origin, sphere->pos); 
     a = dot(oc, ray->direction);
     //printf("sphere diameter: %f\n", sphere->diameter);
     radius = pow(sphere->diameter / 2, 2);
@@ -371,27 +524,30 @@ bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit)
     hit->hit = mult_vec3(ray->direction, hit->h);
     hit->norm = sub_vec3(sphere->pos, hit->hit);
     normalize_bis(&hit->norm);
-    return (true);
+    return (true);*/
 }
 
-/*t_hit intersect_plane(t_ray_view *ray, t_plane *plane, t_hit hit)
+bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit *hit)
 {
-    t_hit tmp;
-    
-    tmp.h = plane_inside(ray, plane);
-    if ((hit.h == -1.0 || hit.h > tmp.h) && tmp.h > EPSILON)
+    double denom;
+
+    denom = dot(plane->dir, ray->direction);
+    if (fabs(denom) > 1e-6)
     {
-        hit.col = plane->color;
-        hit.hit = add_vec3(ray->origin, mult_vec3(ray->direction, tmp.h));
-        hit.norm = plane->dir;
-        if (dot(hit.norm, ray->direction) > __DBL_EPSILON__)
-            hit.norm = mult_vec3(hit.norm, -1);
-        hit = tmp;
+        hit->h = dot(sub_vec3(plane->pos, ray->origin), plane->dir) / denom;
+        if (hit->h >= 0)
+        {
+            hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->h));
+            hit->norm = plane->dir;
+            if (dot(hit->norm, ray->direction) > 0)
+                hit->norm = mult_vec3(hit->norm, -1);
+            return (true);
+        }
     }
-    return (hit);
+    return (false);
 }
 
-t_hit intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit hit)
+/*t_hit intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit hit)
 {
     t_hit tmp;
     double h;
@@ -562,9 +718,9 @@ t_vec3 sub_vec3(t_vec3 a, t_vec3 b)
 {
     t_vec3 sub;
 
-    sub.x = b.x - a.x;
-    sub.y = b.y - a.y;
-    sub.z = b.z - a.z;
+    sub.x = a.x - b.x;
+    sub.y = a.y - b.y;
+    sub.z = a.z - b.z;
     return (sub);
 }
 
@@ -578,14 +734,14 @@ double dot_len(t_vec3 a)
     return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }
 
-/*t_vec3 new_normalized(t_vec3 new)
+t_vec3 new_normalized(t_vec3 new)
 {
     t_vec3 normalized;
 
     normalized = new;
-    normalize(&normalized);
+    normalize_bis(&normalized);
     return (normalized);
-}*/
+}
 
 t_vec3 normalize(t_vec3 new)
 {

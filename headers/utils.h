@@ -6,12 +6,14 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/16 17:11:23 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:14:00 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
+
+# include <stdint.h>
 
 typedef unsigned char	t_u8b;
 
@@ -86,6 +88,15 @@ typedef struct s_screen
 	t_vec3 qy;
 } t_screen;
 
+typedef struct s_fpscounter
+{
+	t_lst		*snapshots;
+	t_u8b		snapshots_samples;
+	t_u8b		n_snapshots;
+	uint64_t	last_tick;
+	uint64_t	total;
+}	t_fpscounter;
+
 typedef struct s_object_union
 {
 	t_sphere sphere;
@@ -122,6 +133,7 @@ typedef struct s_mlx
 	void				*mlx;
 	void				*win;
 	t_image				img;
+	t_fpscounter *fps_counter;
 }						t_mlx;
 
 

@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/19 16:01:18 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/20 12:31:45 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,20 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 		lines_c++;
 		line = get_next_line(fd);
 	}
+	return (ft_check_scene(scene));
+}
+
+int ft_check_scene(t_scene *scene)
+{
+	if (!scene->cam)
+		return (ft_err("You must add a camera into the scene", 0), -1);
+	if (!scene->ambient)
+		return (ft_err("You must add an ambient lighting", 0), -1);
+	if (!scene->plane && !scene->sphere && !scene->cylinder)
+		return (ft_err("You must add at least one object", 0), -1);
 	return (0);
 }
+
 
 void init_pointer_objects(t_scene *scene)
 {

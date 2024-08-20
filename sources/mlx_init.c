@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 14:31:08 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/19 13:51:06 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:17:47 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,18 @@ int init_mlx_all(t_scene *scene)
     //init_objects(scene, 's');
     //init_objects(scene, 'c');
     print_all_objects(scene->obj);
+    //fps_counter_init(mlx->fps_counter, FPS_SNAPSHOT_SAMPLES);
     return (0);
 }
 
 void init_objects_all(t_scene *scene)
 {
-    t_obj *obj;
-
-    obj = gc_calloc(sizeof(t_obj));
-    if (!obj)
-        return ;
-    add_plane_obj(scene, 'p', obj);
-    add_sphere_obj(scene, 's', obj);
-    add_cylinder_obj(scene, 'c', obj);
-    scene->obj = obj;
+    scene->obj = NULL;
+    add_plane_obj(scene->plane, 'p', &scene->obj);
+    add_sphere_obj(scene->sphere, 's', &scene->obj);
+    add_cylinder_obj(scene->cylinder, 'c', &scene->obj);
 }
+
 
 void print_all_objects(t_obj *obj)
 {
@@ -87,7 +84,7 @@ void destroy_mlx(t_mlx *mlx)
     gc_free(mlx);
 }
 
-void init_objects(t_scene *scene, char type)
+/*void init_objects(t_scene *scene, char type)
 {
     t_obj *obj;
 
@@ -101,52 +98,70 @@ void init_objects(t_scene *scene, char type)
     else if (type == 'c')
         add_cylinder_obj(scene, 'c', obj);
     scene->obj = obj;
-}
+}*/
 
-void add_plane_obj(t_scene *scene, char type, t_obj *object)
+void add_plane_obj(t_plane *plane, char type, t_obj **object)
 {
-    while (scene->plane->next)
+     t_obj *tmp;
+
+    while (plane)
     {
-        object->pos = scene->plane->pos;
-        object->dir = scene->plane->dir;
-        object->color = scene->plane->color;
-        object->diameter = 0;
-        object->height = 0;
-        object->type = type;
-        object->object.plane = *scene->plane;
-        object->next = scene->obj;
-        scene->plane = scene->plane->next;
+        tmp = gc_calloc(sizeof(t_obj));
+        if (!tmp)
+            return ;
+        tmp->pos = plane->pos;
+        tmp->dir = plane->dir;
+        tmp->color = plane->color;
+        tmp->diameter = 0;
+        tmp->height = 0;
+        tmp->type = type;
+        tmp->object.plane = *plane;
+        tmp->next = *object;
+        *object = tmp;
+        plane = plane->next;
     }
 }
 
-void add_sphere_obj(t_scene *scene, char type, t_obj *object)
+void add_sphere_obj(t_sphere *sphere, char type, t_obj **object)
 {
-    while (scene->sphere->next)
+    t_obj *tmp;
+
+    while (sphere)
     {
-        object->pos = scene->sphere->pos;
-        object->dir = (t_vec3){0, 0, 0};
-        object->color = scene->sphere->color;
-        object->diameter = scene->sphere->diameter;
-        object->height = 0;
-        object->type = type;
-        object->object.sphere = *scene->sphere;
-        object->next = scene->obj;
-        scene->sphere = scene->sphere->next;
+        tmp = gc_calloc(sizeof(t_obj));
+        if (!tmp)
+            return ;
+        tmp->pos = sphere->pos;
+        tmp->dir = (t_vec3){0, 0, 0};
+        tmp->color = sphere->color;
+        tmp->diameter = sphere->diameter;
+        tmp->height = 0;
+        tmp->type = type;
+        tmp->object.sphere = *sphere;
+        tmp->next = *object;
+        *object = tmp;
+        sphere = sphere->next;
     }
 }
 
-void add_cylinder_obj(t_scene *scene, char type, t_obj *object)
+void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object)
 {
-    while (scene->cylinder->next)
+    t_obj *tmp;
+
+    while (cylinder)
     {
-        object->pos = scene->cylinder->pos;
-        object->dir = scene->cylinder->dir;
-        object->color = scene->cylinder->color;
-        object->diameter = scene->cylinder->diameter;
-        object->height = scene->cylinder->height;
-        object->type = type;
-        object->object.cylinder = *scene->cylinder;
-        object->next = scene->obj;
-        scene->cylinder = scene->cylinder->next;
+        tmp = gc_calloc(sizeof(t_obj));
+        if (!tmp)
+            return ;
+        tmp->pos = cylinder->pos;
+        tmp->dir = cylinder->dir;
+        tmp->color = cylinder->color;
+        tmp->diameter = cylinder->diameter;
+        tmp->height = cylinder->height;
+        tmp->type = type;
+        tmp->object.cylinder = *cylinder;
+        tmp->next = *object;
+        *object = tmp;
+        cylinder = cylinder->next;
     }
 }

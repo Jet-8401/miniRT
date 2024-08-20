@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/19 16:23:21 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:41:44 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <float.h>
 # include <stdio.h> // for perror !
 # include <stdbool.h>
+# include <inttypes.h>
+# include <sys/time.h>
 
 # define PROG_NAME "minirt: "
 
@@ -37,6 +39,8 @@
 # define WIDTH 1280
 # define HEIGHT 720
 # define EPSILON 1e-6
+#define WHITE 2147483647
+# define FPS_SNAPSHOT_SAMPLES 50
 
 typedef struct s_scene
 {
@@ -44,13 +48,13 @@ typedef struct s_scene
 	{
 		float	light_ratio;
 		t_rgb	color;
-	}	ambient;
+	}	*ambient;
 	struct s_cam
 	{
 		t_vec3	pos;
 		t_vec3	dir;
 		t_u8b	fov;
-	}	cam;
+	}	*cam;
 	t_light		*light;
 	t_sphere	*sphere;
 	t_plane		*plane;
@@ -96,6 +100,7 @@ int				ft_strlen2(char **argv);
 // parsing_checker.c
 int				check_value(char *number, bool have_floating_point);
 int				check_numbers_value(char **numbers, bool have_floating_point);
+int ft_check_scene(t_scene *scene);
 
 void init_pointer_objects(t_scene *scene); // TO DELETE AFTER TESTING IF OBJECT ARE NOT ADDING TO LIST
 
@@ -120,7 +125,7 @@ int				set_vector3D(t_vec3 *vec, char *coordinate);
 int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
 
 // add_list.c
-void	add_sphere(t_sphere **scene, t_sphere *new_sphere);
+void	add_sphere(t_scene *scene, t_sphere *object);
 void			add_plane(t_scene *scene, t_plane *object);
 void			add_cylinder(t_scene *scene, t_cylinder *object);
 
@@ -130,9 +135,9 @@ int				init_mlx_all(t_scene *scene);
 int				init_mlx_window(t_mlx *mlx);
 void			destroy_mlx(t_mlx *mlx);
 void init_objects(t_scene *scene, char type);
-void add_plane_obj(t_scene *scene, char type, t_obj *object);
-void add_sphere_obj(t_scene *scene, char type, t_obj *object);
-void add_cylinder_obj(t_scene *scene, char type, t_obj *object);
+void add_sphere_obj(t_sphere *sphere, char type, t_obj **object);
+void add_plane_obj(t_plane *plane, char type, t_obj **object);
+void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object);
 void print_all_objects(t_obj *obj);
 void init_objects_all(t_scene *scene);
 
@@ -154,7 +159,7 @@ t_vec3 add_color(t_vec3 a, t_vec3 b);
 double final_shadow(t_vec3 in);
 int in_scene(t_vec3 ray, t_vec3 norm);
 bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit);
-bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit hit);
+bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit *hit);
 bool intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit hit);
 t_vec3 vec3_ambiant(t_rgb col, t_rgb color, float light_ratio);
 t_vec3 add_vec3(t_vec3 a, t_vec3 b);
@@ -172,10 +177,20 @@ void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y);
 void cam_dir(t_scene *scene);
 t_vec3 new_vector(double x, double y, double z);
 t_vec3 world_cam(double cam_matrix[4][4], t_vec3 *direction);
-
+t_rgb vect_to_rgb(t_vec3 vec);
+t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit);
+t_vec3 new_normalized(t_vec3 new);
+t_rgb add_all_light(t_rgb color, t_rgb ambiant, float light_ratio);
 
 // ft_atof.c
 double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
+
+
+
+int	fps_counter_init(t_fpscounter *counter, t_u8b samples);
+uint64_t	get_time();
+float	fps_count(t_fpscounter *counter);
+void	fps_display(t_mlx *display);
 
 #endif
