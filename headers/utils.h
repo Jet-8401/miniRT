@@ -33,7 +33,7 @@ typedef struct s_rgb
 typedef struct s_sphere
 {
 	t_vec3				pos;
-	float				diameter;
+	float				radius;
 	t_rgb				color;
 	struct s_sphere		*next;
 }						t_sphere;

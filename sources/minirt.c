@@ -40,7 +40,7 @@ void print_sphere_list(t_scene *scene)
 	while (sphere)
 	{
 		printf("Sphere position: %f %f %f\n", sphere->pos.x, sphere->pos.y, sphere->pos.z);
-		printf("Sphere diameter: %f\n", sphere->diameter);
+		printf("Sphere diameter: %f\n", sphere->radius);
 		printf("Sphere color: %d %d %d\n", sphere->color.r, sphere->color.g, sphere->color.b);
 		sphere = sphere->next;
 	}
@@ -85,7 +85,7 @@ int	main(int argc, char *argv[])
 	(void) argc;
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
-	if (ft_init_display(&scene.display, 200, 200, "miniRT") == -1)
+	if (ft_init_display(&scene.display, 300, 300, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
 	printf("bpp = %d\n", scene.display.bpp);

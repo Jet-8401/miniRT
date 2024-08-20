@@ -27,7 +27,7 @@
 # include <X11/keysym.h>
 
 // for debug
-#define WHITE 2147483647
+#define STRING_COLOR 0xFFFFFF
 
 # define PROG_NAME "minirt: "
 # define FPS_SNAPSHOT_SAMPLES 50
@@ -142,6 +142,9 @@ void			add_sphere(t_scene *scene, t_sphere *object);
 void			add_plane(t_scene *scene, t_plane *object);
 void			add_cylinder(t_scene *scene, t_cylinder *object);
 
+// rgb.c
+int				rgb_to_int(t_rgb *rgb, t_u8b is_big_endian);
+
 // ft_atof.c
 double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
@@ -151,7 +154,11 @@ int				ft_init_display(t_display *display, int size_x, int size_y,
 					char *title);
 void			ft_destroy_display(t_display *display);
 
+// render_time.c
+void			render_time_display(t_display *display);
+
 // fps_couter.c
+uint64_t		get_time();
 int				fps_counter_init(t_fpscounter *counter, t_u8b samples);
 float			fps_count(t_fpscounter *counter);
 void			fps_display(t_display *display);

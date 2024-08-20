@@ -8,10 +8,12 @@ FILES = minirt.c \
 		ft_atof.c \
 		3Dvector.c \
 		elements_setter.c \
+		rgb.c \
 		props_init.c \
 		forms_init.c \
 		add_list.c \
 		display.c \
+		render_time.c \
 		fps_counter.c \
 		mlx_events.c \
 		render.c
