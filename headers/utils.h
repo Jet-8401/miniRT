@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/20 16:14:00 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/21 13:32:04 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,16 @@ typedef struct s_ray_view
 	t_vec3				direction;
 } t_ray_view;
 
+typedef struct s_hit
+{
+	double h;
+	t_rgb col;
+	t_vec3 hit;
+	t_vec3 norm;
+	t_vec3 closest_hit;
+	t_ray_view shadow_ray;
+} t_hit;
+
 typedef struct s_render
 {
 	t_screen			screen;
@@ -152,16 +162,9 @@ typedef struct s_render
 	int				color_ambiant;
 	t_vec3				pixel_pos;
 	t_obj				*obj_closest;
+	struct s_hit hit_shadow;
 } t_render;
 
-typedef struct s_hit
-{
-	double h;
-	t_rgb col;
-	t_vec3 hit;
-	t_vec3 norm;
-	t_vec3 closest_hit;
-} t_hit;
 
 
 

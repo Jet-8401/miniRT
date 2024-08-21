@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/20 17:41:44 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/21 16:58:54 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,13 @@
 # define EPSILON 1e-6
 #define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
+
+// Returns the maximum between a and b
+# define MAX(a, b)	((a) * (a > b) + (b) * (b > a))
+// Returns the minimum between a and b
+# define MIN(a, b)	((a) * (a < b) + (b) * (b < a))
+// Returns the absolute value of x
+# define ABS(x) 	((x) * (x > 0) - (x) * (x < 0))
 
 typedef struct s_scene
 {
@@ -181,6 +188,27 @@ t_rgb vect_to_rgb(t_vec3 vec);
 t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit);
 t_vec3 new_normalized(t_vec3 new);
 t_rgb add_all_light(t_rgb color, t_rgb ambiant, float light_ratio);
+t_rgb mult_rgb2(t_rgb a, t_rgb b);
+t_rgb mult_rgb(t_rgb ambiant, double intensity);
+
+/* TEST  !!!!*/
+
+t_rgb final_light(t_rgb ambiant_light, t_rgb diffuse, t_rgb specular);
+t_rgb mix_color(t_rgb a, double d1, t_rgb b, double d2);
+bool new_shadow_ray(t_scene *scene, t_hit *hit);
+double distance(t_vec3 a, t_vec3 b);
+t_vec3 *mult_shadow(t_vec3 *dst, t_ray_view *ray, double t);
+t_obj *intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
+int new_intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
+t_rgb specular_light(t_scene *scene, t_render *render, t_hit *hit);
+t_rgb new_color_rgb(double r, double g, double b);
+t_rgb diffuse_light(t_light *light, t_hit *hit, double ratio);
+t_rgb mult_color_vec4(t_rgb color, double b);
+t_rgb add_rgb(t_rgb a, t_rgb b);
+t_u8b check_data(int n, int min, int max);
+double vec3_cossine(t_vec3 v1, t_vec3 v2);
+bool intersect3(t_ray_view *render, t_obj *obj, t_hit *hit, double light_distance);
+double vec3_length(t_vec3 vec);
 
 // ft_atof.c
 double			ft_atof(char *str);
@@ -194,3 +222,4 @@ float	fps_count(t_fpscounter *counter);
 void	fps_display(t_mlx *display);
 
 #endif
+

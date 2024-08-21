@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/20 17:46:23 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/21 16:59:22 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,6 @@ void pixel_draw(t_scene *scene, t_render *render)
         while (x < WIDTH)
         {
             new_init_camera(scene, &render->prime_ray, (float)x, (float)y);
-            if (x == 0 && y == 0)
-            {
-                printf("screen.pos: %lf %lf %lf\n", render->screen.pos.x, render->screen.pos.y, render->screen.pos.z);
-                printf("screen.px: %f %f %f\n", render->screen.px.x, render->screen.px.y, render->screen.px.z);
-            }
             //render->pixel_pos = add_vec3(render->screen.pos, mult_vec3_comb(x + ft_rand(), render->screen.px, render->screen.screen_height - 1 - y + ft_rand(), render->screen.py));
             //render->prime_ray.direction = normalize(sub_vec3(render->pixel_pos, render->prime_ray.origin));
             //printf("ray.direction: %f %f %f\n", render->prime_ray.direction.x, render->prime_ray.direction.y, render->prime_ray.direction.z);
@@ -229,6 +224,16 @@ t_vec3 new_vector(double x, double y, double z)
     return (new);
 }
 
+t_rgb new_color_rgb(double r, double g, double b)
+{
+    t_rgb new;
+
+    new.r = r;
+    new.g = g;
+    new.b = b;
+    return (new);
+}
+
 t_rgb vect_to_rgb(t_vec3 vec)
 {
     t_rgb color;
@@ -309,16 +314,227 @@ t_rgb ambiant_color(t_render *render, t_scene *scene, int depth)
 
 t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit)
 {
-    double d;
-    t_rgb color;
+    t_rgb final_color;
+    t_light *new_light;
 
     (void)render;
+    new_light = scene->light;
+    final_color = mult_color_vec4(hit->col, scene->ambient->light_ratio);
+    if (new_light && !new_shadow_ray(scene, hit))
+        final_color = add_rgb(final_color, diffuse_light(new_light, hit, new_light->brightness));
+    return (final_color);
+    //double d;
+    //t_rgb color;
+    /*t_rgb ambiant_light;
+    t_rgb diffuse;
+    t_rgb specular;
+    int in_shadow;
+
+    (void)render;
+    in_shadow = 0;
+    ft_memset(&diffuse, 0, sizeof(diffuse));
+    ft_memset(&specular, 0, sizeof(specular));
+    ambiant_light = hit->col;
+    ambiant_light = add_all_light(ambiant_light, scene->ambient->color, scene->ambient->light_ratio);
+    in_shadow = new_shadow_ray(scene, render, hit);
+    if (dot(hit->norm, render->prime_ray.direction) > 0)
+        hit->norm = mult_vec3(hit->norm, -1);
     d = dot(hit->norm, new_normalized(sub_vec3(scene->light->pos, hit->hit)));
     if (d < 0)
         d = 0;
     color = vect_to_rgb(vec3_ambiant(hit->col, (t_rgb){255, 255, 255}, d * scene->light->brightness));
+    if (!in_shadow)
+        diffuse = mix_color(diffuse, 1, diffuse_light(scene, render, hit), 1);
+    if (!in_shadow)
+        specular = mix_color(specular, 1, specular_light(scene, render, hit), 1);
     color = add_all_light(color, scene->ambient->color, scene->ambient->light_ratio);
-    return (color);
+    return (final_light(ambiant_light, diffuse, specular));*/
+}
+
+t_rgb add_rgb(t_rgb a, t_rgb b)
+{
+    t_rgb added;
+
+    added.r = check_data(a.r + b.r, 0, 255);
+    added.g = check_data(a.g + b.g, 0, 255);
+    added.b = check_data(a.b + b.b, 0, 255);
+    return (added);
+}
+
+t_u8b check_data(int n, int min, int max)
+{
+    if (n > max)
+        return (max);
+    else if (n < min)
+        return (min);
+    return (n);
+}
+
+
+t_rgb diffuse_light(t_light *light, t_hit *hit, double ratio)
+{
+    t_vec3 light_dir;
+    t_rgb diff_color;
+    double cos_angle;
+    double diffuse_ratio;
+    double attenuation;
+
+    light_dir = sub_vec3(light->pos, hit->hit);
+    attenuation = MIN(1.0, 90.0 / vec3_length(light_dir));
+    cos_angle = vec3_cossine(hit->norm, light_dir);
+    diffuse_ratio = ratio * cos_angle * attenuation;
+    diff_color = mult_rgb(hit->col, diffuse_ratio);
+    return (diff_color);
+    /*t_rgb color;
+    double hit_p;
+
+    (void)render;
+    color = hit->col;
+    hit_p = dot(hit->shadow_ray.direction, hit->norm);
+    color = add_all_light(color, (t_rgb){255, 255, 255}, scene->light->brightness * hit_p);
+    return (color);*/
+}
+
+
+double vec3_cossine(t_vec3 v1, t_vec3 v2)
+{
+    double dot_new;
+    double lengths; 
+
+    dot_new = dot(v1, v2);
+    lengths = vec3_length(v1) * vec3_length(v2);
+    return (dot_new / lengths);
+}
+
+t_rgb specular_light(t_scene *scene, t_render *render, t_hit *hit)
+{
+    double hit_p;
+    t_rgb specular_color;
+    t_vec3 spec;
+
+    hit_p = dot(hit->shadow_ray.direction, hit->norm);
+    spec = mult_vec3(hit->norm, hit_p * 2);
+    spec = sub_vec3(spec, hit->shadow_ray.direction);
+    hit_p = dot(spec, render->prime_ray.direction);
+    specular_color = new_color_rgb(255, 255, 255);
+    specular_color = add_all_light(specular_color, specular_color, scene->light->brightness * hit_p);
+    return (specular_color);
+}
+
+t_rgb final_light(t_rgb ambiant_light, t_rgb diffuse, t_rgb specular)
+{
+    t_rgb final;
+
+    final.r = ambiant_light.r + diffuse.r + specular.r;
+    final.g = ambiant_light.g + diffuse.g + specular.g;
+    final.b = ambiant_light.b + diffuse.b + specular.b;
+    if (final.r > 255)
+        final.r = 255;
+    if (final.g > 255)
+        final.g = 255;
+    if (final.b > 255)
+        final.b = 255;
+    return (final);
+}
+
+t_rgb mix_color(t_rgb a, double d1, t_rgb b, double d2)
+{
+    t_rgb dst;
+
+    dst.r = a.r * d1 + b.r * d2;
+    dst.g = a.g * d1 + b.g * d2;
+    dst.b = a.b * d1 + b.b * d2;
+    if (dst.r > 255)
+        dst.r = 255;
+    if (dst.g > 255)
+        dst.g = 255;
+    if (dst.b > 255)
+        dst.b = 255;
+    return (dst);
+}
+
+bool new_shadow_ray(t_scene *scene, t_hit *hit)
+{
+    t_vec3 light_dir;
+    t_light *new_light;
+    t_ray_view ray;
+    double light_distance;
+
+    new_light = scene->light;
+    light_dir = sub_vec3(new_light->pos, hit->hit);
+    light_distance = vec3_length(light_dir);
+    ray.origin = add_vec3(hit->hit, (t_vec3){0.0001, 0.0001, 0.0001});
+    ray.direction = normalize(light_dir);
+    return (intersect3(&ray, scene->obj, hit, light_distance));
+    /*hit->shadow_ray.origin = hit->hit;
+    hit->shadow_ray.direction = new_normalized(sub_vec3(scene->light->pos, hit->hit));
+    normalize_bis(&hit->shadow_ray.direction);
+    mult_shadow(&hit->shadow_ray.origin, &hit->shadow_ray, 0.01);
+    return (intersect2(&hit->shadow_ray, scene->obj, &render->hit_shadow) && distance(hit->shadow_ray.origin, scene->light->pos) > distance(render->hit_shadow.hit, hit->shadow_ray.origin));*/
+}
+
+bool intersect3(t_ray_view *render, t_obj *obj, t_hit *hit, double light_distance)
+{
+    double min_distance;
+    t_obj *obj_closest;
+    t_hit tmp_hit;
+
+    (void)hit;
+    min_distance = light_distance;
+    tmp_hit.h = 0;
+    obj_closest = NULL;
+    while (obj)
+    {
+        if (new_intersect2(render, obj, &tmp_hit))
+        {
+            if (tmp_hit.h < min_distance)
+            {
+                return (true);
+            }
+        }
+        obj = obj->next;
+    }
+    return (false);
+}
+
+double vec3_length(t_vec3 vec)
+{
+    return (sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
+}
+
+double distance(t_vec3 a, t_vec3 b)
+{
+    double x;
+    double y;
+    double z;
+
+    x = a.x - b.x;
+    y = a.y - b.y;
+    z = a.z - b.z;
+    x = pow(x, 2);
+    y = pow(y, 2);
+    z = pow(z, 2);
+    return (sqrt(x + y + z));
+}
+
+t_vec3 *mult_shadow(t_vec3 *dst, t_ray_view *ray, double t)
+{
+    dst->x = ray->origin.x + t * ray->direction.x;
+    dst->y = ray->origin.y + t * ray->direction.y;
+    dst->z = ray->origin.z + t * ray->direction.z;
+    return (dst);
+}
+
+
+
+t_rgb mult_rgb2(t_rgb a, t_rgb b)
+{
+    return ((t_rgb){a.r * b.r, a.g * b.g, a.b * b.b});
+}
+
+t_rgb mult_rgb(t_rgb ambiant, double intensity)
+{
+    return ((t_rgb){ambiant.r * intensity, ambiant.g * intensity, ambiant.b * intensity});
 }
 
 t_rgb add_all_light(t_rgb color, t_rgb ambiant, float light_ratio)
@@ -332,12 +548,12 @@ t_rgb add_all_light(t_rgb color, t_rgb ambiant, float light_ratio)
     new.r = color.r * ambiant.r * light_ratio;
     new.g = color.g * ambiant.g * light_ratio;
     new.b = color.b * ambiant.b * light_ratio;
-    if (new.r > 1)
-        new.r = 1;
-    if (new.g > 1)
-        new.g = 1;
-    if (new.b > 1)
-        new.b = 1;
+    if (new.r > 255)
+        new.r = 255;
+    if (new.g > 255)
+        new.g = 255;
+    if (new.b > 255)
+        new.b = 255;
     if (new.r < 0)
         new.r = 0;
     if (new.g < 0)
@@ -373,6 +589,48 @@ t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit)
     if (obj_closest)
         hit->col = obj_closest->color;
     return (obj_closest);
+}
+
+
+t_obj *intersect2(t_ray_view *render, t_obj *obj, t_hit *hit)
+{
+    double min_distance;
+    t_obj *obj_closest;
+    t_hit tmp_hit;
+
+    min_distance = INFINITY;
+    tmp_hit.h = 0;
+    obj_closest = NULL;
+    while (obj)
+    {
+        if (new_intersect2(render, obj, &tmp_hit))
+        {
+            if (tmp_hit.h < min_distance)
+            {
+                min_distance = tmp_hit.h;
+                obj_closest = obj;
+                *hit = tmp_hit;
+                //printf("tmp_hit.h: %f\n", tmp_hit.h);
+            }
+        }
+        obj = obj->next;
+    }
+    if (obj_closest)
+        hit->col = obj_closest->color;
+    return (obj_closest);
+}
+
+
+int new_intersect2(t_ray_view *render, t_obj *obj, t_hit *hit)
+{
+    //printf("obj->type: %c\n", obj->type);
+    if (obj->type == 's')
+        return (intersect_sphere(render, &obj->object.sphere, hit));
+    else if (obj->type == 'p')
+        return (intersect_plane(render, &obj->object.plane, hit));
+    /*else if (obj->type == 'c')
+        return (intersect_cylinder(&render->ray, &obj->object.cylinder, *hit));*/
+    return (0);
 }
 
 int new_intersect(t_render *render, t_obj *obj, t_hit *hit)
@@ -696,6 +954,16 @@ t_vec3 mult_color_vec3(t_rgb color, double b)
     mult.x = color.r * b;
     mult.y = color.g * b;
     mult.z = color.b * b;
+    return (mult);
+}
+
+t_rgb mult_color_vec4(t_rgb color, double b)
+{
+    t_rgb mult;
+
+    mult.r = color.r * b;
+    mult.g = color.g * b;
+    mult.b = color.b * b;
     return (mult);
 }
 
