@@ -87,7 +87,8 @@ void	fps_display(t_display *display)
 	static char	*string;
 
 	string = ft_itoa(fps_count(display->fps_counter));
-	mlx_string_put(display->mlx_ptr, display->window, 0, 10, WHITE, string);
+	mlx_string_put(display->mlx_ptr, display->window, 0, 10, STRING_COLOR,
+		string);
 	gc_free(string);
 	string = NULL;
 }

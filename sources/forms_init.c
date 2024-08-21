@@ -42,8 +42,10 @@ int	sphere_init(t_scene *scene, char **args)
 		return (ft_err("Bad arguments number sphere", 0), -1);
 	if (set_vector3D(&sphere->pos, args[1]) == -1)
 		return (ft_err("Bad argument coordinate sphere", 0), -1);
-	if (set_float_value(args[2], &sphere->diameter) == -1)
+	if (set_float_value(args[2], &sphere->radius) == -1)
 		return (ft_err("Bad height sphere", 0), -1);
+	else
+		sphere->radius /= 2;
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
 	add_sphere(scene, sphere);
