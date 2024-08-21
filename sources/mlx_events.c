@@ -36,16 +36,16 @@ int	key_handler(int keycode, t_scene *scene)
 			scene->cam->pos.z -= 0.5;
 			break ;
 		case 65361:
-			scene->cam->pos.x -= MOVING_RATIO;
-			break ;
-		case 65363:
 			scene->cam->pos.x += MOVING_RATIO;
 			break ;
+		case 65363:
+			scene->cam->pos.x -= MOVING_RATIO;
+			break ;
 		case 65362:
-			scene->cam->pos.y += MOVING_RATIO;
+			scene->cam->pos.y -= MOVING_RATIO;
 			break ;
 		case 65364:
-			scene->cam->pos.y -= MOVING_RATIO;
+			scene->cam->pos.y += MOVING_RATIO;
 			break ;
 		case XK_Escape:
 			close_window(&scene->display);

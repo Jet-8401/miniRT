@@ -85,7 +85,7 @@ int	main(int argc, char *argv[])
 	(void) argc;
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
-	if (ft_init_display(&scene.display, 300, 300, "miniRT") == -1)
+	if (ft_init_display(&scene.display, 600, 600, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
 	printf("bpp = %d\n", scene.display.bpp);

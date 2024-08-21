@@ -136,6 +136,8 @@ int				set_vector3D(t_vec3 *vec, char *coordinate);
 int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
 void			vec3D_normalize(t_vec3 *vec);
 double			vec3D_dot(t_vec3 *a, t_vec3 *b);
+void			vec3D_cross(t_vec3 *a, t_vec3 *b, t_vec3 *c);
+void			vec3D_subtract(t_vec3 *a, t_vec3 *b, t_vec3 *c);
 
 // add_list.c
 void			add_sphere(t_scene *scene, t_sphere *object);
