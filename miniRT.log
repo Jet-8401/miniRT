@@ -1,0 +1,23 @@
+Ambient light: 0.200000
+Ambient color: 255 255 255
+Camera position: 0.000000 0.000000 -10.000000
+Camera direction: 0.000000 0.000000 1.000000
+Camera fov: 90
+Light position: -40.000000 0.000000 30.000000
+Light brightness: 0.700000
+Sphere position: -10.000000 5.500000 20.000000
+Sphere diameter: 2.500000
+Sphere color: 255 150 100
+Plane position: -10.000000 5.500000 20.000000
+Plane direction: 0.000000 0.000000 0.000000
+Plane radius: 2.500000
+Plane height: 0.000000
+Plane color: 255 150 100
+Cylinder position: -10.000000 5.500000 20.000000
+Cylinder direction: 0.000000 0.000000 0.000000
+Cylinder radius: 2.500000
+Cylinder height: 0.000000
+Cylinder color: 255 150 100
+bpp = 32
+endian mode: little
+keycode=65307

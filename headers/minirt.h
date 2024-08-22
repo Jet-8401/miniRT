@@ -73,9 +73,7 @@ typedef struct s_scene
 		t_u8b	fov;
 	}	*cam;
 	t_light		*light;
-	t_sphere	*sphere;
-	t_plane		*plane;
-	t_cylinder	*cylinder;
+	t_object	*objects;
 	t_display	display;
 }	t_scene;
 
@@ -140,9 +138,8 @@ void			vec3D_cross(t_vec3 *a, t_vec3 *b, t_vec3 *c);
 void			vec3D_subtract(t_vec3 *a, t_vec3 *b, t_vec3 *c);
 
 // add_list.c
-void			add_sphere(t_scene *scene, t_sphere *object);
-void			add_plane(t_scene *scene, t_plane *object);
-void			add_cylinder(t_scene *scene, t_cylinder *object);
+void			add_object(t_scene *scene, t_object *object);
+
 
 // rgb.c
 int				rgb_to_int(t_rgb *rgb, t_u8b is_big_endian);

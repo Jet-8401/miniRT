@@ -12,6 +12,59 @@
 
 #include "../headers/minirt.h"
 #include <X11/X.h>
+#include <unistd.h>
+
+void print_sphere_list(t_scene *scene)
+{
+	t_object *object;
+
+	object = scene->objects;
+	while (object)
+	{
+		if (object->type != SPEHRE)
+			continue ;
+		printf("Sphere position: %f %f %f\n", object->pos.x, object->pos.y, object->pos.z);
+		printf("Sphere diameter: %f\n", object->radius);
+		printf("Sphere color: %d %d %d\n", object->color.r, object->color.g, object->color.b);
+		object = object->next;
+	}
+}
+
+void print_plane_list(t_scene *scene)
+{
+	t_object *object;
+
+	object = scene->objects;
+	while (object)
+	{
+		if (object->type != PLANE)
+			continue ;
+		printf("Plane position: %f %f %f\n", object->pos.x, object->pos.y, object->pos.z);
+		printf("Plane direction: %f %f %f\n", object->dir.x, object->dir.y, object->dir.z);
+		printf("Plane radius: %f\n", object->radius);
+		printf("Plane height: %f\n", object->height);
+		printf("Plane color: %d %d %d\n", object->color.r, object->color.g, object->color.b);
+		object = object->next;
+	}
+}
+
+void print_cylinder_list(t_scene *scene)
+{
+	t_object *object;
+
+	object = scene->objects;
+	while (object)
+	{
+		if (object->type != CYLINDER)
+			continue ;
+		printf("Cylinder position: %f %f %f\n", object->pos.x, object->pos.y, object->pos.z);
+		printf("Cylinder direction: %f %f %f\n", object->dir.x, object->dir.y, object->dir.z);
+		printf("Cylinder radius: %f\n", object->radius);
+		printf("Cylinder height: %f\n", object->height);
+		printf("Cylinder color: %d %d %d\n", object->color.r, object->color.g, object->color.b);
+		object = object->next;
+	}
+}
 
 void	print_all(t_scene *scene)
 {
@@ -22,60 +75,9 @@ void	print_all(t_scene *scene)
 	printf("Camera fov: %d\n", scene->cam->fov);
 	printf("Light position: %f %f %f\n", scene->light->pos.x, scene->light->pos.y, scene->light->pos.z);
 	printf("Light brightness: %f\n", scene->light->brightness);
-	print_form_list(scene);
-}
-
-void print_form_list(t_scene *scene)
-{
 	print_sphere_list(scene);
 	print_plane_list(scene);
 	print_cylinder_list(scene);
-}
-
-void print_sphere_list(t_scene *scene)
-{
-	t_sphere *sphere;
-
-	sphere = scene->sphere;
-	while (sphere)
-	{
-		printf("Sphere position: %f %f %f\n", sphere->pos.x, sphere->pos.y, sphere->pos.z);
-		printf("Sphere diameter: %f\n", sphere->radius);
-		printf("Sphere color: %d %d %d\n", sphere->color.r, sphere->color.g, sphere->color.b);
-		sphere = sphere->next;
-	}
-}
-
-void print_plane_list(t_scene *scene)
-{
-	t_plane *plane;
-
-	plane = scene->plane;
-	while (plane)
-	{
-		printf("Plane position: %f %f %f\n", plane->pos.x, plane->pos.y, plane->pos.z);
-		printf("Plane direction: %f %f %f\n", plane->dir.x, plane->dir.y, plane->dir.z);
-		printf("Plane diameter: %f\n", plane->diameter);
-		printf("Plane height: %f\n", plane->height);
-		printf("Plane color: %d %d %d\n", plane->color.r, plane->color.g, plane->color.b);
-		plane = plane->next;
-	}
-}
-
-void print_cylinder_list(t_scene *scene)
-{
-	t_cylinder *cylinder;
-
-	cylinder = scene->cylinder;
-	while (cylinder)
-	{
-		printf("Cylinder position: %f %f %f\n", cylinder->pos.x, cylinder->pos.y, cylinder->pos.z);
-		printf("Cylinder direction: %f %f %f\n", cylinder->dir.x, cylinder->dir.y, cylinder->dir.z);
-		printf("Cylinder diameter: %f\n", cylinder->diameter);
-		printf("Cylinder height: %f\n", cylinder->height);
-		printf("Cylinder color: %d %d %d\n", cylinder->color.r, cylinder->color.g, cylinder->color.b);
-		cylinder = cylinder->next;
-	}
 }
 
 int	main(int argc, char *argv[])
@@ -85,7 +87,7 @@ int	main(int argc, char *argv[])
 	(void) argc;
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
-	if (ft_init_display(&scene.display, 600, 600, "miniRT") == -1)
+	if (ft_init_display(&scene.display, 300, 300, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
 	printf("bpp = %d\n", scene.display.bpp);

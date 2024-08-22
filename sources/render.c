@@ -1,96 +1,120 @@
 #include "../headers/minirt.h"
-#include <math.h>
 
-/*
-red = (uint8_t)((x / (float) display->width) * 255);
-green = (uint8_t)((y / (float) display->height) * 255);
-display->data[x + y * display->width] = red << 16 | green << 8;
-*/
-
-t_rgb	*plane_equ(struct s_cam *cam_pos, void *object, t_vec3 *ray)
+float	solve_quadratic(float a, float b, float c)
 {
-	(void) cam_pos;
+	return (-b - sqrt((b * b) - 4.0f * a * c) / (2.0f * a));
+}
+
+float	plane_equ(t_object *object, t_ray *ray)
+{
 	(void) object;
 	(void) ray;
 	return (0);
 }
 
-t_rgb	*sphere_equ(struct s_cam *cam_pos, void *sphere, t_vec3 *ray)
+float	sphere_equ(t_object *sphere, t_ray *ray)
 {
 	float	a, b, c;
+	t_vec3	newOrigin = {0, 0, 0};
 
-	a = vec3D_dot(ray, ray);
-	b = 2.0f * vec3D_dot(&cam_pos->pos, ray);
-    c = vec3D_dot(&cam_pos->pos, &cam_pos->pos) -
-    	(((t_sphere *) sphere)->radius) * (((t_sphere *) sphere)->radius);
+	vec3D_subtract(&ray->origin, &sphere->pos, &newOrigin);
+	a = vec3D_dot(&ray->dir, &ray->dir);
+	b = 2.0f * vec3D_dot(&newOrigin, &ray->dir);
+    c = vec3D_dot(&newOrigin, &newOrigin) - sphere->radius * sphere->radius;
 
 	// quadratic formula discriminant
 	// b² - 4ac
-	if (((b * b) - 4.0f * a * c) > 0.0f)
-		return (&((t_sphere *) sphere)->color);
-	return (NULL);
+	return (solve_quadratic(a, b, c));
 }
 
-// E = eye point
-// D = offset vector
-
-t_rgb	*cylinder_equ(struct s_cam *cam_pos, void *object, t_vec3 *ray)
+float	cylinder_equ(t_object *cy, t_ray *ray)
 {
-	t_cylinder	*cy = (t_cylinder *) object;
-
-	t_vec3		u;
-	t_vec3		v;
+	t_vec3		u = {0, 0, 0};
+	t_vec3		v = {0, 0, 0};
 	double		a, b, c;
 
-	vec3D_cross(ray, &cy->dir, &u);
-	vec3D_subtract(&cy->pos, &cam_pos->pos, &v);
+	vec3D_cross(&ray->dir, &cy->dir, &u);
+	vec3D_subtract(&cy->pos, &ray->origin, &v);
 	vec3D_cross(&v, &cy->dir, &v);
 	a = vec3D_dot(&u, &u);
 	b = 2 * vec3D_dot(&u, &v);
-	c = vec3D_dot(&v, &v) - (cy->diameter / 2);
+	c = vec3D_dot(&v, &v) - (cy->radius);
+
+	double	delta = ((b * b) - 4.0f * a * c);
+	double	t1;
+	t_vec3	phit = {0, 0, 0};
+	t_vec3	nhit = {0, 0, 0};
 
 	/*a = ray->x * ray->x + ray->y * ray->y;
 	b = 2.0f * cam_pos->pos.x * ray->x + 2.0f * cam_pos->pos.y * ray->y;
 	c = cam_pos->pos.x * cam_pos->pos.x + cam_pos->pos.y * cam_pos->pos.y - 1000;*/
-	if (((b * b) - 4.0f * a * c) > 0.0f)
-		return (&cy->color);
-	return (NULL);
+	if (delta > 0.0001f)
+	{
+		t1 = (-b + delta) / (2 * a);
+		phit.x = ray->origin.x + t1 * ray->dir.x;
+		phit.y = ray->origin.y + t1 * ray->dir.y;
+		phit.z = ray->origin.z + t1 * ray->dir.z;
+		vec3D_subtract(&phit, &ray->dir, &v);
+		vec3D_cross(&v, &cy->dir, &nhit);
+		vec3D_cross(&nhit, &cy->dir, &nhit);
+		vec3D_normalize(&nhit);
+		if (vec3D_dot(&nhit, &ray->dir))
+		return (solve_quadratic(a, b, c));
+	}
+	return (0);
 }
 
-t_rgb	*instersect_form(t_scene *scene, t_vec3 *ray)
+t_object	*instersect_forms(t_scene *scene, t_ray *ray)
 {
-	void	*objects[4] = { scene->plane, scene->sphere, scene->cylinder, NULL };
-	t_rgb	*(*equation[4])(struct s_cam *, void *, t_vec3 *) = {
-		&plane_equ, &sphere_equ, &cylinder_equ };
-	int		i;
-	t_rgb	*color;
+	static float	(*equations[3])(t_object *, t_ray *) = {
+		sphere_equ, plane_equ, cylinder_equ
+	};
+	t_object		*obj;
+	t_object		*closest;
+	float			closest_distance;
+	float			distance;
 
-	i = -1;
-	while (objects[++i])
+	obj = scene->objects;
+	closest_distance = 3.402823466e+38F;
+	closest = NULL;
+	while (obj)
 	{
-		color = (equation[i])(scene->cam, objects[i], ray);
-		if (color)
-			return (color);
+		distance = equations[obj->type](obj, ray);
+		if (distance < 0.0f)
+		{
+			obj = obj->next;
+			continue ;
+		}
+		if (distance < closest_distance)
+		{
+			closest_distance = distance;
+			closest = obj;
+		}
+
+		obj = obj->next;
 	}
-	return (NULL);
+	return (closest);
 }
 
 int	render_scene(t_scene *scene)
 {
-	t_vec3	ray;
-	float	scale;
-	t_rgb	*color;
+	t_ray		ray;
+	float		scale;
+	t_object	*closest;
 
-	ray.z = scene->cam->dir.z;
+	ray.origin = scene->cam->pos;
+	ray.dir.z = scene->cam->dir.z;
 	scale = 1.0f / tan((float) scene->cam->fov / 2);
 	for(int y = 0; y < scene->display.height; y++) {
 		for (int x = 0; x < scene->display.width; x++) {
-			ray.x = scale * ((2 * (x + 0.5) / (double) scene->display.width - 1) * scene->display.aspect_ratio);
-            ray.y = scale * (1 - 2 * (y + 0.5) / (double) scene->display.height);
-			color = instersect_form(scene, &ray);
-			if (color)
+			ray.dir.x = scale * (((2 * (x + 0.5) / (double) scene->display.width - 1) * scene->display.aspect_ratio));
+            ray.dir.y = scale * (1 - 2 * (y + 0.5) / (double) scene->display.height);
+			closest = instersect_forms(scene, &ray);
+			if (closest)
+			{
 				scene->display.data[x + y * scene->display.width] =
-					rgb_to_int(color, scene->display.big_endian);
+					rgb_to_int(&closest->color, scene->display.big_endian);
+			}
 			else
 				scene->display.data[x + y * scene->display.width] = 0;
 		}

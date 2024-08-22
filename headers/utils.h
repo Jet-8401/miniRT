@@ -16,6 +16,12 @@
 #include <stdint.h>
 typedef unsigned char	t_u8b;
 
+enum	form {
+	SPEHRE,
+	PLANE,
+	CYLINDER
+};
+
 typedef struct s_vec3
 {
 	double				x;
@@ -30,33 +36,22 @@ typedef struct s_rgb
 	t_u8b				b;
 }						t_rgb;
 
-typedef struct s_sphere
+typedef struct s_ray
 {
-	t_vec3				pos;
-	float				radius;
-	t_rgb				color;
-	struct s_sphere		*next;
-}						t_sphere;
+	t_vec3	origin;
+	t_vec3	dir;
+}	t_ray;
 
-typedef struct s_plane
+typedef struct s_object
 {
-	t_vec3				pos;
-	t_vec3				dir;
-	float				diameter;
-	float				height;
-	t_rgb				color;
-	struct s_plane		*next;
-}						t_plane;
-
-typedef struct s_cylinder
-{
-	t_vec3				pos;
-	t_vec3				dir;
-	float				diameter;
-	float				height;
-	t_rgb				color;
-	struct s_cylinder	*next;
-}						t_cylinder;
+	t_vec3			pos;
+	t_vec3			dir;
+	float			radius;
+	float			height;
+	t_rgb			color;
+	enum form		type;
+	struct s_object *next;
+}	t_object;
 
 // brightness is a ratio between 0 and 1
 typedef struct s_light
