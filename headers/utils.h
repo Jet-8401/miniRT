@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/21 13:32:04 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:01:32 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ typedef struct s_screen
 	double scalar_fov;
 	double scale;
 	double width;
-	t_vec3 pos;
-	t_vec3 px;
+	t_vec3 right;
+	t_vec3 up;
 	t_vec3 py;
 	t_vec3 qx;
 	t_vec3 qy;
@@ -162,6 +162,7 @@ typedef struct s_render
 	int				color_ambiant;
 	t_vec3				pixel_pos;
 	t_obj				*obj_closest;
+	double light_distance;
 	struct s_hit hit_shadow;
 } t_render;
 

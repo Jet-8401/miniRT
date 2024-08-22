@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/21 16:58:54 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/22 12:02:49 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@
 # define ERR_UNKNOWN_ID "unrecognized identifier"
 # define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
 
-# define WIDTH 1280
-# define HEIGHT 720
+# define WIDTH 1920
+# define HEIGHT 1080
 # define EPSILON 1e-6
 #define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
@@ -195,7 +195,7 @@ t_rgb mult_rgb(t_rgb ambiant, double intensity);
 
 t_rgb final_light(t_rgb ambiant_light, t_rgb diffuse, t_rgb specular);
 t_rgb mix_color(t_rgb a, double d1, t_rgb b, double d2);
-bool new_shadow_ray(t_scene *scene, t_hit *hit);
+bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render);
 double distance(t_vec3 a, t_vec3 b);
 t_vec3 *mult_shadow(t_vec3 *dst, t_ray_view *ray, double t);
 t_obj *intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
@@ -207,7 +207,7 @@ t_rgb mult_color_vec4(t_rgb color, double b);
 t_rgb add_rgb(t_rgb a, t_rgb b);
 t_u8b check_data(int n, int min, int max);
 double vec3_cossine(t_vec3 v1, t_vec3 v2);
-bool intersect3(t_ray_view *render, t_obj *obj, t_hit *hit, double light_distance);
+bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene);
 double vec3_length(t_vec3 vec);
 
 // ft_atof.c

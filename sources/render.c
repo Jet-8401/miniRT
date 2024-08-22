@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/21 16:59:22 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/22 15:42:33 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,29 @@
 void init_camera(t_scene *scene)
 {
     t_screen *screen;
+    double new_fov;
 
     screen = gc_calloc(sizeof(t_screen));
     screen->screen_width = WIDTH;
     screen->screen_height = HEIGHT;
     screen->aspect_ratio = (float)WIDTH / (float)HEIGHT;
+    new_fov = scene->cam->fov / 2.0;
     screen->scalar_fov = (scene->cam->fov * M_PI / 180);
-    screen->scale = tan(scene->cam->fov / 2 * M_PI / 180);
+    screen->scale = tan((new_fov * 3.1415926535f) / 180.0f);
+    screen->aspect_ratio = screen->scale / (16.0 / 9.0);
+    screen->right = normalize(merge_vect(scene->cam->dir, (t_vec3){0.0, 1.0, 0.0}));
+    screen->up = normalize(merge_vect(scene->cam->dir, screen->right));
+    screen->right = normalize(merge_vect(scene->cam->dir, screen->up));
     //printf("screen cam.dir: %f %f %f\n", scene->cam.dir.x, scene->cam.dir.y, scene->cam.dir.z);
-    if (fabs(scene->cam->dir.y) > 1.0 - 1e-4)
+    /*if (fabs(scene->cam->dir.y) > 1.0 - 1e-4)
         screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 0, -1.0}, scene->cam->dir)), screen->scale);
     else
         screen->qx = mult_vec3(normalize(merge_vect((t_vec3){0, 1.0, 0}, scene->cam->dir)), screen->scale);
     screen->qy = mult_vec3(normalize(merge_vect(screen->qx, scene->cam->dir)) ,dot_len(screen->qx) * HEIGHT / WIDTH);
     screen->px = mult_vec3(screen->qx, -2.0 / (screen->screen_width - 1));
     screen->py = mult_vec3(screen->qy, -2.0 / (screen->screen_height - 1));
-    screen->pos = add_vec3(add_vec3(scene->cam->pos, scene->cam->dir), add_vec3(screen->qx, screen->qy));
-    cam_dir(scene);
+    screen->pos = add_vec3(add_vec3(scene->cam->pos, scene->cam->dir), add_vec3(screen->qx, screen->qy));*/
+    //cam_dir(scene);
     /*printf("screen.pos a init camera: %f %f %f\n", screen->pos.x, screen->pos.y, screen->pos.z);
     printf("screen.px a init camera: %f %f %f\n", screen->px.x, screen->px.y, screen->px.z);
     printf("screen.py a init camera: %f %f %f\n", screen->py.x, screen->py.y, screen->py.z);
@@ -165,7 +171,10 @@ void	fps_display(t_mlx *display)
 void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
 {
     t_scene *tmp_scene;
-    //t_vec3 coord;
+    t_vec3 coord;
+    t_vec3 vertical;
+    t_vec3 horizontal;
+    t_vec3 res;
 
     tmp_scene = scene;
     prime_ray->origin = new_vector(tmp_scene->cam->pos.x, tmp_scene->cam->pos.y, tmp_scene->cam->pos.z);
@@ -174,9 +183,18 @@ void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
     coord.y = coord.y * 2.0f - 1.0f;
     coord.x *= tmp_scene->screen->aspect_ratio;
     prime_ray->direction = new_vector(coord.x, coord.y, -1.0f);*/
-    prime_ray->direction.x = (2.0 * (x + 0.5) / (float)WIDTH - 1.0) * tmp_scene->screen->aspect_ratio * tmp_scene->screen->scale;
+    coord.x = ((2.0f * x) / WIDTH) - 1;
+    coord.y = ((2.0f * y) / HEIGHT) - 1;
+    coord.z = 0;
+    vertical = mult_vec3(tmp_scene->screen->up, coord.y * tmp_scene->screen->aspect_ratio);
+    horizontal = mult_vec3(tmp_scene->screen->right, coord.x * tmp_scene->screen->scale);
+    res = add_vec3(vertical, horizontal);
+    res = add_vec3(res, scene->cam->dir);
+    res = add_vec3(res, scene->cam->pos);
+    prime_ray->direction = sub_vec3(res, prime_ray->origin);
+    /*prime_ray->direction.x = (2.0 * (x + 0.5) / (float)WIDTH - 1.0) * tmp_scene->screen->aspect_ratio * tmp_scene->screen->scale;
     prime_ray->direction.y = (1.0 - 2.0 * (y + 0.5) / (float)HEIGHT) * tmp_scene->screen->scale;;
-    prime_ray->direction.z = -1.0f;
+    prime_ray->direction.z = -1.0f;*/
     //prime_ray->direction = world_cam(scene->cam_matrix, &prime_ray->direction);
     normalize_bis(&prime_ray->direction);
 }
@@ -320,7 +338,7 @@ t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit)
     (void)render;
     new_light = scene->light;
     final_color = mult_color_vec4(hit->col, scene->ambient->light_ratio);
-    if (new_light && !new_shadow_ray(scene, hit))
+    if (new_light && !new_shadow_ray(scene, hit, render))
         final_color = add_rgb(final_color, diffuse_light(new_light, hit, new_light->brightness));
     return (final_color);
     //double d;
@@ -453,19 +471,18 @@ t_rgb mix_color(t_rgb a, double d1, t_rgb b, double d2)
     return (dst);
 }
 
-bool new_shadow_ray(t_scene *scene, t_hit *hit)
+bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render)
 {
     t_vec3 light_dir;
     t_light *new_light;
     t_ray_view ray;
-    double light_distance;
 
     new_light = scene->light;
     light_dir = sub_vec3(new_light->pos, hit->hit);
-    light_distance = vec3_length(light_dir);
-    ray.origin = add_vec3(hit->hit, (t_vec3){0.0001, 0.0001, 0.0001});
+    render->light_distance = vec3_length(light_dir);
+    ray.origin = hit->hit;
     ray.direction = normalize(light_dir);
-    return (intersect3(&ray, scene->obj, hit, light_distance));
+    return (intersect3(&ray, render, hit, scene));
     /*hit->shadow_ray.origin = hit->hit;
     hit->shadow_ray.direction = new_normalized(sub_vec3(scene->light->pos, hit->hit));
     normalize_bis(&hit->shadow_ray.direction);
@@ -473,25 +490,25 @@ bool new_shadow_ray(t_scene *scene, t_hit *hit)
     return (intersect2(&hit->shadow_ray, scene->obj, &render->hit_shadow) && distance(hit->shadow_ray.origin, scene->light->pos) > distance(render->hit_shadow.hit, hit->shadow_ray.origin));*/
 }
 
-bool intersect3(t_ray_view *render, t_obj *obj, t_hit *hit, double light_distance)
+bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene)
 {
-    double min_distance;
-    t_obj *obj_closest;
+    double max_distance;
+    t_obj *shape;
     t_hit tmp_hit;
+    t_obj *obj;
 
     (void)hit;
-    min_distance = light_distance;
-    tmp_hit.h = 0;
-    obj_closest = NULL;
+    max_distance = render->light_distance;
+    tmp_hit.h = INFINITY;
+    obj = scene->obj;
+    shape = NULL;
     while (obj)
     {
-        if (new_intersect2(render, obj, &tmp_hit))
-        {
-            if (tmp_hit.h < min_distance)
-            {
-                return (true);
-            }
-        }
+        shape = obj;
+        if (shape->diameter == render->obj_closest->diameter)
+            continue;
+        if (new_intersect2(ray, shape, &tmp_hit) && tmp_hit.h < max_distance)
+            return (true);
         obj = obj->next;
     }
     return (false);
@@ -534,7 +551,11 @@ t_rgb mult_rgb2(t_rgb a, t_rgb b)
 
 t_rgb mult_rgb(t_rgb ambiant, double intensity)
 {
-    return ((t_rgb){ambiant.r * intensity, ambiant.g * intensity, ambiant.b * intensity});
+    t_rgb new;
+    new.r = check_data(ambiant.r * intensity, 0, 255);
+    new.g = check_data(ambiant.g * intensity, 0, 255);
+    new.b = check_data(ambiant.b * intensity, 0, 255);
+    return (new);
 }
 
 t_rgb add_all_light(t_rgb color, t_rgb ambiant, float light_ratio)
@@ -752,6 +773,7 @@ bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit)
         hit->norm = sub_vec3(hit->hit, sphere->pos);
         normalize_bis(&hit->norm);
         hit->h = t0;
+        hit->col = sphere->color;
         return (true);
     }
     return (false);
@@ -961,9 +983,9 @@ t_rgb mult_color_vec4(t_rgb color, double b)
 {
     t_rgb mult;
 
-    mult.r = color.r * b;
-    mult.g = color.g * b;
-    mult.b = color.b * b;
+    mult.r = check_data(color.r * b, 0, 255);
+    mult.g = check_data(color.g * b, 0, 255);
+    mult.b = check_data(color.b * b, 0, 255);
     return (mult);
 }
 
@@ -1036,7 +1058,7 @@ t_vec3 merge_vect(t_vec3 a, t_vec3 b)
     t_vec3 merged;
 
     merged.x = (a.y * b.z) - (a.z * b.y);
-    merged.y = (a.x * b.z) - (a.z * b.x);
+    merged.y = (a.z * b.x) - (a.x * b.z);
     merged.z = (a.x * b.y) - (a.y * b.x);
     return (merged);
 }
