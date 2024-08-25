@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/22 12:02:49 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/25 14:39:50 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,9 +142,9 @@ int				init_mlx_all(t_scene *scene);
 int				init_mlx_window(t_mlx *mlx);
 void			destroy_mlx(t_mlx *mlx);
 void init_objects(t_scene *scene, char type);
-void add_sphere_obj(t_sphere *sphere, char type, t_obj **object);
-void add_plane_obj(t_plane *plane, char type, t_obj **object);
-void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object);
+void add_sphere_obj(t_sphere *sphere, char type, t_obj **object, int *i);
+void add_plane_obj(t_plane *plane, char type, t_obj **object, int *i);
+void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object, int *i);
 void print_all_objects(t_obj *obj);
 void init_objects_all(t_scene *scene);
 
@@ -202,7 +202,7 @@ t_obj *intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
 int new_intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
 t_rgb specular_light(t_scene *scene, t_render *render, t_hit *hit);
 t_rgb new_color_rgb(double r, double g, double b);
-t_rgb diffuse_light(t_light *light, t_hit *hit, double ratio);
+t_rgb diffuse_light(t_light *light, t_hit *hit, t_scene *scene, t_render *render);
 t_rgb mult_color_vec4(t_rgb color, double b);
 t_rgb add_rgb(t_rgb a, t_rgb b);
 t_u8b check_data(int n, int min, int max);

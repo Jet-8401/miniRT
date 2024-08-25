@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 14:31:08 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/20 17:17:47 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/25 15:13:36 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,15 @@ int init_mlx_all(t_scene *scene)
 
 void init_objects_all(t_scene *scene)
 {
+    int i;
     scene->obj = NULL;
-    add_plane_obj(scene->plane, 'p', &scene->obj);
-    add_sphere_obj(scene->sphere, 's', &scene->obj);
-    add_cylinder_obj(scene->cylinder, 'c', &scene->obj);
+    i = 0;
+    add_plane_obj(scene->plane, 'p', &scene->obj, &i);
+    printf("i: %d\n", i);
+    add_sphere_obj(scene->sphere, 's', &scene->obj, &i);
+    printf("i: %d\n", i);
+    add_cylinder_obj(scene->cylinder, 'c', &scene->obj, &i);
+    printf("i: %d\n", i);
 }
 
 
@@ -52,6 +57,7 @@ void print_all_objects(t_obj *obj)
 {
     while (obj)
     {
+        printf("id: %d\n", obj->id);
         printf("type: %c\n", obj->type);
         printf("pos: %f %f %f\n", obj->pos.x, obj->pos.y, obj->pos.z);
         printf("dir: %f %f %f\n", obj->dir.x, obj->dir.y, obj->dir.z);
@@ -100,7 +106,7 @@ void destroy_mlx(t_mlx *mlx)
     scene->obj = obj;
 }*/
 
-void add_plane_obj(t_plane *plane, char type, t_obj **object)
+void add_plane_obj(t_plane *plane, char type, t_obj **object, int *i)
 {
      t_obj *tmp;
 
@@ -109,6 +115,7 @@ void add_plane_obj(t_plane *plane, char type, t_obj **object)
         tmp = gc_calloc(sizeof(t_obj));
         if (!tmp)
             return ;
+        tmp->id = *i;
         tmp->pos = plane->pos;
         tmp->dir = plane->dir;
         tmp->color = plane->color;
@@ -118,11 +125,12 @@ void add_plane_obj(t_plane *plane, char type, t_obj **object)
         tmp->object.plane = *plane;
         tmp->next = *object;
         *object = tmp;
+        (*i)++;
         plane = plane->next;
     }
 }
 
-void add_sphere_obj(t_sphere *sphere, char type, t_obj **object)
+void add_sphere_obj(t_sphere *sphere, char type, t_obj **object, int *i)
 {
     t_obj *tmp;
 
@@ -131,6 +139,7 @@ void add_sphere_obj(t_sphere *sphere, char type, t_obj **object)
         tmp = gc_calloc(sizeof(t_obj));
         if (!tmp)
             return ;
+        tmp->id = *i;
         tmp->pos = sphere->pos;
         tmp->dir = (t_vec3){0, 0, 0};
         tmp->color = sphere->color;
@@ -140,11 +149,12 @@ void add_sphere_obj(t_sphere *sphere, char type, t_obj **object)
         tmp->object.sphere = *sphere;
         tmp->next = *object;
         *object = tmp;
+        (*i)++;
         sphere = sphere->next;
     }
 }
 
-void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object)
+void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object, int *i)
 {
     t_obj *tmp;
 
@@ -153,6 +163,7 @@ void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object)
         tmp = gc_calloc(sizeof(t_obj));
         if (!tmp)
             return ;
+        tmp->id = *i;
         tmp->pos = cylinder->pos;
         tmp->dir = cylinder->dir;
         tmp->color = cylinder->color;
@@ -162,6 +173,7 @@ void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object)
         tmp->object.cylinder = *cylinder;
         tmp->next = *object;
         *object = tmp;
+        (*i)++;
         cylinder = cylinder->next;
     }
 }

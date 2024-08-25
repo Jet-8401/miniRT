@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/22 14:01:32 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/25 14:37:59 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_object_union
 
 typedef struct s_obj
 {
+	int					id;
 	t_vec3				pos;
 	t_vec3				dir;
 	t_object_union 		object;
