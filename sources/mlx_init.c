@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 14:31:08 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/25 15:13:36 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/26 12:09:16 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void init_objects_all(t_scene *scene)
 {
     int i;
     scene->obj = NULL;
-    i = 0;
+    i = 1;
     add_plane_obj(scene->plane, 'p', &scene->obj, &i);
     printf("i: %d\n", i);
     add_sphere_obj(scene->sphere, 's', &scene->obj, &i);

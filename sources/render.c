@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/25 15:30:13 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/26 13:17:58 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ void pixel_draw(t_scene *scene, t_render *render)
             //render->prime_ray.direction = normalize(sub_vec3(render->pixel_pos, render->prime_ray.origin));
             //printf("ray.direction: %f %f %f\n", render->prime_ray.direction.x, render->prime_ray.direction.y, render->prime_ray.direction.z);
             render->color_ambiant = color_rgb(ambiant_color(render, scene, 0));
-            if (render->color_ambiant != 0)
-                printf("color_ambiant: %d\n", render->color_ambiant);
+            /*if (render->color_ambiant != 0)
+                printf("color_ambiant: %d\n", render->color_ambiant);*/
             new_mlx_pixel_put(scene->mlx, x, y, render->color_ambiant);
             x++;
         }
@@ -312,12 +312,12 @@ t_rgb ambiant_color(t_render *render, t_scene *scene, int depth)
     //max_ray = 5;
     ft_memset(&color, 0, sizeof(t_rgb));
     render->obj_closest = intersect(render, scene->obj, &hit);
-    if (render->obj_closest)
-        printf("closest obj: %c\n", render->obj_closest->type);
+    /*if (render->obj_closest)
+        printf("closest obj: %c\n", render->obj_closest->type);*/
     //else
         //printf("closest obj: NULL\n");
     //o = render->obj_closest;
-    printf("render->obj_closest->id: %d\n", render->obj_closest->id);
+    //printf("render->obj_closest->id: %d\n", render->obj_closest->id);
     if (!render->obj_closest)
         return (color);
     color = light_handler(scene, render, &hit);
@@ -333,8 +333,9 @@ t_rgb ambiant_color(t_render *render, t_scene *scene, int depth)
 
 t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit)
 {
-    /*t_rgb final_color;
-    t_light *new_light;
+    t_rgb final_color;
+    final_color = mult_color_vec4(hit->col, scene->ambient->light_ratio);
+    /*t_light *new_light;
 
     (void)render;
     new_light = scene->light;
@@ -364,8 +365,9 @@ t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit)
     //printf("Je passe ici light_handler 2\n");
     color = vect_to_rgb(vec3_ambiant(hit->col, (t_rgb){255, 255, 255}, d * scene->light->brightness));
     if (new_shadow_ray(scene, hit, render) == true)
-        color = mult_rgb(color, 0.5);
-    printf("Je passe ici light_handler\n");
+        color = mult_rgb(color, 0.2);
+    //printf("Je passe ici light_handler\n");
+    color = add_rgb(final_color, color);
     return (color);
     /*if (!in_shadow)
         diffuse = mix_color(diffuse, 1, diffuse_light(scene, render, hit), 1);
@@ -518,21 +520,21 @@ bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene)
     max_distance = render->light_distance;
     tmp_hit.h = INFINITY;
     obj = scene->obj;
-    //printf("Je passe ici\n");
     while (obj)
     {
-        //printf("obj->id: %d\n", obj->id);
-        //printf("render->obj_closest->id: %d\n", render->obj_closest->id);
-        /*if (obj->id == render->obj_closest->id)
-            continue;*/
-        if (obj->id != render->obj_closest->id && new_intersect2(ray, obj, &tmp_hit) && tmp_hit.h < max_distance)
-        {
-            //printf("Je passe ici 1\n");
-            return (true);
+        if (obj->id != render->obj_closest->id)
+        {        
+            if(new_intersect2(ray, obj, &tmp_hit) && tmp_hit.h < max_distance && tmp_hit.h > 0.0f)
+            {
+                printf("obj ID = %d\n", obj->id);
+                printf("closest obj ID = %d\n", render->obj_closest->id);
+                printf("tmp_hit h = %f\n", tmp_hit.h);
+                printf("max distance = %f\n", max_distance);
+                return (true);
+            }
         }
         obj = obj->next;
     }
-    //printf("Je passe ici 2\n");
     return (false);
 }
 
