@@ -8,10 +8,18 @@ float	solve_quadratic(float a, float b, float c)
 	return (-b - sqrt((b * b) - 4.0f * a * c) / (2.0f * a));
 }
 
-float	plane_equ(t_object *object, t_ray *ray)
+// t = -X|V / D|V
+float	plane_equ(t_object *plane, t_ray *ray)
 {
-	(void) object;
-	(void) ray;
+	float	denominator;
+	t_vec3	p0l0 = {0, 0, 0};
+
+	denominator = vec3D_dot(&plane->dir, &ray->dir);
+	if (denominator > 0.0f)
+	{
+		vec3D_subtract(&plane->pos, &ray->origin, &p0l0);
+		return (vec3D_dot(&p0l0, &plane->dir) / denominator);
+	}
 	return (0);
 }
 
@@ -64,7 +72,7 @@ float	cylinder_equ(t_object *cy, t_ray *ray)
 	return (solve_quadratic(a, b, c));
 }
 
-t_object	*instersect_forms(t_scene *scene, t_ray *ray, t_form_hit)
+t_object	*instersect_forms(t_scene *scene, t_ray *ray)
 {
 	static float	(*equations[3])(t_object *, t_ray *) = {
 		sphere_equ, plane_equ, cylinder_equ
