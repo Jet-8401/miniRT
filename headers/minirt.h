@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/25 14:39:50 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/29 22:52:44 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,6 @@
 #define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
 
-// Returns the maximum between a and b
-# define MAX(a, b)	((a) * (a > b) + (b) * (b > a))
-// Returns the minimum between a and b
-# define MIN(a, b)	((a) * (a < b) + (b) * (b < a))
-// Returns the absolute value of x
-# define ABS(x) 	((x) * (x > 0) - (x) * (x < 0))
-
 typedef struct s_scene
 {
 	struct s_ambient
@@ -69,7 +62,6 @@ typedef struct s_scene
 	t_mlx		*mlx;
 	t_screen	*screen;
 	t_obj		*obj;
-	double cam_matrix[4][4];
 }	t_scene;
 
 /******************************************************************************\
@@ -109,7 +101,7 @@ int				check_value(char *number, bool have_floating_point);
 int				check_numbers_value(char **numbers, bool have_floating_point);
 int ft_check_scene(t_scene *scene);
 
-void init_pointer_objects(t_scene *scene); // TO DELETE AFTER TESTING IF OBJECT ARE NOT ADDING TO LIST
+void init_pointer_objects(t_scene *scene); 
 
 // props_init.c
 int				ambient_init(t_scene *scene, char **args);
@@ -153,62 +145,37 @@ void init_objects_all(t_scene *scene);
 void init_camera(t_scene *scene);
 void render_scene(t_scene *scene);
 void pixel_draw(t_scene *scene, t_render *render);
-double ft_rand(void);
-int new_rgb(int r, int g, int b);
 int color_rgb(t_rgb color);
 void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color);
 t_rgb ambiant_color(t_render *render, t_scene *scene, int depth);
 t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit);
 int new_intersect(t_render *render, t_obj *obj, t_hit *hit);
-t_vec3 new_color(t_scene *scene, t_hit hit, t_vec3 light_dir);
-t_vec3 share_light(t_hit hit, t_light *light, double h);
-t_vec3 add_color(t_vec3 a, t_vec3 b);
-double final_shadow(t_vec3 in);
-int in_scene(t_vec3 ray, t_vec3 norm);
 bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit);
 bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit *hit);
-bool intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit hit);
 t_vec3 vec3_ambiant(t_rgb col, t_rgb color, float light_ratio);
 t_vec3 add_vec3(t_vec3 a, t_vec3 b);
-t_vec3 mult_color_vec3(t_rgb color, double b);
 t_vec3 mult_vec3(t_vec3 a, double b);
-t_vec3 mult_vec3_comb(double a_1, t_vec3 a, double b_1, t_vec3 b);
 t_vec3 sub_vec3(t_vec3 a, t_vec3 b);
 double dot(t_vec3 a, t_vec3 b);
-double dot_len(t_vec3 a);
 t_vec3 normalize(t_vec3 new);
 t_vec3 *normalize_bis(t_vec3 *new);
 t_vec3 merge_vect(t_vec3 a, t_vec3 b);
-t_vec3 new_vector(double x, double y, double z);
 void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y);
-void cam_dir(t_scene *scene);
 t_vec3 new_vector(double x, double y, double z);
-t_vec3 world_cam(double cam_matrix[4][4], t_vec3 *direction);
 t_rgb vect_to_rgb(t_vec3 vec);
 t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit);
 t_vec3 new_normalized(t_vec3 new);
-t_rgb add_all_light(t_rgb color, t_rgb ambiant, float light_ratio);
-t_rgb mult_rgb2(t_rgb a, t_rgb b);
 t_rgb mult_rgb(t_rgb ambiant, double intensity);
 
-/* TEST  !!!!*/
 
-t_rgb final_light(t_rgb ambiant_light, t_rgb diffuse, t_rgb specular);
-t_rgb mix_color(t_rgb a, double d1, t_rgb b, double d2);
 bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render);
-double distance(t_vec3 a, t_vec3 b);
-t_vec3 *mult_shadow(t_vec3 *dst, t_ray_view *ray, double t);
-t_obj *intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
 int new_intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
-t_rgb specular_light(t_scene *scene, t_render *render, t_hit *hit);
-t_rgb new_color_rgb(double r, double g, double b);
-t_rgb diffuse_light(t_light *light, t_hit *hit, t_scene *scene, t_render *render);
 t_rgb mult_color_vec4(t_rgb color, double b);
 t_rgb add_rgb(t_rgb a, t_rgb b);
 t_u8b check_data(int n, int min, int max);
-double vec3_cossine(t_vec3 v1, t_vec3 v2);
 bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene);
 double vec3_length(t_vec3 vec);
+
 
 // ft_atof.c
 double			ft_atof(char *str);

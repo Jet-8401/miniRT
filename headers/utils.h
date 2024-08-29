@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/25 14:37:59 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/29 22:46:39 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_cylinder
 	float				diameter;
 	float				height;
 	t_rgb				color;
+	double				radius;
 	struct s_cylinder	*next;
 }						t_cylinder;
 
@@ -83,9 +84,6 @@ typedef struct s_screen
 	double width;
 	t_vec3 right;
 	t_vec3 up;
-	t_vec3 py;
-	t_vec3 qx;
-	t_vec3 qy;
 } t_screen;
 
 typedef struct s_fpscounter
@@ -150,22 +148,18 @@ typedef struct s_hit
 	t_rgb col;
 	t_vec3 hit;
 	t_vec3 norm;
-	t_vec3 closest_hit;
-	t_ray_view shadow_ray;
 } t_hit;
 
 typedef struct s_render
 {
 	t_screen			screen;
-	double				a;
-	double				b;
 	t_ray_view			prime_ray;
 	int				color_ambiant;
-	t_vec3				pixel_pos;
 	t_obj				*obj_closest;
 	double light_distance;
-	struct s_hit hit_shadow;
 } t_render;
+
+
 
 
 
