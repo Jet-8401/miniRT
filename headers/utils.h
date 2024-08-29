@@ -53,6 +53,13 @@ typedef struct s_object
 	struct s_object *next;
 }	t_object;
 
+typedef struct s_form_hit
+{
+	t_rgb	*color;
+	t_vec3	hit;	// hit distance
+	double	t;		// scalar
+}	t_form_hit;
+
 // brightness is a ratio between 0 and 1
 typedef struct s_light
 {

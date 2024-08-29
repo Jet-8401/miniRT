@@ -100,6 +100,7 @@ int	cylinder_init(t_scene *scene, char **args)
 	if (set_rgb(args[5], &cylinder->color) == -1)
 		return (ft_err("Bad rgb cylinder", 0), -1);
 	add_object(scene, cylinder);
+	vec3D_normalize(&cylinder->dir);
 	cylinder->type = CYLINDER;
 	// if (add_cylinder_value(scene, args) == -1)
 	// return (ft_err("wrong cylinder values", 0), -1);

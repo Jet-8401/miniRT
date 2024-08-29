@@ -1,5 +1,8 @@
 #include "../headers/minirt.h"
 
+// quadratic formula
+// -b - sqrt((b * b) - 4.0f * a * c) / (2.0f * a)
+
 float	solve_quadratic(float a, float b, float c)
 {
 	return (-b - sqrt((b * b) - 4.0f * a * c) / (2.0f * a));
@@ -27,44 +30,41 @@ float	sphere_equ(t_object *sphere, t_ray *ray)
 	return (solve_quadratic(a, b, c));
 }
 
+// square(x-c-(d.(x-c)*d)-square(r) = 0
+
+// P - C = D*t + X
+// P=center
+// O=ray origin
+// D=ray direction
+// X=O - C
+// V is a unit length vector that determines cylinder's axis
+//	a   = D|D - (D|V)^2
+//	b/2 = D|X - (D|V)*(X|V)
+//	c   = X|X - (X|V)^2 - r*r
 float	cylinder_equ(t_object *cy, t_ray *ray)
 {
-	t_vec3		u = {0, 0, 0};
-	t_vec3		v = {0, 0, 0};
-	double		a, b, c;
+	float	a, b, c;
+	t_vec3	X = {0, 0, 0};
+	t_vec3	C = {
+		cy->pos.x - cy->height / 2 * ray->dir.x,
+		cy->pos.y - cy->height / 2 * ray->dir.y,
+		cy->pos.z - cy->height / 2 * ray->dir.z
+	};
 
-	vec3D_cross(&ray->dir, &cy->dir, &u);
-	vec3D_subtract(&cy->pos, &ray->origin, &v);
-	vec3D_cross(&v, &cy->dir, &v);
-	a = vec3D_dot(&u, &u);
-	b = 2 * vec3D_dot(&u, &v);
-	c = vec3D_dot(&v, &v) - (cy->radius);
+	// cap1 = center - height/2 * Normal Vector
+	vec3D_subtract(&ray->origin, &C, &X);
 
-	double	delta = ((b * b) - 4.0f * a * c);
-	double	t1;
-	t_vec3	phit = {0, 0, 0};
-	t_vec3	nhit = {0, 0, 0};
+	a = vec3D_dot(&ray->dir, &ray->dir) - pow(vec3D_dot(&ray->dir, &cy->dir), 2);
+	b = vec3D_dot(&ray->dir, &X) -
+		(vec3D_dot(&ray->dir, &cy->dir) * vec3D_dot(&X, &cy->dir));
+	b *= 2;
+	c = vec3D_dot(&X, &X) - pow(vec3D_dot(&X, &cy->dir), 2) -
+		(cy->radius * cy->radius);
 
-	/*a = ray->x * ray->x + ray->y * ray->y;
-	b = 2.0f * cam_pos->pos.x * ray->x + 2.0f * cam_pos->pos.y * ray->y;
-	c = cam_pos->pos.x * cam_pos->pos.x + cam_pos->pos.y * cam_pos->pos.y - 1000;*/
-	if (delta > 0.0001f)
-	{
-		t1 = (-b + delta) / (2 * a);
-		phit.x = ray->origin.x + t1 * ray->dir.x;
-		phit.y = ray->origin.y + t1 * ray->dir.y;
-		phit.z = ray->origin.z + t1 * ray->dir.z;
-		vec3D_subtract(&phit, &ray->dir, &v);
-		vec3D_cross(&v, &cy->dir, &nhit);
-		vec3D_cross(&nhit, &cy->dir, &nhit);
-		vec3D_normalize(&nhit);
-		if (vec3D_dot(&nhit, &ray->dir))
-		return (solve_quadratic(a, b, c));
-	}
-	return (0);
+	return (solve_quadratic(a, b, c));
 }
 
-t_object	*instersect_forms(t_scene *scene, t_ray *ray)
+t_object	*instersect_forms(t_scene *scene, t_ray *ray, t_form_hit)
 {
 	static float	(*equations[3])(t_object *, t_ray *) = {
 		sphere_equ, plane_equ, cylinder_equ
@@ -99,16 +99,14 @@ t_object	*instersect_forms(t_scene *scene, t_ray *ray)
 int	render_scene(t_scene *scene)
 {
 	t_ray		ray;
-	float		scale;
 	t_object	*closest;
 
 	ray.origin = scene->cam->pos;
 	ray.dir.z = scene->cam->dir.z;
-	scale = 1.0f / tan((float) scene->cam->fov / 2);
 	for(int y = 0; y < scene->display.height; y++) {
 		for (int x = 0; x < scene->display.width; x++) {
-			ray.dir.x = scale * (((2 * (x + 0.5) / (double) scene->display.width - 1) * scene->display.aspect_ratio));
-            ray.dir.y = scale * (1 - 2 * (y + 0.5) / (double) scene->display.height);
+			ray.dir.x = 2 * (x + 0.5) / (double) scene->display.width - 1;
+            ray.dir.y = 1 - 2 * (y + 0.5) / (double) scene->display.height;
 			closest = instersect_forms(scene, &ray);
 			if (closest)
 			{
@@ -125,3 +123,6 @@ int	render_scene(t_scene *scene)
 	render_time_display(&scene->display);
 	return (0);
 }
+
+// https://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20ray
+// tracing%20shapes.htm
