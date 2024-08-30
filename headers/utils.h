@@ -6,14 +6,15 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 03:34:08 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/29 22:46:39 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 
-#include <stdint.h>
+# include <stdint.h>
+
 typedef unsigned char	t_u8b;
 
 enum	form {
@@ -56,8 +57,9 @@ typedef struct s_object
 typedef struct s_form_hit
 {
 	t_rgb	*color;
+	t_vec3	norm;
 	t_vec3	hit;	// hit distance
-	double	t;		// scalar
+	float	t;		// scalar
 }	t_form_hit;
 
 // brightness is a ratio between 0 and 1
@@ -82,5 +84,46 @@ typedef struct s_fpscounter
 	uint64_t	last_tick;
 	uint64_t	total;
 }	t_fpscounter;
+
+typedef struct s_image
+{
+	void				*img;
+	char				*addr;
+	int					bpp;
+	int					line_len;
+	int					endian;
+}						t_image;
+
+typedef struct s_mlx
+{
+	void				*mlx;
+	void				*win;
+	t_image				img;
+	t_fpscounter 		*fps_counter;
+}						t_mlx;
+
+
+typedef struct s_ray_view
+{
+	t_vec3				origin;
+	t_vec3				direction;
+} t_ray_view;
+
+typedef struct s_hit
+{
+	double	h;
+	t_rgb	col;
+	t_vec3	hit;
+	t_vec3	norm;
+} t_hit;
+
+typedef struct s_render
+{
+	t_screen	screen;
+	t_ray_view	prime_ray;
+	int			color_ambiant;
+	t_object	*obj_closest;
+	double		light_distance;
+} t_render;
 
 #endif

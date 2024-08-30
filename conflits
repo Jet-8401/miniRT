@@ -1,0 +1,37 @@
+CONFLICT (content): Merge conflict in headers/minirt.h
+Auto-merging headers/utils.h
+CONFLICT (content): Merge conflict in headers/utils.h
+Auto-merging scenes/new.rt
+CONFLICT (content): Merge conflict in scenes/new.rt
+Auto-merging scenes/sample.rt
+CONFLICT (content): Merge conflict in scenes/sample.rt
+Auto-merging sources/add_list.c
+CONFLICT (content): Merge conflict in sources/add_list.c
+Auto-merging sources/forms_init.c
+Auto-merging sources/minirt.c
+CONFLICT (content): Merge conflict in sources/minirt.c
+Auto-merging sources/parsing.c
+CONFLICT (content): Merge conflict in sources/parsing.c
+Auto-merging sources/props_init.c
+CONFLICT (content): Merge conflict in sources/props_init.c
+Auto-merging sources/render.c
+CONFLICT (add/add): Merge conflict in sources/render.c
+Automatic merge failed; fix conflicts and then commit the result.
+
+gere toute les lights
+color = light_handler(scene, render, &hit);
+
+typedef struct s_hit
+{
+	double	h;		// scalar
+	t_rgb	col;	// color
+	t_vec3	hit;	// hit position
+	t_vec3	norm;
+} t_hit;
+
+étape 1:
+Faire en sorte d'intercèpter l'objet le plus proche
+étape 2:
+Merge la lumière d'antho
+étape 3:
+Optimiser ce bordel

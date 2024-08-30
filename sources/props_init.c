@@ -15,7 +15,7 @@
 int	ambient_init(t_scene *scene, char **args)
 {
 	if (scene->ambient)
-		return (ft_err("You cannot provide two ambient lighting", 0), -1);
+		return (ft_err("You cannot provide two ambient lightning", 0), -1);
 	scene->ambient = gc_calloc(sizeof(struct s_ambient));
 	if (!scene->ambient)
 		return (-1);

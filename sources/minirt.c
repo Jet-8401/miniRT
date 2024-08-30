@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
+
 #include <X11/X.h>
 #include <unistd.h>
 
@@ -98,6 +99,7 @@ int	main(int argc, char *argv[])
 		return (gc_dump(NULL), 0);
 	if (ft_init_display(&scene.display, 800, 800, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
+
 	print_all(&scene);
 	printf("bpp = %d\n", scene.display.bpp);
 	printf("endian mode: %s\n", scene.display.big_endian ? "big" : "little");

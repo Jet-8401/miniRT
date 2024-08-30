@@ -19,7 +19,7 @@ int	ft_init_display(t_display *display, int size_x, int size_y, char *title)
 		return (ft_err(ERR_MLX_PTR, 0), -1);
 	display->height = size_y;
 	display->width = size_x;
-	display->aspect_ratio = size_y / size_x;
+	display->aspect_ratio = (double) size_y / size_x;
 	display->window = mlx_new_window(display->mlx_ptr, size_x, size_y, title);
 	if (!display->window)
 		return (ft_err(ERR_MLX_WINDOW, 0), -1);
