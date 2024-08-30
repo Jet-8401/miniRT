@@ -29,12 +29,11 @@ float	sphere_equ(t_object *sphere, t_ray *ray)
 	t_vec3	newOrigin = {0, 0, 0};
 
 	vec3D_subtract(&ray->origin, &sphere->pos, &newOrigin);
+
 	a = vec3D_dot(&ray->dir, &ray->dir);
 	b = 2.0f * vec3D_dot(&newOrigin, &ray->dir);
     c = vec3D_dot(&newOrigin, &newOrigin) - sphere->radius * sphere->radius;
 
-	// quadratic formula discriminant
-	// b² - 4ac
 	return (solve_quadratic(a, b, c));
 }
 
