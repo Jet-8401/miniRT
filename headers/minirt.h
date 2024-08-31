@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/29 22:52:44 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/31 14:49:19 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,11 +169,10 @@ t_rgb mult_rgb(t_rgb ambiant, double intensity);
 
 
 bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render);
-int new_intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
 t_rgb mult_color_vec4(t_rgb color, double b);
 t_rgb add_rgb(t_rgb a, t_rgb b);
 t_u8b check_data(int n, int min, int max);
-bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene);
+bool intersect3(t_render *render, t_scene *scene);
 double vec3_length(t_vec3 vec);
 
 

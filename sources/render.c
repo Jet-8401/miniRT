@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/29 22:53:33 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/08/31 14:49:32 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,16 +273,16 @@ bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render)
     render->light_distance = vec3_length(light_dir);
     ray.origin = hit->hit;
     ray.direction = new_normalized(light_dir);
-    return (intersect3(&ray, render, hit, scene));
+    render->prime_ray = ray;
+    return (intersect3(render, scene));
 }
 
-bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene)
+bool intersect3(t_render *render, t_scene *scene)
 {
     double max_distance;
     t_hit tmp_hit;
     t_obj *obj;
 
-    (void)hit;
     max_distance = render->light_distance;
     tmp_hit.h = INFINITY;
     obj = scene->obj;
@@ -290,7 +290,7 @@ bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene)
     {
         if (obj->id != render->obj_closest->id)
         {        
-            if(new_intersect2(ray, obj, &tmp_hit) && tmp_hit.h < max_distance && tmp_hit.h > 0.0f)
+            if(new_intersect(render, obj, &tmp_hit) && tmp_hit.h < max_distance && tmp_hit.h > 0.0f)
                 return (true);
         }
         obj = obj->next;
@@ -342,17 +342,6 @@ t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit)
     return (obj_closest);
 }
 
-
-int new_intersect2(t_ray_view *render, t_obj *obj, t_hit *hit)
-{
-    if (obj->type == 's')
-        return (intersect_sphere(render, &obj->object.sphere, hit));
-    else if (obj->type == 'p')
-        return (intersect_plane(render, &obj->object.plane, hit));
-    /*else if (obj->type == 'c')
-        return (intersect_cylinder(render, &obj->object.cylinder, hit));*/
-    return (0);
-}
 
 int new_intersect(t_render *render, t_obj *obj, t_hit *hit)
 {
