@@ -105,11 +105,17 @@ bool	cylinder_equ(t_object *cy, t_ray *ray, t_form_hit *hit)
 	return (solve_quadratic(a, b, c));
 }
 
-bool	instersect_forms(t_scene *scene, t_ray *ray, t_form_hit *hit)
+bool	intercept_object(t_object *object, t_ray *ray, t_form_hit *hit)
 {
 	static bool	(*equations[3])(t_object *, t_ray *, t_form_hit *) = {
 		sphere_equ, plane_equ, cylinder_equ
 	};
+
+	return (equations[object->type](object, ray, hit));
+}
+
+bool	instersect_forms(t_scene *scene, t_ray *ray, t_form_hit *hit)
+{
 	t_object		*obj;
 	float			closest_distance;
 	bool			has_hit;
@@ -119,11 +125,12 @@ bool	instersect_forms(t_scene *scene, t_ray *ray, t_form_hit *hit)
 	has_hit = 0;
 	while (obj)
 	{
-		if (equations[obj->type](obj, ray, hit) && hit->t < closest_distance)
+		if (intercept_object(obj, ray, hit) && hit->t < closest_distance)
 		{
 			has_hit = 1;
 			closest_distance = hit->t;
 			hit->color = &obj->color;
+			hit->form = obj;
 		}
 		obj = obj->next;
 	}
@@ -355,7 +362,7 @@ bool intersect_light(t_scene *scene, t_ray *ray, double light_distance,
     {
         if (obj != hit->form)
         {
-            if(instersect_forms(scene, ray, &tmp_hit) && tmp_hit.t < light_distance && tmp_hit.t > 0.0f)
+            if(intercept_object(obj, ray, &tmp_hit) && tmp_hit.t < light_distance && tmp_hit.t > 0.0f)
                 return (true);
         }
         obj = obj->next;
