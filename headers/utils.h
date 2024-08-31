@@ -56,10 +56,11 @@ typedef struct s_object
 
 typedef struct s_form_hit
 {
-	t_rgb	*color;
-	t_vec3	norm;
-	t_vec3	hit;	// hit distance
-	float	t;		// scalar
+	t_object	*form;
+	t_rgb		*color;
+	t_vec3		norm;
+	t_vec3		hit;	// hit distance
+	float		t;		// scalar
 }	t_form_hit;
 
 // brightness is a ratio between 0 and 1
@@ -85,6 +86,7 @@ typedef struct s_fpscounter
 	uint64_t	total;
 }	t_fpscounter;
 
+
 typedef struct s_image
 {
 	void				*img;
@@ -101,29 +103,5 @@ typedef struct s_mlx
 	t_image				img;
 	t_fpscounter 		*fps_counter;
 }						t_mlx;
-
-
-typedef struct s_ray_view
-{
-	t_vec3				origin;
-	t_vec3				direction;
-} t_ray_view;
-
-typedef struct s_hit
-{
-	double	h;
-	t_rgb	col;
-	t_vec3	hit;
-	t_vec3	norm;
-} t_hit;
-
-typedef struct s_render
-{
-	t_screen	screen;
-	t_ray_view	prime_ray;
-	int			color_ambiant;
-	t_object	*obj_closest;
-	double		light_distance;
-} t_render;
 
 #endif

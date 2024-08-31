@@ -65,22 +65,13 @@ typedef struct s_display
 	int				height;
 	int				width;
 	double			aspect_ratio;
+	double			scale;
 	int				bpp;
 	int				lsize;
 	int				big_endian;
+	t_vec3			right;
+	t_vec3			up;
 }	t_display;
-
-typedef struct s_screen
-{
-	uint64_t	screen_width;
-	uint64_t	screen_height;
-	double		aspect_ratio;
-	double		scalar_fov;
-	double		scale;
-	double		width;
-	t_vec3		right;
-	t_vec3		up;
-} t_screen;
 
 typedef struct s_scene
 {
@@ -183,19 +174,16 @@ void add_plane_obj(t_plane *plane, char type, t_obj **object, int *i);
 void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object, int *i);
 void print_all_objects(t_obj *obj);
 void init_objects_all(t_scene *scene);
+*/
 
 // render.c
-
+/*
 void init_camera(t_scene *scene);
 void render_scene(t_scene *scene);
 void pixel_draw(t_scene *scene, t_render *render);
+*/
 int color_rgb(t_rgb color);
 void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color);
-t_rgb ambiant_color(t_render *render, t_scene *scene, int depth);
-t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit);
-int new_intersect(t_render *render, t_obj *obj, t_hit *hit);
-bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit);
-bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit *hit);
 t_vec3 vec3_ambiant(t_rgb col, t_rgb color, float light_ratio);
 t_vec3 add_vec3(t_vec3 a, t_vec3 b);
 t_vec3 mult_vec3(t_vec3 a, double b);
@@ -204,22 +192,23 @@ double dot(t_vec3 a, t_vec3 b);
 t_vec3 normalize(t_vec3 new);
 t_vec3 *normalize_bis(t_vec3 *new);
 t_vec3 merge_vect(t_vec3 a, t_vec3 b);
-void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y);
+// void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y);
 t_vec3 new_vector(double x, double y, double z);
 t_rgb vect_to_rgb(t_vec3 vec);
-t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit);
+t_rgb light_handler(t_scene *scene, t_ray *ray, t_form_hit *hit);
 t_vec3 new_normalized(t_vec3 new);
 t_rgb mult_rgb(t_rgb ambiant, double intensity);
 
 
-bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render);
-int new_intersect2(t_ray_view *render, t_obj *obj, t_hit *hit);
+bool new_shadow_ray(t_scene *scene, t_form_hit *hit);
+int new_intersect2(t_ray *render, t_object *obj, t_form_hit *hit);
 t_rgb mult_color_vec4(t_rgb color, double b);
 t_rgb add_rgb(t_rgb a, t_rgb b);
 t_u8b check_data(int n, int min, int max);
-bool intersect3(t_ray_view *ray, t_render *render, t_hit *hit, t_scene *scene);
+bool intersect_light(t_scene *scene, t_ray *ray, double light_distance,
+	t_form_hit *hit);
 double vec3_length(t_vec3 vec);
-*/
+
 
 // ft_atof.c
 double			ft_atof(char *str);
