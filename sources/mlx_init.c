@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 14:31:08 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/01 23:35:43 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 00:20:08 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,16 @@ int init_mlx_all(t_scene *scene)
         return (-1);
     mlx->mlx = mlx_init();
     if (!mlx->mlx)
-        return (ft_err("mlx_init failed", 0), -1);
+        return (ft_err(ERR_MLX_PTR, 0), -1);
     if (init_mlx_window(mlx) == -1)
         return (-1);
     mlx->img.img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
     if (!mlx->img.img)
-        return (ft_err("mlx_new_image failed", 0), -1);
+        return (ft_err(ERR_RENDER_IMG, 0), -1);
     mlx->img.addr = mlx_get_data_addr(mlx->img.img, &mlx->img.bpp, &mlx->img.line_len, &mlx->img.endian);
     mlx->fps_counter = gc_calloc(sizeof(t_fpscounter));
     if (!mlx->fps_counter)
-        return (ft_err("gc_calloc failed", 0), -1);
+        return (ft_err(ERR_COUNTER_INIT, 0), -1);
     fps_counter_init(mlx->fps_counter, FPS_SNAPSHOT_SAMPLES);
     scene->mlx = mlx;
     init_camera(scene);
@@ -53,7 +53,7 @@ int init_mlx_window(t_mlx *mlx)
     if (!mlx->win)
     {
         destroy_mlx(mlx);
-        return (ft_err("mlx_new_window failed", 0), -1);
+        return (ft_err(ERR_MLX_WINDOW, 0), -1);
     }
     return (0);
 }
