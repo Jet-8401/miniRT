@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/01 23:57:53 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 00:16:55 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@
 # define ERR_FILE_EXT "not a .rt extension"
 # define ERR_UNKNOWN_ID "unrecognized identifier"
 # define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
+# define ERR_MLX_PTR "cannot connect to X server"
+# define ERR_MLX_WINDOW "cannot create mlx window"
+# define ERR_RENDER_IMG "an error ocured while creating mlx image"
+# define ERR_COUNTER_INIT "impossible to init fps counter"
+
 
 # define WIDTH 1920
 # define HEIGHT 1080
@@ -70,15 +75,13 @@ typedef struct s_scene
  *                          function declarations                             *
 \******************************************************************************/
 
-// main.c
-void			print_all(t_scene *scene);
-void			print_form_list(t_scene *scene);
-void			print_sphere_list(t_scene *scene);
-void			print_plane_list(t_scene *scene);
-void			print_cylinder_list(t_scene *scene);
 
 // parsing.c
+int	parser_check_capitals(const char *line);
+int (*check_identifiers(const char *line))(t_scene *n, char **split);
+int	ft_parse_line(t_scene *scene, const char *line);
 int				ft_parsing(t_scene *scene, const char *file_scene);
+int ft_check_scene(t_scene *scene);
 
 // error.c
 void			ft_err(const char *line, char perror_invoc);
@@ -101,9 +104,8 @@ int				ft_strlen2(char **argv);
 // parsing_checker.c
 int				check_value(char *number, bool have_floating_point);
 int				check_numbers_value(char **numbers, bool have_floating_point);
-int ft_check_scene(t_scene *scene);
 
-void init_pointer_objects(t_scene *scene); 
+
 
 // props_init.c
 int				ambient_init(t_scene *scene, char **args);
@@ -192,6 +194,7 @@ void init_objects_all(t_scene *scene);
 void add_plane_obj(t_plane *plane, char type, t_obj **object, int *i);
 void add_sphere_obj(t_sphere *sphere, char type, t_obj **object, int *i);
 void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object, int *i);
+void init_pointer_objects(t_scene *scene); 
 
 // intersect.c
 

@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/01 23:45:03 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 00:10:07 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ typedef struct s_obj
 	t_object_union 		object;
 	float				diameter;
 	float				height;
+	float				radius;
 	t_rgb				color;
 	char				type;
 	struct s_obj		*next;

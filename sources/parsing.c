@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/20 12:31:45 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 00:17:17 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,14 +123,3 @@ int ft_check_scene(t_scene *scene)
 	return (0);
 }
 
-
-void init_pointer_objects(t_scene *scene)
-{
-	scene->light = NULL;
-	scene->sphere = NULL;
-	scene->plane = NULL;
-	scene->cylinder = NULL;
-	scene->mlx = NULL;
-	scene->screen = NULL;
-	scene->obj = NULL;
-}

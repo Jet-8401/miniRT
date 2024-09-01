@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:10:23 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/01 23:46:33 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 00:16:18 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void add_plane_obj(t_plane *plane, char type, t_obj **object, int *i)
         tmp->color = plane->color;
         tmp->diameter = 0;
         tmp->height = 0;
+        tmp->radius = 0;
         tmp->type = type;
         tmp->object.plane = *plane;
         tmp->next = *object;
@@ -61,6 +62,7 @@ void add_sphere_obj(t_sphere *sphere, char type, t_obj **object, int *i)
         tmp->dir = (t_vec3){0, 0, 0};
         tmp->color = sphere->color;
         tmp->diameter = sphere->diameter;
+        tmp->radius = sphere->radius;
         tmp->height = 0;
         tmp->type = type;
         tmp->object.sphere = *sphere;
@@ -85,6 +87,7 @@ void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object, int *i)
         tmp->dir = cylinder->dir;
         tmp->color = cylinder->color;
         tmp->diameter = cylinder->diameter;
+        tmp->radius = cylinder->radius;
         tmp->height = cylinder->height;
         tmp->type = type;
         tmp->object.cylinder = *cylinder;
@@ -93,4 +96,15 @@ void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object, int *i)
         (*i)++;
         cylinder = cylinder->next;
     }
+}
+
+void init_pointer_objects(t_scene *scene)
+{
+	scene->light = NULL;
+	scene->sphere = NULL;
+	scene->plane = NULL;
+	scene->cylinder = NULL;
+	scene->mlx = NULL;
+	scene->screen = NULL;
+	scene->obj = NULL;
 }
