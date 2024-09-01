@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/31 14:49:02 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/01 23:45:03 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_sphere
 {
 	t_vec3				pos;
 	float				diameter;
+	float radius;
 	t_rgb				color;
 	struct s_sphere		*next;
 }						t_sphere;
@@ -144,7 +145,7 @@ typedef struct s_ray_view
 
 typedef struct s_hit
 {
-	double h;
+	double t;
 	t_rgb col;
 	t_vec3 hit;
 	t_vec3 norm;

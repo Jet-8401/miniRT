@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/08/20 11:28:11 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/01 23:53:53 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	sphere_init(t_scene *scene, char **args)
 		return (ft_err("Bad height sphere", 0), -1);
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
+	sphere->radius = sphere->diameter / 2;
 	add_sphere(scene, sphere);
 	// if (add_sphere_value(scene, args) == -1)
 	// return (ft_err("Wrong sphere values", 0), -1);
@@ -93,6 +94,7 @@ int	cylinder_init(t_scene *scene, char **args)
 		return (ft_err("Bad height cylinder", 0), -1);
 	if (set_rgb(args[5], &cylinder->color) == -1)
 		return (ft_err("Bad rgb cylinder", 0), -1);
+	cylinder->radius = cylinder->diameter / 2;
 	add_cylinder(scene, cylinder);
 	// if (add_cylinder_value(scene, args) == -1)
 	// return (ft_err("wrong cylinder values", 0), -1);

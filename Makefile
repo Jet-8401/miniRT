@@ -12,7 +12,18 @@ FILES = minirt.c \
 		forms_init.c \
 		add_list.c \
 		mlx_init.c \
-		render.c 
+		render.c \
+		mlx_events.c \
+		3Dvect.c \
+		3Dvect2.c \
+		color_vect.c \
+		form_intersect.c \
+		fps_counter.c \
+		init_object.c \
+		intersect.c \
+		light.c \
+		utils2.c \
+		print_all_utils.c 
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 
