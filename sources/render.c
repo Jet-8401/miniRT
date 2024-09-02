@@ -9,11 +9,12 @@ float	solve_quadratic(float a, float b, float c)
 }
 
 // t = -X|V / D|V
-float	plane_equ(t_object *plane, t_ray *ray)
+bool	plane_equ(t_object *plane, t_ray *ray, t_form_hit *hit)
 {
 	float	denominator;
 	t_vec3	p0l0 = {0, 0, 0};
 
+	(void) hit;
 	denominator = vec3D_dot(&plane->dir, &ray->dir);
 	if (denominator > 0.0f)
 	{
@@ -23,7 +24,7 @@ float	plane_equ(t_object *plane, t_ray *ray)
 	return (0);
 }
 
-float	sphere_equ(t_object *sphere, t_ray *ray)
+bool	sphere_equ(t_object *sphere, t_ray *ray, t_form_hit *hit)
 {
 	float	a, b, c;
 	t_vec3	newOrigin = {0, 0, 0};
@@ -34,10 +35,16 @@ float	sphere_equ(t_object *sphere, t_ray *ray)
 	b = 2.0f * vec3D_dot(&newOrigin, &ray->dir);
     c = vec3D_dot(&newOrigin, &newOrigin) - sphere->radius * sphere->radius;
 
-	return (solve_quadratic(a, b, c));
-}
+    hit->t = solve_quadratic(a, b, c);
+    if (hit->t < 0.0f)
+    	return (false);
 
-// square(x-c-(d.(x-c)*d)-square(r) = 0
+    /*vec3D_mult(&ray->dir, hit->t, &hit->hit);
+    vec3D_add(&ray->origin, &hit->hit, &hit->hit);
+    vec3D_subtract(&hit->hit, &sphere->pos, &hit->norm);
+    vec3D_normalize(&hit->norm);*/
+	return (true);
+}
 
 // P - C = D*t + X
 // P=center
@@ -48,7 +55,7 @@ float	sphere_equ(t_object *sphere, t_ray *ray)
 //	a   = D|D - (D|V)^2
 //	b/2 = D|X - (D|V)*(X|V)
 //	c   = X|X - (X|V)^2 - r*r
-float	cylinder_equ(t_object *cy, t_ray *ray)
+bool	cylinder_equ(t_object *cy, t_ray *ray, t_form_hit *hit)
 {
 	float	a, b, c;
 	t_vec3	X = {0, 0, 0};
@@ -58,6 +65,7 @@ float	cylinder_equ(t_object *cy, t_ray *ray)
 		cy->pos.z - cy->height / 2 * ray->dir.z
 	};
 
+	(void) hit;
 	// cap1 = center - height/2 * Normal Vector
 	vec3D_subtract(&ray->origin, &C, &X);
 
@@ -71,54 +79,53 @@ float	cylinder_equ(t_object *cy, t_ray *ray)
 	return (solve_quadratic(a, b, c));
 }
 
-t_object	*instersect_forms(t_scene *scene, t_ray *ray)
+bool	intercept_object(t_object *object, t_ray *ray, t_form_hit *hit)
 {
-	static float	(*equations[3])(t_object *, t_ray *) = {
+	static bool	(*equations[3])(t_object *, t_ray *, t_form_hit *) = {
 		sphere_equ, plane_equ, cylinder_equ
 	};
+
+	return (equations[object->type](object, ray, hit));
+}
+
+bool	instersect_forms(t_scene *scene, t_ray *ray, t_form_hit *hit)
+{
 	t_object		*obj;
-	t_object		*closest;
 	float			closest_distance;
-	float			distance;
+	bool			has_hit;
 
 	obj = scene->objects;
 	closest_distance = 3.402823466e+38F;
-	closest = NULL;
+	has_hit = 0;
 	while (obj)
 	{
-		distance = equations[obj->type](obj, ray);
-		if (distance < 0.0f)
+		if (intercept_object(obj, ray, hit) && hit->t < closest_distance)
 		{
-			obj = obj->next;
-			continue ;
+			has_hit = 1;
+			closest_distance = hit->t;
+			hit->form = obj;
 		}
-		if (distance < closest_distance)
-		{
-			closest_distance = distance;
-			closest = obj;
-		}
-
 		obj = obj->next;
 	}
-	return (closest);
+	return (has_hit);
 }
 
 int	render_scene(t_scene *scene)
 {
 	t_ray		ray;
-	t_object	*closest;
+	t_form_hit	hit;
 
 	ray.origin = scene->cam->pos;
 	ray.dir.z = scene->cam->dir.z;
+	ft_memset(&hit, 0, sizeof(hit));
 	for(int y = 0; y < scene->display.height; y++) {
 		for (int x = 0; x < scene->display.width; x++) {
 			ray.dir.x = 2 * (x + 0.5) / (double) scene->display.width - 1;
             ray.dir.y = 1 - 2 * (y + 0.5) / (double) scene->display.height;
-			closest = instersect_forms(scene, &ray);
-			if (closest)
+			if (instersect_forms(scene, &ray, &hit))
 			{
 				scene->display.data[x + y * scene->display.width] =
-					rgb_to_int(&closest->color, scene->display.big_endian);
+					rgb_to_int(&hit.form->color, scene->display.big_endian);
 			}
 			else
 				scene->display.data[x + y * scene->display.width] = 0;
