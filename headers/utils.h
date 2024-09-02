@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/02 00:10:07 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:37:24 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ typedef struct s_cylinder
 	float				height;
 	t_rgb				color;
 	double				radius;
+	t_vec3 cap1;
+	t_vec3 cap2;
 	struct s_cylinder	*next;
 }						t_cylinder;
 

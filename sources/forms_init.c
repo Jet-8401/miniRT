@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/01 23:53:53 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:02:21 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	plane_init(t_scene *scene, char **args)
 		return (ft_err("Bad 3d vector plane", 0), -1);
 	if (set_rgb(args[3], &plane->color) == -1)
 		return (ft_err("Bad rgb plane", 0), -1);
+	normalize_bis(&plane->dir);
 	add_plane(scene, plane);
 	// if (add_plane_value(scene, args) == -1)
 	// return (ft_err("wrong plane values", 0), -1);
@@ -95,6 +96,11 @@ int	cylinder_init(t_scene *scene, char **args)
 	if (set_rgb(args[5], &cylinder->color) == -1)
 		return (ft_err("Bad rgb cylinder", 0), -1);
 	cylinder->radius = cylinder->diameter / 2;
+	normalize_bis(&cylinder->dir);
+	cylinder->cap1 = mult_vec3(cylinder->dir, -cylinder->height / 2);
+	cylinder->cap1 = add_vec3(cylinder->cap1, cylinder->pos);
+	cylinder->cap2 = mult_vec3(cylinder->dir, cylinder->height / 2);
+	cylinder->cap2 = add_vec3(cylinder->cap2, cylinder->pos);
 	add_cylinder(scene, cylinder);
 	// if (add_cylinder_value(scene, args) == -1)
 	// return (ft_err("wrong cylinder values", 0), -1);

@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/02 00:16:55 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:58:44 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,8 @@ t_rgb vect_to_rgb(t_vec3 vec);
 bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit);
 bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit *hit);
 bool	intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit);
+bool infinite_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit);
+double distance(t_vec3 a, t_vec3 b);
 
 // fps_counter.c
 
