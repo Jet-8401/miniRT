@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:13:27 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/02 19:28:40 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/03 21:14:22 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_rgb ambiant_color(t_render *render, t_scene *scene)
     render->obj_closest = intersect(render, scene->obj, &hit);
     if (!render->obj_closest)
         return (color);
-    //color = light_handler(scene, render, &hit);
+    //color = render->obj_closest->color;
+    color = light_handler(scene, render, &hit);
     return (color);
 }
 

@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:06:55 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/02 19:27:29 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/03 23:06:41 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,25 @@ bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit *hit)
 
 bool	intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit) //t_object *cy, t_ray *ray, t_form_hit *hit)
 {
-    t_plane    plane;
+    t_hit tmp_hit;
+    t_vec3 q;
+    int check;
+
+    check = 0;
+    check = intersect_cylinder_math(ray, cylinder, &tmp_hit);
+    if (check == 0)
+        return (false);
+    hit->t = tmp_hit.t;
+    hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, tmp_hit.t));
+    q = sub_vec3(hit->hit, cylinder->pos);
+    hit->norm = sub_vec3(q, mult_vec3(cylinder->dir, dot(cylinder->dir, q)));
+    normalize_bis(&hit->norm);
+    if (dot(hit->norm, ray->direction) > 0.0f)
+        hit->norm = mult_vec3(hit->norm, -1);
+    hit->col = cylinder->color;
+    return (true);
+    
+    /*t_plane    plane;
     t_hit tmp_hit;
 
     hit->t = INFINITY;
@@ -70,11 +88,11 @@ bool	intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit) //t_o
     plane.pos = cylinder->cap2;
     if (intersect_plane(ray, &plane, &tmp_hit) && distance(tmp_hit.hit, cylinder->cap2) <= cylinder->diameter * 0.5 && hit->t > tmp_hit.t)
         *hit = tmp_hit;
-    if (infinite_cylinder(ray, cylinder, &tmp_hit) && pow(distance(cylinder->pos, tmp_hit.hit), 2) <= pow(cylinder->height * 0.5, 2) + (cylinder->diameter * cylinder->diameter * 0.25) && hit->t > tmp_hit.t)
+    if (infinite_cylinder(ray, cylinder, &tmp_hit) && pow(distance(cylinder->pos, tmp_hit.hit), 2) <= cylinder->height / 2 && hit->t > tmp_hit.t)
         *hit = tmp_hit;
     if (hit->t < INFINITY && hit->t > EPSILON) 
         return (true);
-    return (false);
+    return (false);*/
 	/*float	a, b, c;
 	t_vec3	X = {0, 0, 0};
 	t_vec3	C = {
@@ -110,8 +128,70 @@ bool	intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit) //t_o
 	return (solve_quadratic(a, b, c));*/
 }
 
+int intersect_cylinder_math(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit)
+{
+    if (calculation(&hit->t, &hit->t2, ray, cylinder) == 0)
+        return (0);
+    if (hit->t > 0)
+        check_cylinder_data(ray, cylinder, &hit->t);
+    if (hit->t2 > 0)
+        check_cylinder_data(ray, cylinder, &hit->t2);
+    if (hit->t < 0 && hit->t2 < 0)
+        return (0);
+    if ((hit->t2 < hit->t && hit->t2 >= 0) || (hit->t < hit->t2 && hit->t <= 0))
+        hit->t = hit->t2;
+    else
+        hit->t2 = hit->t;
+    return (1);
+}
 
-bool infinite_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit)
+void check_cylinder_data(t_ray_view *ray, t_cylinder *cylinder, double *t)
+{
+    t_vec3 q;
+    t_vec3 p2;
+
+    p2 = add_vec3(cylinder->pos, mult_vec3(cylinder->dir, cylinder->height));
+    q = add_vec3(ray->origin, mult_vec3(ray->direction, *t));
+    if (dot(cylinder->dir, sub_vec3(q, cylinder->pos)) < 0 || dot(cylinder->dir, sub_vec3(q, p2)) > 0)
+        *t = -1;
+}
+
+int calculation(double *t, double *t2, t_ray_view *ray, t_cylinder *cylinder)
+{
+    t_vec3 a_sqrt;
+    t_vec3 right;
+    double a;
+    double b;
+    double c;
+    double delta;
+
+    a_sqrt = sub_vec3(ray->direction, mult_vec3(cylinder->dir, dot(ray->direction, cylinder->dir)));
+    a = dot(a_sqrt, a_sqrt);
+    right = sub_vec3(sub_vec3(ray->origin, cylinder->pos), mult_vec3(cylinder->dir, dot(sub_vec3(ray->origin, cylinder->pos), cylinder->dir)));
+    b = 2.0f * dot(a_sqrt, right);
+    c = dot(right, right) - cylinder->radius * cylinder->radius;
+    delta = b * b - 4.0f * a * c;
+    if (delta < 0.0f)
+        return (0);
+    else if (delta == 0.0f)
+    {
+        *t = -b / (2.0f * a);
+        *t2 = -b / (2.0f * a);
+    }
+    else
+    {
+        *t = (-b - sqrt(delta)) / (2.0f * a);
+        *t2 = (-b + sqrt(delta)) / (2.0f * a);
+    }
+    if (*t >= 0 && *t2 >= 0)
+        *t = *t < *t2 ? *t : *t2;
+    else if (*t2 >= 0)
+        *t = *t2;
+    return (1);
+}
+
+
+/*bool infinite_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit)
 {
     float	a, b, c;
 	t_vec3	X = {0, 0, 0};
@@ -133,6 +213,11 @@ bool infinite_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit)
     if (delta < 0.0f)
         return (false);
     hit->t = (-b - sqrt(delta)) / (2.0f * a);
+    hit->t2 = (-b + sqrt(delta)) / (2.0f * a);
+    if (hit->t >= 0 && hit->t2 >= 0)
+        hit->t = hit->t < hit->t2 ? hit->t : hit->t2;
+    else if (hit->t2 >= 0)
+        hit->t = hit->t2;
     hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
     m = dot(ray->direction, mult_vec3(cylinder->dir, hit->t)) + dot(X, cylinder->dir);
     hit->norm = sub_vec3(sub_vec3(hit->hit, cylinder->pos), mult_vec3(cylinder->dir, m));
@@ -141,7 +226,7 @@ bool infinite_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit)
     if (dot(hit->norm, ray->direction) > 0)
         hit->norm = mult_vec3(hit->norm, -1);
     return (true);
-}
+}*/
 
 double distance(t_vec3 a, t_vec3 b)
 {

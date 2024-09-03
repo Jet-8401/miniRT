@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/02 15:37:24 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:05:24 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ typedef struct s_ray_view
 typedef struct s_hit
 {
 	double t;
+	double t2;
 	t_rgb col;
 	t_vec3 hit;
 	t_vec3 norm;

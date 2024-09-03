@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/02 15:58:44 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/03 22:46:59 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,15 @@ t_u8b check_data(int n, int min, int max);
 // ft_atof.c
 double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
+
+
+
+// TEST 
+
+int intersect_cylinder_math(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit);
+void check_cylinder_data(t_ray_view *ray, t_cylinder *cylinder, double *t);
+int calculation(double *t, double *t2, t_ray_view *ray, t_cylinder *cylinder);
+
 
 
 #endif
