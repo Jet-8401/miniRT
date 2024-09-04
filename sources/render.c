@@ -15,19 +15,27 @@ float	solve_quadratic(float a, float b, float c)
 }
 
 // t = -X|V / D|V
+// Before the division we should check whether D|V is nonzero.
+// We can also check if the signs of D|V and X|V are different
+// (if not, resulting t will be negative).
 bool	plane_equ(t_object *plane, t_ray *ray, t_form_hit *hit)
 {
-	float	denominator;
-	t_vec3	p0l0 = {0, 0, 0};
+	t_vec3	X;
+	float	u;
 
-	(void) hit;
-	denominator = vec3D_dot(&plane->dir, &ray->dir);
-	if (denominator > 0.0f)
-	{
-		vec3D_subtract(&plane->pos, &ray->origin, &p0l0);
-		return (vec3D_dot(&p0l0, &plane->dir) / denominator);
-	}
-	return (0);
+	u = vec3D_dot(&ray->dir, &plane->dir);
+	if (u == 0)
+		return (false);
+	vec3D_subtract(&ray->origin, &plane->pos, &X);
+
+	X.x *= -1;
+	X.y *= -1;
+	X.z *= -1;
+
+	hit->t = vec3D_dot(&X, &plane->dir) / u;
+	if (hit->t < 0.0f)
+		return (false);
+	return (true);
 }
 
 bool	sphere_equ(t_object *sphere, t_ray *ray, t_form_hit *hit)
@@ -113,41 +121,12 @@ bool	cylinder_equ(t_object *cy, t_ray *ray, t_form_hit *hit)
 	hit->t = -b - delta;
 	hit->t2 = -b + delta;
 
-	if (hit->t < 0.0f && hit->t2 < 0.0f)
-		return (false);
-	/*
-	t_vec3	q;
-	t_vec3	p2;
-
-	p2 = add(cylinder.origin, scale(cylinder.dir, cylinder.height));
-	q = add(ray.origin, scale(ray.dir, *t));
-	if (dot(cylinder.dir, subtract(q, cylinder.origin)) <= 0)
-		*t = -1;
-	if (dot(cylinder.dir, subtract(q, p2)) >= 0)
-		*t = -1;
-	*/
-
-	if (hit->t2 < hit->t)
-		hit->t = hit->t2;
-
-	return (true);
-	vec3D_scale(&ray->dir, hit->t, &hit->hit);
-	vec3D_add(&hit->hit, &ray->origin, &hit->hit);
-	//vec3D_normalize(&hit->hit); // maybe not
-
-	t_vec3	p2;
-	vec3D_scale(&cy->dir, cy->height, &p2);
-	vec3D_add(&p2, &cy->pos, &p2);
-
-	t_vec3	temp;
-	vec3D_subtract(&hit->hit, &cy->pos, &temp);
-	vec3D_normalize(&temp);
-	if (vec3D_dot(&cy->dir, &temp) <= 0)
-		return (false);
-	vec3D_subtract(&temp, &p2, &temp);
-	if (vec3D_dot(&cy->dir, &temp) >= 0)
+	if (hit->t < 0.0f && hit->t2 < 0.0)
 		return (false);
 
+	float	maxm = vec3D_dot(&ray->dir, &cy->dir)*hit->t + vec3D_dot(&X, &cy->dir);
+	if (maxm < 0.0f || maxm > cy->height)
+		return (false);
 	return (true);
 }
 
