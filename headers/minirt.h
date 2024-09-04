@@ -52,7 +52,8 @@ typedef struct s_display
 	t_fpscounter	*fps_counter;
 	int				height;
 	int				width;
-	int				aspect_ratio;
+	float			aspect_ratio;
+	float			scale;
 	int				bpp;
 	int				lsize;
 	int				big_endian;
@@ -136,6 +137,9 @@ void			vec3D_normalize(t_vec3 *vec);
 double			vec3D_dot(t_vec3 *a, t_vec3 *b);
 void			vec3D_cross(t_vec3 *a, t_vec3 *b, t_vec3 *c);
 void			vec3D_subtract(t_vec3 *a, t_vec3 *b, t_vec3 *c);
+void			vec3D_add(t_vec3 *a, t_vec3 *b, t_vec3 *c);
+void			vec3D_mult(t_vec3 *a, t_vec3 *b, t_vec3 *c);
+void			vec3D_scale(t_vec3 *a, float scale, t_vec3 *b);
 
 // add_list.c
 void			add_object(t_scene *scene, t_object *object);
@@ -149,8 +153,8 @@ double			ft_atof(char *str);
 void			ft_atof_bis(char *str, long double *res, int *neg);
 
 // display.c
-int				ft_init_display(t_display *display, int size_x, int size_y,
-					char *title);
+int				ft_init_display(t_scene *scene, int size_x, int size_y,
+	char *title);
 void			ft_destroy_display(t_display *display);
 
 // render_time.c

@@ -12,26 +12,27 @@
 
 #include "../headers/minirt.h"
 
-int	ft_init_display(t_display *display, int size_x, int size_y, char *title)
+int	ft_init_display(t_scene *scene, int size_x, int size_y, char *title)
 {
-	display->mlx_ptr = gc_track(mlx_init());
-	if (!display->mlx_ptr)
+	scene->display.mlx_ptr = gc_track(mlx_init());
+	if (!scene->display.mlx_ptr)
 		return (ft_err(ERR_MLX_PTR, 0), -1);
-	display->height = size_y;
-	display->width = size_x;
-	display->aspect_ratio = size_y / size_x;
-	display->window = mlx_new_window(display->mlx_ptr, size_x, size_y, title);
-	if (!display->window)
+	scene->display.height = size_y;
+	scene->display.width = size_x;
+	scene->display.aspect_ratio = (float) size_y / size_x;
+	scene->display.scale = tan((float) scene->cam->fov / 2 * M_PI / 180);
+	scene->display.window = mlx_new_window(scene->display.mlx_ptr, size_x, size_y, title);
+	if (!scene->display.window)
 		return (ft_err(ERR_MLX_WINDOW, 0), -1);
-	display->render_img = mlx_new_image(display->mlx_ptr, size_x, size_y);
-	if (!display->render_img)
+	scene->display.render_img = mlx_new_image(scene->display.mlx_ptr, size_x, size_y);
+	if (!scene->display.render_img)
 		return (ft_err(ERR_RENDER_IMG, 0), -1);
-	display->data = (uint32_t *) mlx_get_data_addr(display->render_img,
-		&display->bpp, &display->lsize, &display->big_endian);
-	display->fps_counter = gc_calloc(sizeof(t_fpscounter));
-	if (!display->fps_counter)
+	scene->display.data = (uint32_t *) mlx_get_data_addr(scene->display.render_img,
+		&scene->display.bpp, &scene->display.lsize, &scene->display.big_endian);
+	scene->display.fps_counter = gc_calloc(sizeof(t_fpscounter));
+	if (!scene->display.fps_counter)
 		return (ft_err(ERR_COUNTER_INIT, 0), -1);
-	fps_counter_init(display->fps_counter, FPS_SNAPSHOT_SAMPLES);
+	fps_counter_init(scene->display.fps_counter, FPS_SNAPSHOT_SAMPLES);
 	return (0);
 }
 

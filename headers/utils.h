@@ -58,6 +58,7 @@ typedef struct s_form_hit
 	t_object	*form;
 	t_vec3		hit;	// hit distance
 	double		t;		// scalar
+	double		t2;
 }	t_form_hit;
 
 // brightness is a ratio between 0 and 1
