@@ -66,3 +66,24 @@ void	vec3D_subtract(t_vec3 *a, t_vec3 *b, t_vec3 *c)
 	c->y = a->y - b->y;
 	c->z = a->z - b->z;
 }
+
+void	vec3D_add(t_vec3 *a, t_vec3 *b, t_vec3 *c)
+{
+	c->x = a->x + b->x;
+	c->y = a->y + b->y;
+	c->z = a->z + b->z;
+}
+
+void	vec3D_mult(t_vec3 *a, t_vec3 *b, t_vec3 *c)
+{
+	c->x = a->x * b->x;
+	c->y = a->y * b->y;
+	c->z = a->z * b->z;
+}
+
+void	vec3D_scale(t_vec3 *a, float scale, t_vec3 *b)
+{
+	b->x = a->x * scale;
+	b->y = a->y * scale;
+	b->z = a->z * scale;
+}

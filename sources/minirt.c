@@ -22,7 +22,10 @@ void print_sphere_list(t_scene *scene)
 	while (object)
 	{
 		if (object->type != SPEHRE)
+		{
+			object = object->next;
 			continue ;
+		}
 		printf("Sphere position: %f %f %f\n", object->pos.x, object->pos.y, object->pos.z);
 		printf("Sphere diameter: %f\n", object->radius);
 		printf("Sphere color: %d %d %d\n", object->color.r, object->color.g, object->color.b);
@@ -38,7 +41,10 @@ void print_plane_list(t_scene *scene)
 	while (object)
 	{
 		if (object->type != PLANE)
+		{
+			object = object->next;
 			continue ;
+		}
 		printf("Plane position: %f %f %f\n", object->pos.x, object->pos.y, object->pos.z);
 		printf("Plane direction: %f %f %f\n", object->dir.x, object->dir.y, object->dir.z);
 		printf("Plane radius: %f\n", object->radius);
@@ -56,7 +62,10 @@ void print_cylinder_list(t_scene *scene)
 	while (object)
 	{
 		if (object->type != CYLINDER)
+		{
+			object = object->next;
 			continue ;
+		}
 		printf("Cylinder position: %f %f %f\n", object->pos.x, object->pos.y, object->pos.z);
 		printf("Cylinder direction: %f %f %f\n", object->dir.x, object->dir.y, object->dir.z);
 		printf("Cylinder radius: %f\n", object->radius);
@@ -87,7 +96,7 @@ int	main(int argc, char *argv[])
 	(void) argc;
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
-	if (ft_init_display(&scene.display, 800, 800, "miniRT") == -1)
+	if (ft_init_display(&scene, 900, 900, "miniRT") == -1)
 		return (gc_dump(NULL), 0);
 	print_all(&scene);
 	printf("bpp = %d\n", scene.display.bpp);

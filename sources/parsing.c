@@ -71,9 +71,6 @@ int	ft_parse_line(t_scene *scene, const char *line)
  */
 int	ft_check_scene(t_scene *scene)
 {
-	t_u8b	forms_bin_filter;
-
-	forms_bin_filter = SPEHRE | PLANE | CYLINDER;
 	if (!scene->cam)
 		return (ft_err("You must add a camera into the scene", 0), -1);
 	if (!scene->ambient)
