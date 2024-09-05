@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:06:55 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/03 23:06:41 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/04 22:34:34 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,37 @@ bool	intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit) //t_o
     t_hit tmp_hit;
     t_vec3 q;
     int check;
+    t_plane    plane;
 
+    hit->t = INFINITY;
+    plane.pos = cylinder->cap1;
+    plane.dir = cylinder->dir;
+    plane.color = cylinder->color;
+    if (intersect_plane(ray, &plane, &tmp_hit) && distance(tmp_hit.hit, cylinder->cap1) <= cylinder->diameter * 0.5 && hit->t > tmp_hit.t)
+        *hit = tmp_hit;
+    plane.pos = cylinder->cap2;
+    if (intersect_plane(ray, &plane, &tmp_hit) && distance(tmp_hit.hit, cylinder->cap2) <= cylinder->diameter * 0.5 && hit->t > tmp_hit.t)
+        *hit = tmp_hit;
     check = 0;
     check = intersect_cylinder_math(ray, cylinder, &tmp_hit);
     if (check == 0)
         return (false);
-    hit->t = tmp_hit.t;
+    else if (check == 1)
+    {
+        hit->t = tmp_hit.t;
+        hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, tmp_hit.t));
+        q = sub_vec3(hit->hit, cylinder->pos);
+        hit->norm = sub_vec3(q, mult_vec3(cylinder->dir, dot(cylinder->dir, q)));
+        normalize_bis(&hit->norm);
+        if (dot(hit->norm, ray->direction) > 0.0f)
+            hit->norm = mult_vec3(hit->norm, -1);
+        hit->col = cylinder->color;
+        return (true);
+    }
+    if (hit->t < INFINITY && hit->t > EPSILON) 
+        return (true);
+    return (false);
+    /*hit->t = tmp_hit.t;
     hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, tmp_hit.t));
     q = sub_vec3(hit->hit, cylinder->pos);
     hit->norm = sub_vec3(q, mult_vec3(cylinder->dir, dot(cylinder->dir, q)));
@@ -74,7 +99,7 @@ bool	intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit) //t_o
     if (dot(hit->norm, ray->direction) > 0.0f)
         hit->norm = mult_vec3(hit->norm, -1);
     hit->col = cylinder->color;
-    return (true);
+    return (true);*/
     
     /*t_plane    plane;
     t_hit tmp_hit;
