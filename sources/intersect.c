@@ -12,47 +12,40 @@
 
 #include "../headers/minirt.h"
 
-t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit)
+bool	intersect(t_render *render, t_object *obj, t_hit *hit)
 {
-    double min_distance;
-    t_obj *obj_closest;
-    t_hit tmp_hit;
+	float			closest_distance;
+	bool			has_hit;
 
-    min_distance = INFINITY;
-    tmp_hit.t = 0;
-    obj_closest = NULL;
-    while (obj)
-    {
-        if (new_intersect(render, obj, &tmp_hit))
-        {
-            if (tmp_hit.t < min_distance)
-            {
-                min_distance = tmp_hit.t;
-                obj_closest = obj;
-                *hit = tmp_hit;
-            }
-        }
-        obj = obj->next;
-    }
-    if (obj_closest)
-        hit->col = obj_closest->color;
-    return (obj_closest);
+	closest_distance = 3.402823466e+38F;
+	has_hit = 0;
+	while (obj)
+	{
+		if (new_intersect(render, obj, hit) && hit->t < closest_distance)
+		{
+			has_hit = 1;
+			closest_distance = hit->t;
+			hit->object = obj;
+		}
+		obj = obj->next;
+	}
+	return (has_hit);
 }
 
-bool intersect_shadow(t_render *render, t_scene *scene)
+bool intersect_shadow(t_render *render, t_scene *scene, t_hit *hit)
 {
-    double max_distance;
-    t_hit tmp_hit;
-    t_obj *obj;
+    double		max_distance;
+    t_hit		tmp_hit;
+    t_object	*obj;
 
     max_distance = render->light_distance;
     tmp_hit.t = INFINITY;
-    obj = scene->obj;
+    obj = scene->object;
     while (obj)
     {
-        if (obj->id != render->obj_closest->id)
-        {        
-            if(new_intersect(render, obj, &tmp_hit) && tmp_hit.t < max_distance && tmp_hit.t > 0.0f)
+        if (obj->id != hit->object->id)
+        {
+        	if(new_intersect(render, obj, &tmp_hit) && tmp_hit.t < max_distance && tmp_hit.t > 0.0f)
                 return (true);
         }
         obj = obj->next;
@@ -60,14 +53,13 @@ bool intersect_shadow(t_render *render, t_scene *scene)
     return (false);
 }
 
-int new_intersect(t_render *render, t_obj *obj, t_hit *hit)
+int new_intersect(t_render *render, t_object *obj, t_hit *hit)
 {
-    if (obj->type == 's')
-        return (intersect_sphere(&render->prime_ray, &obj->object.sphere, hit));
-    else if (obj->type == 'p')
-        return (intersect_plane(&render->prime_ray, &obj->object.plane, hit));
-    else if (obj->type == 'c')
-        return (intersect_cylinder(&render->prime_ray, &obj->object.cylinder, hit));
+    if (obj->type == SPHERE)
+        return (intersect_sphere(&render->prime_ray, obj, hit));
+    else if (obj->type == PLANE)
+        return (intersect_plane(&render->prime_ray, obj, hit));
+    else if (obj->type == CYLINDER)
+        return (intersect_cylinder(&render->prime_ray, obj, hit));
     return (0);
 }
-

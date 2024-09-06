@@ -34,14 +34,13 @@ int render_scene(t_scene *scene)
     t_render render;
 
     ft_memset(&render, 0, sizeof(t_render));
-    render.screen = (*scene->screen);
+    //render.screen = (*scene->screen);
     pixel_draw(scene, &render);
     mlx_put_image_to_window(scene->mlx->mlx, scene->mlx->win, scene->mlx->img.img, 0, 0);
     fps_display(scene->mlx);
     render_time_display(scene->mlx);
     return (0);
 }
-
 
 void pixel_draw(t_scene *scene, t_render *render)
 {
@@ -64,7 +63,6 @@ void pixel_draw(t_scene *scene, t_render *render)
     }
 }
 
-
 void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
 {
     t_scene *tmp_scene;
@@ -86,5 +84,3 @@ void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
     prime_ray->direction = sub_vec3(res, prime_ray->origin);
     normalize_bis(&prime_ray->direction);
 }
-
-

@@ -12,43 +12,16 @@
 
 #include "../headers/minirt.h"
 
-void	add_sphere(t_scene *scene, t_sphere *object)
+static int IDS = 0;
+
+void	add_object(t_scene *scene, t_object *object)
 {
-	t_sphere *tmp;
+	t_object *tmp;
 
-	tmp = scene->sphere;
+	object->id = IDS++;
+	tmp = scene->object;
 	if (tmp == NULL)
-		scene->sphere = object;
-	else
-	{
-		while (tmp->next != NULL)
-			tmp = tmp->next;
-		tmp->next = object;
-	}
-}
-
-void	add_plane(t_scene *scene, t_plane *object)
-{
-	t_plane	*tmp;
-
-	tmp = scene->plane;
-	if (tmp == NULL)
-		scene->plane = object;
-	else
-	{
-		while (tmp->next != NULL)
-			tmp = tmp->next;
-		tmp->next = object;
-	}
-}
-
-void	add_cylinder(t_scene *scene, t_cylinder *object)
-{
-	t_cylinder *tmp;
-
-	tmp = scene->cylinder;
-	if (tmp == NULL)
-		scene->cylinder = object;
+		scene->object = object;
 	else
 	{
 		while (tmp->next != NULL)

@@ -33,9 +33,9 @@ int	light_init(t_scene *scene, char **args)
 
 int	sphere_init(t_scene *scene, char **args)
 {
-	t_sphere	*sphere;
+	t_object	*sphere;
 
-	sphere = gc_calloc(sizeof(t_sphere));
+	sphere = gc_calloc(sizeof(t_object));
 	if (!sphere)
 		return (-1);
 	if (ft_strlen2(args) != 4)
@@ -47,7 +47,9 @@ int	sphere_init(t_scene *scene, char **args)
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
 	sphere->radius = sphere->diameter / 2;
-	add_sphere(scene, sphere);
+	add_object(scene, sphere);
+	sphere->type = SPHERE;
+	//add_sphere(scene, sphere);
 	// if (add_sphere_value(scene, args) == -1)
 	// return (ft_err("Wrong sphere values", 0), -1);
 	// add_object(&scene->sphere->next, sphere);
@@ -56,9 +58,9 @@ int	sphere_init(t_scene *scene, char **args)
 
 int	plane_init(t_scene *scene, char **args)
 {
-	t_plane	*plane;
+	t_object	*plane;
 
-	plane = gc_calloc(sizeof(t_plane));
+	plane = gc_calloc(sizeof(t_object));
 	if (!plane)
 		return (-1);
 	if (ft_strlen2(args) != 4)
@@ -70,7 +72,9 @@ int	plane_init(t_scene *scene, char **args)
 	if (set_rgb(args[3], &plane->color) == -1)
 		return (ft_err("Bad rgb plane", 0), -1);
 	normalize_bis(&plane->dir);
-	add_plane(scene, plane);
+	add_object(scene, plane);
+	plane->type = PLANE;
+	//add_plane(scene, plane);
 	// if (add_plane_value(scene, args) == -1)
 	// return (ft_err("wrong plane values", 0), -1);
 	return (0);
@@ -78,9 +82,9 @@ int	plane_init(t_scene *scene, char **args)
 
 int	cylinder_init(t_scene *scene, char **args)
 {
-	t_cylinder	*cylinder;
+	t_object	*cylinder;
 
-	cylinder = gc_calloc(sizeof(t_cylinder));
+	cylinder = gc_calloc(sizeof(t_object));
 	if (!cylinder)
 		return (-1);
 	if (ft_strlen2(args) != 6)
@@ -97,11 +101,16 @@ int	cylinder_init(t_scene *scene, char **args)
 		return (ft_err("Bad rgb cylinder", 0), -1);
 	cylinder->radius = cylinder->diameter / 2;
 	normalize_bis(&cylinder->dir);
-	cylinder->cap1 = mult_vec3(cylinder->dir, -cylinder->height / 2);
-	cylinder->cap1 = add_vec3(cylinder->cap1, cylinder->pos);
-	cylinder->cap2 = mult_vec3(cylinder->dir, cylinder->height / 2);
-	cylinder->cap2 = add_vec3(cylinder->cap2, cylinder->pos);
-	add_cylinder(scene, cylinder);
+	cylinder->type = CYLINDER;
+	/*cylinder->cap1.pos = add_vec3(cylinder->pos,
+    	mult_vec3(cylinder->dir, cylinder->height));
+	cylinder->cap1.dir = cylinder->dir;
+	cylinder->cap1.color = cylinder->color;
+	cylinder->cap2.pos = add_vec3(cylinder->pos, mult_vec3(cylinder->dir, 0));
+	cylinder->cap2.dir = cylinder->dir;
+	cylinder->cap1.color = cylinder->color;*/
+	add_object(scene, cylinder);
+	//add_cylinder(scene, cylinder);
 	// if (add_cylinder_value(scene, args) == -1)
 	// return (ft_err("wrong cylinder values", 0), -1);
 	return (0);

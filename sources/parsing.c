@@ -97,7 +97,6 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 	if (fd == -1)
 		return (ft_err(file_scene, 1), -1);
 	ft_memset(scene, 0, sizeof(t_scene));
-	init_pointer_objects(scene);
 	lines_c = 1;
 	line = get_next_line(fd);
 	while (line != NULL)
@@ -118,8 +117,7 @@ int ft_check_scene(t_scene *scene)
 		return (ft_err("You must add a camera into the scene", 0), -1);
 	if (!scene->ambient)
 		return (ft_err("You must add an ambient lighting", 0), -1);
-	if (!scene->plane && !scene->sphere && !scene->cylinder)
+	if (!scene->object)
 		return (ft_err("You must add at least one object", 0), -1);
 	return (0);
 }
-

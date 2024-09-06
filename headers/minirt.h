@@ -13,9 +13,9 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-#ifndef M_PI
-#   define M_PI 3.1415926535897932384626433832
-#endif
+# ifndef M_PI
+#  define M_PI 3.1415926535897932384626433832
+# endif
 
 # include <math.h>
 # include <stdlib.h>
@@ -46,7 +46,7 @@
 # define WIDTH 1920
 # define HEIGHT 1080
 # define EPSILON 1e-6
-#define WHITE 2147483647
+# define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
 
 typedef struct s_scene
@@ -63,12 +63,9 @@ typedef struct s_scene
 		t_u8b	fov;
 	}	*cam;
 	t_light		*light;
-	t_sphere	*sphere;
-	t_plane		*plane;
-	t_cylinder	*cylinder;
+	t_object	*object;
 	t_mlx		*mlx;
 	t_screen	*screen;
-	t_obj		*obj;
 }	t_scene;
 
 /******************************************************************************\
@@ -128,9 +125,7 @@ int				set_vector3D(t_vec3 *vec, char *coordinate);
 int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
 
 // add_list.c
-void	add_sphere(t_scene *scene, t_sphere *object);
-void			add_plane(t_scene *scene, t_plane *object);
-void			add_cylinder(t_scene *scene, t_cylinder *object);
+void			add_object(t_scene *scene, t_object *object);
 
 // mlx_init.c
 
@@ -149,12 +144,12 @@ void pixel_draw(t_scene *scene, t_render *render);
 void new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y);
 
 
-// 3Dvect.c 
+// 3Dvect.c
 
 t_vec3 merge_vect(t_vec3 a, t_vec3 b);
-t_vec3 *normalize_bis(t_vec3 *new);
-t_vec3 normalize(t_vec3 new);
-t_vec3 new_normalized(t_vec3 new);
+t_vec3 *normalize_bis(t_vec3 *_new);
+t_vec3 normalize(t_vec3 _new);
+t_vec3 new_normalized(t_vec3 _new);
 double dot(t_vec3 a, t_vec3 b);
 
 // 3Dvect2.c
@@ -176,11 +171,11 @@ t_rgb vect_to_rgb(t_vec3 vec);
 
 // form_intersect.c
 
-bool intersect_sphere(t_ray_view *ray, t_sphere *sphere, t_hit *hit);
-bool intersect_plane(t_ray_view *ray, t_plane *plane, t_hit *hit);
-bool	intersect_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit);
-bool infinite_cylinder(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit);
-double distance(t_vec3 a, t_vec3 b);
+bool	intersect_sphere(t_ray_view *ray, t_object *sphere, t_hit *hit);
+bool	intersect_plane(t_ray_view *ray, t_object *plane, t_hit *hit);
+bool	intersect_cylinder(t_ray_view *ray, t_object *cylinder, t_hit *hit);
+bool	infinite_cylinder(t_ray_view *ray, t_object *cylinder, t_hit *hit);
+double	distance(t_vec3 a, t_vec3 b);
 
 // fps_counter.c
 
@@ -191,18 +186,16 @@ void	render_time_display(t_mlx *display);
 void	fps_display(t_mlx *display);
 
 // init_object.c
-
+/*
 void init_objects_all(t_scene *scene);
-void add_plane_obj(t_plane *plane, char type, t_obj **object, int *i);
-void add_sphere_obj(t_sphere *sphere, char type, t_obj **object, int *i);
-void add_cylinder_obj(t_cylinder *cylinder, char type, t_obj **object, int *i);
-void init_pointer_objects(t_scene *scene); 
+void init_pointer_objects(t_scene *scene);
+*/
 
 // intersect.c
 
-t_obj *intersect(t_render *render, t_obj *obj, t_hit *hit);
-bool intersect_shadow(t_render *render, t_scene *scene);
-int new_intersect(t_render *render, t_obj *obj, t_hit *hit);
+bool	intersect(t_render *render, t_object *obj, t_hit *hit);
+bool	intersect_shadow(t_render *render, t_scene *scene, t_hit *hit);
+int		new_intersect(t_render *render, t_object *obj, t_hit *hit);
 
 // light.c
 
@@ -215,6 +208,7 @@ bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render);
 int	close_window(t_scene *display);
 int	key_handler(int keycode, t_scene *scene);
 
+/*
 // print_all_utils.c *************************	TO DELETE BEFORE VALIDATING  *************************
 
 void	print_all(t_scene *scene);
@@ -222,7 +216,8 @@ void print_form_list(t_scene *scene);
 void print_sphere_list(t_scene *scene);
 void print_plane_list(t_scene *scene);
 void print_cylinder_list(t_scene *scene);
-void print_all_objects(t_obj *obj);
+//void print_all_objects(t_obj *obj);
+*/
 
 // utils2.c
 
@@ -236,13 +231,12 @@ void			ft_atof_bis(char *str, long double *res, int *neg);
 
 
 
-// TEST 
+// TEST
 
-int intersect_cylinder_math(t_ray_view *ray, t_cylinder *cylinder, t_hit *hit);
-void check_cylinder_data(t_ray_view *ray, t_cylinder *cylinder, double *t);
-int calculation(double *t, double *t2, t_ray_view *ray, t_cylinder *cylinder);
+int intersect_cylinder_math(t_ray_view *ray, t_object *cylinder, t_hit *hit);
+void check_cylinder_data(t_ray_view *ray, t_object *cylinder, double *t);
+int calculation(double *t, double *t2, t_ray_view *ray, t_object *cylinder);
 
 
 
 #endif
-

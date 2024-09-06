@@ -34,7 +34,6 @@ int init_mlx_all(t_scene *scene)
     fps_counter_init(mlx->fps_counter, FPS_SNAPSHOT_SAMPLES);
     scene->mlx = mlx;
     init_camera(scene);
-    init_objects_all(scene);
     return (0);
 }
 
@@ -85,4 +84,3 @@ void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
         i -= 8;
     }
 }
-

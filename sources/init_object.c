@@ -12,10 +12,12 @@
 
 #include "../headers/minirt.h"
 
+/*
+
 void init_objects_all(t_scene *scene)
 {
     int i;
-    
+
     scene->obj = NULL;
     i = 1;
     add_plane_obj(scene->plane, 'p', &scene->obj, &i);
@@ -108,3 +110,4 @@ void init_pointer_objects(t_scene *scene)
 	scene->screen = NULL;
 	scene->obj = NULL;
 }
+*/
