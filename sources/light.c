@@ -24,7 +24,6 @@ t_rgb ambiant_color(t_render *render, t_scene *scene)
     if (!intersect(render, scene->object, &hit))
     	return (color);
     //color = render->obj_closest->color;
-    color = hit.object->color;
     color = light_handler(scene, render, &hit);
     //color = hit.object->color;
     return (color);

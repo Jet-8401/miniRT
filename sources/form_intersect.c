@@ -23,33 +23,32 @@ bool intersect_sphere(t_ray_view *ray, t_object *sphere, t_hit *hit)
     b = 2.0f * dot(sub_vec3(ray->origin, sphere->pos), ray->direction);
     c = dot(sub_vec3(ray->origin, sphere->pos), sub_vec3(ray->origin, sphere->pos)) - sphere->radius * sphere->radius;
     delta = b * b - 4.0f * a * c;
-    if (delta >= 0.0f)
-    {
-        hit->t = (-b - sqrt(delta)) / (2.0f * a);
-        hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
-        hit->norm = sub_vec3(hit->hit, sphere->pos);
-        normalize_bis(&hit->norm);
-        return (true);
-    }
-    return (false);
+    if (delta < 0.0f)
+    	return (false);
+    hit->t = (-b - sqrt(delta)) / (2.0f * a);
+    hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
+    hit->norm = sub_vec3(hit->hit, sphere->pos);
+    normalize_bis(&hit->norm);
+    return (true);
 }
 
 bool intersect_plane(t_ray_view *ray, t_object *plane, t_hit *hit)
 {
-    double denom;
+    double	denom;
+    float	t;
 
     denom = dot(plane->dir, ray->direction);
     if (fabs(denom) > 1e-6)
     {
-        hit->t = dot(sub_vec3(plane->pos, ray->origin), plane->dir) / denom;
-        if (hit->t >= 0)
-        {
-            hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
-            hit->norm = plane->dir;
-            if (dot(hit->norm, ray->direction) > 0)
-                hit->norm = mult_vec3(hit->norm, -1);
-            return (true);
-        }
+        t = dot(sub_vec3(plane->pos, ray->origin), plane->dir) / denom;
+        if (t < 0.0f)
+        	return (false);
+        hit->t = t;
+        hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
+        hit->norm = plane->dir;
+        if (dot(hit->norm, ray->direction) > 0)
+            hit->norm = mult_vec3(hit->norm, -1);
+        return (true);
     }
     return (false);
 }

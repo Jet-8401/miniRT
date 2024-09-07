@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../headers/minirt.h"
+#include "../headers/minirt.h"
 
 void init_camera(t_scene *scene)
 {
@@ -34,7 +34,6 @@ int render_scene(t_scene *scene)
     t_render render;
 
     ft_memset(&render, 0, sizeof(t_render));
-    //render.screen = (*scene->screen);
     pixel_draw(scene, &render);
     mlx_put_image_to_window(scene->mlx->mlx, scene->mlx->win, scene->mlx->img.img, 0, 0);
     fps_display(scene->mlx);

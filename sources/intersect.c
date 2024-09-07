@@ -12,25 +12,26 @@
 
 #include "../headers/minirt.h"
 
-bool	intersect(t_render *render, t_object *obj, t_hit *hit)
+bool    intersect(t_render *render, t_object *obj, t_hit *hit)
 {
-	float			closest_distance;
-	bool			has_hit;
+    bool	has_hit;
+    t_hit	tmp;
 
-	closest_distance = 3.402823466e+38F;
-	has_hit = 0;
-	while (obj)
-	{
-		if (new_intersect(render, obj, hit) && hit->t < closest_distance)
-		{
-			has_hit = 1;
-			closest_distance = hit->t;
-			hit->object = obj;
-		}
-		obj = obj->next;
-	}
-	return (has_hit);
+    hit->t = 3.402823466e+38f;
+    has_hit = 0;
+    while (obj)
+    {
+        if (does_intersect(render, obj, &tmp) && tmp.t < hit->t)
+        {
+            has_hit = 1;
+            *hit = tmp;
+            hit->object = obj;
+        }
+        obj = obj->next;
+    }
+    return (has_hit);
 }
+
 
 bool intersect_shadow(t_render *render, t_scene *scene, t_hit *hit)
 {
@@ -43,9 +44,9 @@ bool intersect_shadow(t_render *render, t_scene *scene, t_hit *hit)
     obj = scene->object;
     while (obj)
     {
-        if (obj->id != hit->object->id)
+        if (obj != hit->object)
         {
-        	if(new_intersect(render, obj, &tmp_hit) && tmp_hit.t < max_distance && tmp_hit.t > 0.0f)
+        	if(does_intersect(render, obj, &tmp_hit) && tmp_hit.t < max_distance && tmp_hit.t > 0.0f)
                 return (true);
         }
         obj = obj->next;
@@ -53,13 +54,11 @@ bool intersect_shadow(t_render *render, t_scene *scene, t_hit *hit)
     return (false);
 }
 
-int new_intersect(t_render *render, t_object *obj, t_hit *hit)
+bool does_intersect(t_render *render, t_object *obj, t_hit *hit)
 {
-    if (obj->type == SPHERE)
-        return (intersect_sphere(&render->prime_ray, obj, hit));
-    else if (obj->type == PLANE)
-        return (intersect_plane(&render->prime_ray, obj, hit));
-    else if (obj->type == CYLINDER)
-        return (intersect_cylinder(&render->prime_ray, obj, hit));
-    return (0);
+	static	bool (*intersections[3])(t_ray_view*, t_object*, t_hit*) = {
+		intersect_sphere, intersect_plane, intersect_cylinder
+	};
+
+	return (intersections[obj->type](&render->prime_ray, obj, hit));
 }

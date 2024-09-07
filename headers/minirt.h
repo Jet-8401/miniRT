@@ -195,7 +195,8 @@ void init_pointer_objects(t_scene *scene);
 
 bool	intersect(t_render *render, t_object *obj, t_hit *hit);
 bool	intersect_shadow(t_render *render, t_scene *scene, t_hit *hit);
-int		new_intersect(t_render *render, t_object *obj, t_hit *hit);
+bool	does_intersect(t_render *render, t_object *obj, t_hit *hit);
+
 
 // light.c
 
