@@ -1,2 +1,0 @@
-TODO:
-normalize the object structure

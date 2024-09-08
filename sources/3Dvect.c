@@ -12,6 +12,7 @@
 
 #include "../headers/minirt.h"
 
+// cross product
 t_vec3 merge_vect(t_vec3 a, t_vec3 b)
 {
     t_vec3 merged;

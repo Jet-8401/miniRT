@@ -35,7 +35,8 @@ typedef struct s_rgb
 enum obj_type {
 	SPHERE,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	DISK
 };
 
 typedef struct s_object
@@ -48,6 +49,8 @@ typedef struct s_object
 	float			radius;
 	enum obj_type	type;
 	struct s_object	*next;
+	struct s_object	*start_cap;
+	struct s_object	*end_cap;
 	int				id;
 }	t_object;
 

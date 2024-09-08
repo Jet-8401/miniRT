@@ -1,6 +1,7 @@
 *.o
 *.a
 *.swp
+*.txt
 
 miniRT
 .idea

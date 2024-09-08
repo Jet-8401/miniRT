@@ -18,12 +18,8 @@ t_rgb ambiant_color(t_render *render, t_scene *scene)
     t_hit hit;
 
     ft_memset(&color, 0, sizeof(t_rgb));
-    /*render->obj_closest = intersect(render, scene->object, &hit);
-    if (!render->obj_closest)
-        return (color);*/
     if (!intersect(render, scene->object, &hit))
     	return (color);
-    //color = render->obj_closest->color;
     color = light_handler(scene, render, &hit);
     //color = hit.object->color;
     return (color);

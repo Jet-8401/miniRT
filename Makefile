@@ -21,7 +21,8 @@ FILES = minirt.c \
 		fps_counter.c \
 		intersect.c \
 		light.c \
-		utils2.c
+		utils2.c \
+		vec3D_utils.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/
 

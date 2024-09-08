@@ -47,12 +47,8 @@ int	sphere_init(t_scene *scene, char **args)
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (ft_err("Bad rgb arguments sphere", 0), -1);
 	sphere->radius = sphere->diameter / 2;
-	add_object(scene, sphere);
 	sphere->type = SPHERE;
-	//add_sphere(scene, sphere);
-	// if (add_sphere_value(scene, args) == -1)
-	// return (ft_err("Wrong sphere values", 0), -1);
-	// add_object(&scene->sphere->next, sphere);
+	add_object(scene, sphere);
 	return (0);
 }
 
@@ -71,13 +67,34 @@ int	plane_init(t_scene *scene, char **args)
 		return (ft_err("Bad 3d vector plane", 0), -1);
 	if (set_rgb(args[3], &plane->color) == -1)
 		return (ft_err("Bad rgb plane", 0), -1);
-	normalize_bis(&plane->dir);
-	add_object(scene, plane);
 	plane->type = PLANE;
-	//add_plane(scene, plane);
-	// if (add_plane_value(scene, args) == -1)
-	// return (ft_err("wrong plane values", 0), -1);
+	vec3_normalize(&plane->dir);
+	add_object(scene, plane);
 	return (0);
+}
+
+void	cylinder_disk_init(t_scene *scene, t_object *cylinder)
+{
+	t_object	*cap[2];
+	t_vec3		temp;
+	int			i;
+
+	i = -1;
+	while (++i < 2)
+	{
+		cap[i] = gc_calloc(sizeof(t_object));
+		*cap[i] = *cylinder;
+		cap[i]->type = DISK;
+	}
+
+	temp = cylinder->dir;
+	vec3_scale(&temp, cylinder->height);
+	vec3_add(&cylinder->pos, &temp, &cap[1]->pos);
+
+	cylinder->start_cap = cap[0];
+	cylinder->end_cap = cap[1];
+	add_object(scene, cap[0]);
+	add_object(scene, cap[1]);
 }
 
 int	cylinder_init(t_scene *scene, char **args)
@@ -100,18 +117,9 @@ int	cylinder_init(t_scene *scene, char **args)
 	if (set_rgb(args[5], &cylinder->color) == -1)
 		return (ft_err("Bad rgb cylinder", 0), -1);
 	cylinder->radius = cylinder->diameter / 2;
-	normalize_bis(&cylinder->dir);
 	cylinder->type = CYLINDER;
-	/*cylinder->cap1.pos = add_vec3(cylinder->pos,
-    	mult_vec3(cylinder->dir, cylinder->height));
-	cylinder->cap1.dir = cylinder->dir;
-	cylinder->cap1.color = cylinder->color;
-	cylinder->cap2.pos = add_vec3(cylinder->pos, mult_vec3(cylinder->dir, 0));
-	cylinder->cap2.dir = cylinder->dir;
-	cylinder->cap1.color = cylinder->color;*/
+	vec3_normalize(&cylinder->dir);
+	cylinder_disk_init(scene, cylinder);
 	add_object(scene, cylinder);
-	//add_cylinder(scene, cylinder);
-	// if (add_cylinder_value(scene, args) == -1)
-	// return (ft_err("wrong cylinder values", 0), -1);
 	return (0);
 }
