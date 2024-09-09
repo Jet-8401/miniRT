@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:13:27 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/09 17:31:27 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:36:28 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ t_rgb light_handler(t_scene *scene, t_render *render, t_hit *hit)
         render->color = vect_to_rgb(vec3_ambiant(hit->object->color, (t_rgb){255, 255, 255}, d * scene->light->brightness));
         if (new_shadow_ray(scene, hit, render))
             render->color = mult_rgb(render->color, scene->ambient->light_ratio);
-        render->color = add_rgb(render->color, render->ambiant_light);
+        //render->color = add_rgb(render->color, render->ambiant_light);
     }
-    return (render->color);
+    return (add_rgb(render->color, render->ambiant_light));
 }
 
 bool new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render)
