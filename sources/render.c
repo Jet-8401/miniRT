@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:45:59 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/01 23:37:35 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:01:23 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	init_camera(t_scene *scene)
 	screen = &scene->screen;
 	screen->screen_width = WIDTH;
 	screen->screen_height = HEIGHT;
-	screen->scale = tan((float) scene->cam->fov / 2 * M_PI / 180);
-	screen->aspect_ratio = screen->scale / ((float) WIDTH / HEIGHT);
-	screen->right = normalize(merge_vect(scene->cam->dir,
-				(t_vec3){0.0, 1.0, 0.0}));
+	screen->scale = tan((float)scene->cam->fov / 2 * M_PI / 180);
+	screen->aspect_ratio = screen->scale / ((float)WIDTH / HEIGHT);
+	screen->right = normalize(merge_vect(scene->cam->dir, (t_vec3){0.0, 1.0,
+				0.0}));
 	screen->up = normalize(merge_vect(scene->cam->dir, screen->right));
 	screen->right = normalize(merge_vect(scene->cam->dir, screen->up));
 }
@@ -30,8 +30,8 @@ void	init_camera(t_scene *scene)
 int	render_scene(t_scene *scene)
 {
 	pixel_draw(scene, &scene->render);
-	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win,
-		scene->mlx.img.img, 0, 0);
+	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img.img,
+		0, 0);
 	fps_display(&scene->mlx);
 	render_time_display(&scene->mlx);
 	return (0);

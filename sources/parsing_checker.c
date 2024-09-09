@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:36:17 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/07/12 17:28:55 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:01:08 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_value(char *number, bool have_floating_point)
 			if (floating_point || !have_floating_point)
 				return (-1);
 			floating_point = 1;
-			continue;
+			continue ;
 		}
 		if (number[c] < '0' || number[c] > '9')
 			return (-1);

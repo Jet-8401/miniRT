@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:14:43 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/01 23:15:28 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:04:27 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,15 @@ int	fps_counter_init(t_fpscounter *counter, t_u8b samples)
 	return (0);
 }
 
-uint64_t	get_time()
+uint64_t	get_time(void)
 {
 	static struct timeval	tv;
 	static uint64_t			timestamp;
 
 	gettimeofday(&tv, NULL);
-	// change multiplication by bitshifting
 	timestamp = tv.tv_sec * 1e6 + tv.tv_usec;
 	return (timestamp);
 }
-
 
 float	fps_count(t_fpscounter *counter)
 {
@@ -52,30 +50,19 @@ float	fps_count(t_fpscounter *counter)
 	static uint64_t	delta;
 	static uint64_t	now;
 
-	// if there now last_tick, set it and skip
 	if (!counter->last_tick)
 		return (counter->last_tick = get_time(), 0);
 	now = get_time();
-	// calculate the delta from the difference
-	// of the last_tick and the new tick
-	//printf("last_tick=%ld\n", counter->last_tick);
-	//printf("now      =%ld\n", now);
 	delta = now - counter->last_tick;
-	//printf("delta=%ld\n", delta);
-	*(uint64_t *) counter->snapshots->content = delta;
-	// skip for the next snapshot
+	*(uint64_t *)counter->snapshots->content = delta;
 	counter->snapshots = counter->snapshots->next;
 	counter->last_tick = now;
 	counter->total += delta;
-	//printf("total=%ld\n", counter->total);
-	//printf("snapshots=%d\n", counter->current_snapshots);
-	// check if the number of snapshots is the same as asked.
-	// if not, it return to prevent from substracting the lastest delta
 	if (counter->n_snapshots < counter->snapshots_samples)
-		return (counter->n_snapshots++,
-			1e6 / ((float) counter->total / counter->n_snapshots));
-	result = (float) counter->total / counter->n_snapshots;
-	counter->total -= *((uint64_t *) counter->snapshots->prev->content);
+		return (counter->n_snapshots++, 1e6 / ((float)counter->total
+				/ counter->n_snapshots));
+	result = (float)counter->total / counter->n_snapshots;
+	counter->total -= *((uint64_t *)counter->snapshots->prev->content);
 	return (1e6 / result);
 }
 

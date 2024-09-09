@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:17:20 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/12 17:28:18 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:00:22 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_err(const char *line, char perror_invoc)
 		perror(line);
 		return ;
 	}
-	if (write(2, line, ft_strlen(line)) -1 && write(2, "\n", 1) == -1)
+	if (write(2, line, ft_strlen(line)) - 1 && write(2, "\n", 1) == -1)
 		return ;
 }
 

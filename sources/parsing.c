@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/02 00:17:17 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:11:51 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ int	parser_check_capitals(const char *line)
 int (*check_identifiers(const char *line))(t_scene *n, char **split)
 {
 	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
-	static int	(*functions[6])(t_scene *, char **) = {ambient_init,
-		camera_init, light_init, sphere_init, plane_init, cylinder_init};
 	int			id;
 	long		id_len;
+	static int (*functions[6])(t_scene *, char **) = {ambient_init, camera_init,
+		light_init, sphere_init, plane_init, cylinder_init};
 
 	id = 0;
 	while (id < 6)
@@ -47,9 +47,9 @@ int (*check_identifiers(const char *line))(t_scene *n, char **split)
 
 int	ft_parse_line(t_scene *scene, const char *line)
 {
-	int			(*initiator)(t_scene * n, char **);
+	int		(* initiator)(t_scene * n, char **);
 	int			result;
-	char		**split;
+	char			**split;
 
 	if (parser_check_capitals(line) == -1)
 		return (-1);
@@ -111,7 +111,7 @@ int	ft_parsing(t_scene *scene, const char *file_scene)
 	return (ft_check_scene(scene));
 }
 
-int ft_check_scene(t_scene *scene)
+int	ft_check_scene(t_scene *scene)
 {
 	if (!scene->cam)
 		return (ft_err("You must add a camera into the scene", 0), -1);

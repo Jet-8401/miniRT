@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vec3D_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 01:50:04 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/08 01:50:06 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:01:29 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	vec3_normalize(t_vec3 *vec)
 {
 	double	magnitude;
 
-	magnitude = sqrt(((vec->x * vec->x) + (vec->y * vec->y)
-		+ (vec->z * vec->z)));
+	magnitude = sqrt(((vec->x * vec->x) + (vec->y * vec->y) + (vec->z
+					* vec->z)));
 	vec->x /= magnitude;
 	vec->y /= magnitude;
 	vec->z /= magnitude;

@@ -6,19 +6,19 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 13:17:11 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/08/20 11:27:45 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:15:48 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-static int IDS = 0;
+static int	g_ids = 0;
 
 void	add_object(t_scene *scene, t_object *object)
 {
-	t_object *tmp;
+	t_object	*tmp;
 
-	object->id = IDS++;
+	object->id = g_ids++;
 	tmp = scene->object;
 	if (tmp == NULL)
 		scene->object = object;
