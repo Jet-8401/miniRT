@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/03 20:05:24 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:24:43 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,9 @@ typedef struct s_render
 	t_ray_view			prime_ray;
 	int					color_ambiant;
 	double				light_distance;
+	t_rgb				final_color;
+	t_rgb				ambiant_light;
+	t_rgb				color;
 }	t_render;
 
 
