@@ -73,12 +73,10 @@ typedef struct s_screen
 	size_t screen_width;
 	size_t screen_height;
 	double aspect_ratio;
-	double scalar_fov;
 	double scale;
-	double width;
 	t_vec3 right;
 	t_vec3 up;
-} t_screen;
+}	t_screen;
 
 typedef struct s_fpscounter
 {
@@ -89,8 +87,6 @@ typedef struct s_fpscounter
 	uint64_t	total;
 }	t_fpscounter;
 
-/*   mlx lib  */
-
 typedef struct s_image
 {
 	void				*img;
@@ -98,22 +94,22 @@ typedef struct s_image
 	int					bpp;
 	int					line_len;
 	int					endian;
-}						t_image;
+}	t_image;
 
 typedef struct s_mlx
 {
-	void				*mlx;
-	void				*win;
-	t_image				img;
-	t_fpscounter *fps_counter;
-}						t_mlx;
+	void			*mlx;
+	void			*win;
+	t_image			img;
+	t_fpscounter	*fps_counter;
+}	t_mlx;
 
 
 typedef struct s_ray_view
 {
-	t_vec3				origin;
-	t_vec3				direction;
-} t_ray_view;
+	t_vec3	origin;
+	t_vec3	direction;
+}	t_ray_view;
 
 typedef struct s_hit
 {
@@ -126,11 +122,10 @@ typedef struct s_hit
 
 typedef struct s_render
 {
-	//t_screen			screen;
 	t_ray_view			prime_ray;
 	int					color_ambiant;
 	double				light_distance;
-} t_render;
+}	t_render;
 
 
 

@@ -42,7 +42,6 @@
 # define ERR_RENDER_IMG "an error ocured while creating mlx image"
 # define ERR_COUNTER_INIT "impossible to init fps counter"
 
-
 # define WIDTH 1920
 # define HEIGHT 1080
 # define EPSILON 1e-6
@@ -64,8 +63,9 @@ typedef struct s_scene
 	}	*cam;
 	t_light		*light;
 	t_object	*object;
-	t_mlx		*mlx;
-	t_screen	*screen;
+	t_mlx		mlx;
+	t_screen	screen;
+	t_render	render;
 }	t_scene;
 
 /******************************************************************************\

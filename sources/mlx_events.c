@@ -16,8 +16,7 @@
 
 int	close_window(t_scene *display)
 {
-	if (display->mlx)
-		ft_destroy_display(display);
+	ft_destroy_display(display);
 	gc_dump(NULL);
 	exit(0);
 	return (0);

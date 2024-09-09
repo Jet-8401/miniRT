@@ -21,10 +21,10 @@ int	main(int argc, char *argv[])
 		return (gc_dump(NULL), 0);
 	if (init_mlx_all(&scene) == -1)
 		return (gc_dump(NULL), 0);
-	mlx_hook(scene.mlx->win, 17, 0, close_window, &scene);
-	mlx_hook(scene.mlx->win, KeyPress, KeyPressMask, key_handler, &scene);
-	mlx_loop_hook(scene.mlx->mlx, &render_scene, &scene);
-	mlx_loop(scene.mlx->mlx);
+	mlx_hook(scene.mlx.win, 17, 0, close_window, &scene);
+	mlx_hook(scene.mlx.win, KeyPress, KeyPressMask, key_handler, &scene);
+	mlx_loop_hook(scene.mlx.mlx, &render_scene, &scene);
+	mlx_loop(scene.mlx.mlx);
 	//gc_dump(NULL);
 	return (0);
 }

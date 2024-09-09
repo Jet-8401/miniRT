@@ -16,7 +16,7 @@ int init_mlx_all(t_scene *scene)
 {
     t_mlx *mlx;
 
-    mlx = gc_calloc(sizeof(t_mlx));
+    mlx = &scene->mlx;
     if (!mlx)
         return (-1);
     mlx->mlx = mlx_init();
@@ -32,19 +32,17 @@ int init_mlx_all(t_scene *scene)
     if (!mlx->fps_counter)
         return (ft_err(ERR_COUNTER_INIT, 0), -1);
     fps_counter_init(mlx->fps_counter, FPS_SNAPSHOT_SAMPLES);
-    scene->mlx = mlx;
     init_camera(scene);
     return (0);
 }
 
 void	ft_destroy_display(t_scene *display)
 {
-	mlx_destroy_image(display->mlx->mlx, display->mlx->img.img);
-	mlx_destroy_window(display->mlx->mlx, display->mlx->win);
-	mlx_destroy_display(display->mlx->mlx);
-	gc_free(display->mlx->mlx);
+	mlx_destroy_image(display->mlx.mlx, display->mlx.img.img);
+	mlx_destroy_window(display->mlx.mlx, display->mlx.win);
+	mlx_destroy_display(display->mlx.mlx);
+	gc_free(display->mlx.mlx);
 }
-
 
 int init_mlx_window(t_mlx *mlx)
 {
