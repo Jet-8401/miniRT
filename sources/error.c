@@ -21,7 +21,7 @@ void	ft_err(const char *line, char perror_invoc)
 		perror(line);
 		return ;
 	}
-	if (write(2, line, ft_strlen(line)) -1 && write(2, "\n", 1) == -1)
+	if (write(2, line, ft_strlen(line)) - 1 && write(2, "\n", 1) == -1)
 		return ;
 }
 

@@ -17,8 +17,8 @@ void	init_camera(t_scene *scene)
 	t_screen	*screen;
 
 	screen = &scene->screen;
-	screen->screen_width = WIDTH;
-	screen->screen_height = HEIGHT;
+	screen->width = WIDTH;
+	screen->height = HEIGHT;
 	screen->scale = tan((float) scene->cam->fov / 2 * M_PI / 180);
 	screen->aspect_ratio = screen->scale / ((float) WIDTH / HEIGHT);
 	screen->right = normalize(merge_vect(scene->cam->dir,
@@ -27,37 +27,33 @@ void	init_camera(t_scene *scene)
 	screen->right = normalize(merge_vect(scene->cam->dir, screen->up));
 }
 
-int	render_scene(t_scene *scene)
+// This is a proper way to create a pixel put function however very slow
+void new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
 {
-	pixel_draw(scene, &scene->render);
-	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win,
-		scene->mlx.img.img, 0, 0);
-	fps_display(&scene->mlx);
-	render_time_display(&scene->mlx);
-	return (0);
+    uint8_t	*pixel;
+    int		i;
+
+    i = mlx->img.bpp - 8;
+    pixel = mlx->img.addr + (y * mlx->img.line_len + x * (mlx->img.bpp / 8));
+    while (i >= 0)
+    {
+        if (mlx->img.big_endian != 0)
+            *pixel++ = (color >> i) & 0xFF;
+        else
+            *pixel++ = (color >> (mlx->img.bpp - 8 - i)) & 0xFF;
+        i -= 8;
+    }
 }
 
-void	pixel_draw(t_scene *scene, t_render *render)
+uint32_t	convert_rgb(t_mlx *mlx, t_rgb rgb)
 {
-	uint64_t	x;
-	uint64_t	y;
-
-	y = 0;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			new_init_camera(scene, &render->prime_ray, (float)x, (float)y);
-			render->color_ambiant = color_rgb(ambiant_color(render, scene));
-			new_mlx_pixel_put(&scene->mlx, x, y, render->color_ambiant);
-			x++;
-		}
-		y++;
-	}
+	if (mlx->img.big_endian)
+		return ((rgb.r << 24) | (rgb.g << 16) | (rgb.b << 8));
+	else
+		return ((rgb.r << 16) | (rgb.g << 8) | rgb.b);
 }
 
-void	new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
+void	init_ray(t_scene *scene, t_ray_view *prime_ray, float x, float y)
 {
 	t_vec3	vertical;
 	t_vec3	horizontal;
@@ -75,4 +71,37 @@ void	new_init_camera(t_scene *scene, t_ray_view *prime_ray, float x, float y)
 	res = add_vec3(res, scene->cam->pos);
 	prime_ray->direction = sub_vec3(res, prime_ray->origin);
 	vec3_normalize(&prime_ray->direction);
+}
+
+void	pixel_draw(t_scene *scene, t_render *render)
+{
+	uint64_t	x;
+	uint64_t	y;
+
+	y = 0;
+	while (y < HEIGHT)
+	{
+		x = 0;
+		while (x < WIDTH)
+		{
+			init_ray(scene, &render->prime_ray, (float)x, (float)y);
+			//scene->mlx.img.addr[x + y * scene->screen.width]
+			//	= mlx_convert_rgb(&scene->mlx, ambiant_color(render, scene));
+			render->color_ambiant = convert_rgb(&scene->mlx,
+				ambiant_color(render, scene));
+			new_mlx_pixel_put(&scene->mlx, x, y, render->color_ambiant);
+			x++;
+		}
+		y++;
+	}
+}
+
+int	render_scene(t_scene *scene)
+{
+	pixel_draw(scene, &scene->render);
+	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win,
+		scene->mlx.img.img, 0, 0);
+	fps_display(&scene->mlx);
+	render_time_display(&scene->mlx);
+	return (0);
 }

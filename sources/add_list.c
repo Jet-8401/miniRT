@@ -12,13 +12,10 @@
 
 #include "../headers/minirt.h"
 
-static int IDS = 0;
-
 void	add_object(t_scene *scene, t_object *object)
 {
-	t_object *tmp;
+	t_object	*tmp;
 
-	object->id = IDS++;
 	tmp = scene->object;
 	if (tmp == NULL)
 		scene->object = object;

@@ -22,7 +22,9 @@ double	ft_atof(char *str)
 	ft_atof_bis(str, &res, &neg);
 	if (res > DBL_MAX)
 		ft_err("Number bigger than double", 0);
-	return (neg ? -res : res);
+	if (neg)
+		return (-res);
+	return (res);
 }
 
 void	ft_atof_bis(char *str, long double *res, int *neg)

@@ -26,7 +26,7 @@ int	check_value(char *number, bool have_floating_point)
 			if (floating_point || !have_floating_point)
 				return (-1);
 			floating_point = 1;
-			continue;
+			continue ;
 		}
 		if (number[c] < '0' || number[c] > '9')
 			return (-1);

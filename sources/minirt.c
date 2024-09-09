@@ -16,7 +16,8 @@ int	main(int argc, char *argv[])
 {
 	t_scene	scene;
 
-	(void)argc; // to remove
+	if (argc != 2)
+		return (ft_err(ERR_USAGE, 0), 0);
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
 	if (init_mlx_all(&scene) == -1)

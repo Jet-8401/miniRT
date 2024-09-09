@@ -32,7 +32,8 @@ typedef struct s_rgb
 	t_u8b				b;
 }						t_rgb;
 
-enum obj_type {
+enum e_obj_type
+{
 	SPHERE,
 	PLANE,
 	CYLINDER,
@@ -47,11 +48,10 @@ typedef struct s_object
 	float			diameter;
 	float			height;
 	float			radius;
-	enum obj_type	type;
+	enum e_obj_type	type;
 	struct s_object	*next;
 	struct s_object	*start_cap;
 	struct s_object	*end_cap;
-	int				id;
 }	t_object;
 
 // brightness is a ratio between 0 and 1
@@ -70,12 +70,12 @@ typedef struct s_lst
 
 typedef struct s_screen
 {
-	size_t screen_width;
-	size_t screen_height;
-	double aspect_ratio;
-	double scale;
-	t_vec3 right;
-	t_vec3 up;
+	size_t	width;
+	size_t	height;
+	double	aspect_ratio;
+	double	scale;
+	t_vec3	right;
+	t_vec3	up;
 }	t_screen;
 
 typedef struct s_fpscounter
@@ -89,11 +89,11 @@ typedef struct s_fpscounter
 
 typedef struct s_image
 {
-	void				*img;
-	char				*addr;
-	int					bpp;
-	int					line_len;
-	int					endian;
+	void	*img;
+	uint8_t	*addr;
+	int		bpp;
+	int		line_len;
+	int		big_endian;
 }	t_image;
 
 typedef struct s_mlx
@@ -103,7 +103,6 @@ typedef struct s_mlx
 	t_image			img;
 	t_fpscounter	*fps_counter;
 }	t_mlx;
-
 
 typedef struct s_ray_view
 {
@@ -126,10 +125,5 @@ typedef struct s_render
 	int					color_ambiant;
 	double				light_distance;
 }	t_render;
-
-
-
-
-
 
 #endif

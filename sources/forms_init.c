@@ -26,8 +26,6 @@ int	light_init(t_scene *scene, char **args)
 	if (set_ratio(args[2], &light->brightness) == -1)
 		return (ft_err("Bad light ratio", 0), -1);
 	scene->light = light;
-	// if (add_light_value(scene, args) == -1)
-	// return (ft_err("Wrong light values", 0), -1);
 	return (0);
 }
 
@@ -86,11 +84,9 @@ void	cylinder_disk_init(t_scene *scene, t_object *cylinder)
 		*cap[i] = *cylinder;
 		cap[i]->type = DISK;
 	}
-
 	temp = cylinder->dir;
 	vec3_scale(&temp, cylinder->height);
 	vec3_add(&cylinder->pos, &temp, &cap[1]->pos);
-
 	cylinder->start_cap = cap[0];
 	cylinder->end_cap = cap[1];
 	add_object(scene, cap[0]);
