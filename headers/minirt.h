@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/03 22:46:59 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:13:04 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ int				set_float_value(char *size, float *value);
 int				set_fov(char *fov, t_u8b *new_fov);
 
 // element_init2.c
-int				set_vector3D(t_vec3 *vec, char *coordinate);
-int				set_normalized_vector3D(t_vec3 *vec, char *coordinate);
+int				set_vector3d(t_vec3 *vec, char *coordinate);
+int				set_normalized_vector3d(t_vec3 *vec, char *coordinate);
 
 // add_list.c
 void			add_object(t_scene *scene, t_object *object);
@@ -158,7 +158,7 @@ void			vec3_normalize(t_vec3 *vec);
 double			vec3_dot(t_vec3 *a, t_vec3 *b);
 
 // color_vect.c
-t_rgb			mult_color_vec4(t_rgb color, double b);
+t_rgb			mult_color_vec4(t_rgb color, t_rgb color2);
 t_vec3			vec3_ambiant(t_rgb col, t_rgb color, float light_ratio);
 t_rgb			mult_rgb(t_rgb ambiant, double intensity);
 t_rgb			add_rgb(t_rgb a, t_rgb b);

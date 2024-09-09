@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:27:54 by jullopez          #+#    #+#             */
-/*   Updated: 2024/07/11 15:41:09 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:14:32 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ int	ft_isspace(char c)
 
 void	free_double_array(char **split)
 {
-	(void) split;
-	// todo
+	(void)split;
 }
 
 char	*strs_join(const char **strs)
@@ -37,7 +36,7 @@ char	*strs_join(const char **strs)
 	while (strs[++i])
 	{
 		n = ft_strlen(strs[i]);
-		list = lst_append(&list, lst_new((void *) n));
+		list = lst_append(&list, lst_new((void *)n));
 		bytes += n;
 	}
 	string = gc_calloc((bytes + 1) * sizeof(char));
@@ -45,8 +44,8 @@ char	*strs_join(const char **strs)
 		return (NULL);
 	while (i-- > 0)
 	{
-		bytes -= (long) list->content;
-		ft_memcpy(&string[bytes], strs[i], (long) list->content);
+		bytes -= (long)list->content;
+		ft_memcpy(&string[bytes], strs[i], (long)list->content);
 		lst_trunc(&list);
 	}
 	return (string);

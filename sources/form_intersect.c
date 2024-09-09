@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:06:55 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/05 20:11:46 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:00:25 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* Note that in the sphere quadratic equation a=1.
  * Therefore every calculus have been simplified with value that
  * already has to be computed with a.
-*/
+ */
 bool	intersect_sphere(t_ray_view *ray, t_object *sphere, t_hit *hit)
 {
 	double	b;

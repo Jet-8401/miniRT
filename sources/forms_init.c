@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/02 18:02:21 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:17:49 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	light_init(t_scene *scene, char **args)
 		return (-1);
 	if (ft_strlen2(args) != 4)
 		return (ft_err("Bad arguments number light", 0), -1);
-	if (set_vector3D(&light->pos, args[1]) == -1)
+	if (set_vector3d(&light->pos, args[1]) == -1)
 		return (ft_err("Bad coordinate light", 0), -1);
 	if (set_ratio(args[2], &light->brightness) == -1)
 		return (ft_err("Bad light ratio", 0), -1);
@@ -38,7 +38,7 @@ int	sphere_init(t_scene *scene, char **args)
 		return (-1);
 	if (ft_strlen2(args) != 4)
 		return (ft_err("Bad arguments number sphere", 0), -1);
-	if (set_vector3D(&sphere->pos, args[1]) == -1)
+	if (set_vector3d(&sphere->pos, args[1]) == -1)
 		return (ft_err("Bad argument coordinate sphere", 0), -1);
 	if (set_float_value(args[2], &sphere->diameter) == -1)
 		return (ft_err("Bad height sphere", 0), -1);
@@ -59,9 +59,9 @@ int	plane_init(t_scene *scene, char **args)
 		return (-1);
 	if (ft_strlen2(args) != 4)
 		return (ft_err("Bad arguments number plane", 0), -1);
-	if (set_vector3D(&plane->pos, args[1]) == -1)
+	if (set_vector3d(&plane->pos, args[1]) == -1)
 		return (ft_err("Bad argument coordinate sphere", 0), -1);
-	if (set_normalized_vector3D(&plane->dir, args[2]) == -1)
+	if (set_normalized_vector3d(&plane->dir, args[2]) == -1)
 		return (ft_err("Bad 3d vector plane", 0), -1);
 	if (set_rgb(args[3], &plane->color) == -1)
 		return (ft_err("Bad rgb plane", 0), -1);
@@ -102,9 +102,9 @@ int	cylinder_init(t_scene *scene, char **args)
 		return (-1);
 	if (ft_strlen2(args) != 6)
 		return (ft_err("Bad arguments number cylinder", 0), -1);
-	if (set_vector3D(&cylinder->pos, args[1]) == -1)
+	if (set_vector3d(&cylinder->pos, args[1]) == -1)
 		return (ft_err("Bad coordinate cylinder", 0), -1);
-	if (set_normalized_vector3D(&cylinder->dir, args[2]) == -1)
+	if (set_normalized_vector3d(&cylinder->dir, args[2]) == -1)
 		return (ft_err("Bad 3d vector cylinder", 0), -1);
 	if (set_float_value(args[3], &cylinder->diameter) == -1)
 		return (ft_err("Bad diameter", 0), -1);

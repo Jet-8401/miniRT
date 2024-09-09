@@ -65,10 +65,10 @@ float	fps_count(t_fpscounter *counter)
 	counter->last_tick = now;
 	counter->total += delta;
 	if (counter->n_snapshots < counter->snapshots_samples)
-		return (counter->n_snapshots++,
-			1e6 / ((float) counter->total / counter->n_snapshots));
-	result = (float) counter->total / counter->n_snapshots;
-	counter->total -= *((uint64_t *) counter->snapshots->prev->content);
+		return (counter->n_snapshots++, 1e6 / ((float)counter->total
+				/ counter->n_snapshots));
+	result = (float)counter->total / counter->n_snapshots;
+	counter->total -= *((uint64_t *)counter->snapshots->prev->content);
 	return (1e6 / result);
 }
 
