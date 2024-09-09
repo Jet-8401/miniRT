@@ -48,8 +48,8 @@ void	vec3_normalize(t_vec3 *vec)
 {
 	double	magnitude;
 
-	magnitude = sqrt(((vec->x * vec->x) + (vec->y * vec->y) +
-		(vec->z * vec->z)));
+	magnitude = sqrt(((vec->x * vec->x) + (vec->y * vec->y)
+		+ (vec->z * vec->z)));
 	vec->x /= magnitude;
 	vec->y /= magnitude;
 	vec->z /= magnitude;
