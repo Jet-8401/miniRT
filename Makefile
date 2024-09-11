@@ -1,4 +1,5 @@
 NAME = miniRT
+NAME_BONUS = miniRT_bonus
 FILES = minirt.c \
 		error.c \
 		list_utils.c \
@@ -25,16 +26,20 @@ FILES = minirt.c \
 		vec3D_utils.c \
 		vec3D_utils2.c \
 		cylinder_utils.c
+
+FILES_BONUS = $(wildcard sources/bonus/*.c)
 SOURCES = $(addprefix sources/,$(FILES))
+SOURCES_BONUS = $(FILES_BONUS)
 OUT = bins/
 
 BINS = $(addprefix $(OUT),$(SOURCES:.c=.o))
+BINS_BONUS = $(addprefix $(OUT),$(SOURCES_BONUS:.c=.o))
 
 LIBS_DIRS = libs/libft-gc
 LIBS = libs/mlx/libmlx.a libs/libft-gc/libft-gc.a
 
-CFLAGS = -g -O3 -Wall -Werror -Wextra -Wpedantic
-FLAGS = -Llibs/mlx -L/usr/lib -lmlx -lXext -lX11 -lm -I/usr/include
+CFLAGS = -g -O3 -Wall -Werror -Wextra -Wpedantic 
+FLAGS = -Llibs/mlx -L/usr/lib -lmlx -lXext -lX11 -lm -I/usr/include -
 
 .SECONDEXPANSION:
 
@@ -47,18 +52,24 @@ $(NAME): $(BINS)
 	make -C libs/mlx
 	$(CC) $^ $(FLAGS) -o $@ $(LIBS)
 
+$(NAME_BONUS): $(BINS_BONUS)
+	make -C libs/mlx
+	$(CC) $^ $(FLAGS) -o $@ $(LIBS)
+
 $(OUT)%.o:	%.c $$(@D)/.f
 	$(CC) $(CFLAGS) -c $< -o $@
 
 %/.f:
 	mkdir -p $(dir $@)
 
+bonus: $(LIBS_DIRS) $(NAME_BONUS)
+
 clean: $(LIBS_DIRS)
 	make -C libs/mlx clean
 	rm -rf $(OUT)
 
 fclean: $(LIBS_DIRS) clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(NAME_BONUS)
 
 re:	fclean all
 
