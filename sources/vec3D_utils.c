@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 01:50:04 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/09 18:01:29 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:16:44 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,4 @@ void	vec3_normalize(t_vec3 *vec)
 	vec->y /= magnitude;
 	vec->z /= magnitude;
 	return ;
-}
-
-double	vec3_dot(t_vec3 *a, t_vec3 *b)
-{
-	return ((a->x * b->x) + (a->y * b->y) + (a->z * b->z));
 }

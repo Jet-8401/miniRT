@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 15:59:32 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/09 15:24:43 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:36:54 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_rgb
 	t_u8b				b;
 }						t_rgb;
 
-enum e_obj_type
+enum					e_obj_type
 {
 	SPHERE,
 	PLANE,
@@ -42,17 +42,17 @@ enum e_obj_type
 
 typedef struct s_object
 {
-	t_vec3			pos;
-	t_vec3			dir;
-	t_rgb			color;
-	float			diameter;
-	float			height;
-	float			radius;
-	enum e_obj_type	type;
-	struct s_object	*next;
-	struct s_object	*start_cap;
-	struct s_object	*end_cap;
-}	t_object;
+	t_vec3				pos;
+	t_vec3				dir;
+	t_rgb				color;
+	float				diameter;
+	float				height;
+	float				radius;
+	enum e_obj_type		type;
+	struct s_object		*next;
+	struct s_object		*start_cap;
+	struct s_object		*end_cap;
+}						t_object;
 
 // brightness is a ratio between 0 and 1
 typedef struct s_light
@@ -70,54 +70,54 @@ typedef struct s_lst
 
 typedef struct s_screen
 {
-	size_t	width;
-	size_t	height;
-	double	aspect_ratio;
-	double	scale;
-	t_vec3	right;
-	t_vec3	up;
-}	t_screen;
+	size_t				width;
+	size_t				height;
+	double				aspect_ratio;
+	double				scale;
+	t_vec3				right;
+	t_vec3				up;
+}						t_screen;
 
 typedef struct s_fpscounter
 {
-	t_lst		*snapshots;
-	t_u8b		snapshots_samples;
-	t_u8b		n_snapshots;
-	uint64_t	last_tick;
-	uint64_t	total;
-}	t_fpscounter;
+	t_lst				*snapshots;
+	t_u8b				snapshots_samples;
+	t_u8b				n_snapshots;
+	uint64_t			last_tick;
+	uint64_t			total;
+}						t_fpscounter;
 
 typedef struct s_image
 {
-	void	*img;
-	uint8_t	*addr;
-	int		bpp;
-	int		line_len;
-	int		big_endian;
-}	t_image;
+	void				*img;
+	uint8_t				*addr;
+	int					bpp;
+	int					line_len;
+	int					big_endian;
+}						t_image;
 
 typedef struct s_mlx
 {
-	void			*mlx;
-	void			*win;
-	t_image			img;
-	t_fpscounter	*fps_counter;
-}	t_mlx;
+	void				*mlx;
+	void				*win;
+	t_image				img;
+	t_fpscounter		*fps_counter;
+}						t_mlx;
 
 typedef struct s_ray_view
 {
-	t_vec3	origin;
-	t_vec3	direction;
-}	t_ray_view;
+	t_vec3				origin;
+	t_vec3				direction;
+}						t_ray_view;
 
 typedef struct s_hit
 {
-	double		t;
-	double		t2;
-	t_vec3		hit;
-	t_vec3		norm;
-	t_object	*object;
-}	t_hit;
+	double				t;
+	double				t2;
+	t_vec3				hit;
+	t_vec3				norm;
+	t_object			*object;
+}						t_hit;
 
 typedef struct s_render
 {
@@ -127,6 +127,16 @@ typedef struct s_render
 	t_rgb				final_color;
 	t_rgb				ambiant_light;
 	t_rgb				color;
-}	t_render;
+}						t_render;
+
+typedef struct s_equation
+{
+	double				a;
+	double				b;
+	double				c;
+	double				delta;
+	t_vec3				origin;
+	t_vec3				temp;
+}						t_equation;
 
 #endif

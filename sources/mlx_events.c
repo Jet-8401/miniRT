@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 01:45:02 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/09 18:01:03 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:14:00 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,29 +25,19 @@ int	close_window(t_scene *display)
 int	key_handler(int keycode, t_scene *scene)
 {
 	printf("keycode=%d\n", keycode);
-	switch (keycode)
-	{
-	case 65451:
+	if (keycode == 65451)
 		scene->cam->pos.z += 0.5;
-		break ;
-	case 65453:
+	else if (keycode == 65453)
 		scene->cam->pos.z -= 0.5;
-		break ;
-	case 65361:
+	else if (keycode == 65361)
 		scene->cam->pos.x -= MOVING_RATIO;
-		break ;
-	case 65363:
+	else if (keycode == 65363)
 		scene->cam->pos.x += MOVING_RATIO;
-		break ;
-	case 65362:
+	else if (keycode == 65362)
 		scene->cam->pos.y += MOVING_RATIO;
-		break ;
-	case 65364:
+	else if (keycode == 65364)
 		scene->cam->pos.y -= MOVING_RATIO;
-		break ;
-	case XK_Escape:
+	else if (keycode == XK_Escape)
 		close_window(scene);
-		break ;
-	}
 	return (0);
 }

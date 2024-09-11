@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jullopez <jullopez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 19:17:22 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/09 19:17:23 by jullopez         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:59:51 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,33 +53,36 @@ void	check_cylinder_data(t_ray_view *ray, t_object *cylinder, double *t)
 
 bool	calculation(double *t, double *t2, t_ray_view *ray, t_object *cylinder)
 {
-	t_vec3	a_sqrt;
-	t_vec3	right;
-	double	a;
-	double	b;
-	double	c;
-	double	delta;
-	t_vec3	origin;
-	t_vec3	temp;
+	t_equation	eq;
+	t_vec3		a_sqrt;
+	t_vec3		right;
 
-	temp = cylinder->dir;
-	vec3_scale(&temp, vec3_dot(&ray->direction, &cylinder->dir));
-	vec3_subtract(&ray->direction, &temp, &a_sqrt);
-	a = vec3_dot(&a_sqrt, &a_sqrt);
-	vec3_subtract(&ray->origin, &cylinder->pos, &origin);
-	temp = cylinder->dir;
-	vec3_scale(&temp, vec3_dot(&origin, &cylinder->dir));
-	vec3_subtract(&origin, &temp, &right);
-	b = 2.0f * vec3_dot(&a_sqrt, &right);
-	c = vec3_dot(&right, &right) - cylinder->radius * cylinder->radius;
-	delta = b * b - 4.0f * a * c;
-	if (delta < 0.0f)
+	eq.temp = cylinder->dir;
+	vec3_scale(&eq.temp, vec3_dot(&ray->direction, &cylinder->dir));
+	vec3_subtract(&ray->direction, &eq.temp, &a_sqrt);
+	eq.a = vec3_dot(&a_sqrt, &a_sqrt);
+	vec3_subtract(&ray->origin, &cylinder->pos, &eq.origin);
+	eq.temp = cylinder->dir;
+	vec3_scale(&eq.temp, vec3_dot(&eq.origin, &cylinder->dir));
+	vec3_subtract(&eq.origin, &eq.temp, &right);
+	eq.b = 2.0f * vec3_dot(&a_sqrt, &right);
+	eq.c = vec3_dot(&right, &right) - cylinder->radius * cylinder->radius;
+	eq.delta = eq.b * eq.b - 4.0f * eq.a * eq.c;
+	if (eq.delta < 0.0f)
 		return (0);
-	*t = (-b - sqrt(delta)) / (2.0f * a);
-	*t2 = (-b + sqrt(delta)) / (2.0f * a);
-	if (*t >= 0 && *t2 >= 0)
-		*t = *t < *t2 ? *t : *t2;
-	else if (*t2 >= 0)
-		*t = *t2;
+	solve_calculation(&t, &t2, &eq);
 	return (1);
+}
+
+void	solve_calculation(double **t, double **t2, t_equation *eq)
+{
+	*(*t) = (-eq->b - sqrt(eq->delta)) / (2.0f * eq->a);
+	*(*t2) = (-eq->b + sqrt(eq->delta)) / (2.0f * eq->a);
+	if (*(*t) >= 0 && *(*t2) >= 0)
+	{
+		if (*(*t) >= *(*t2))
+			*(*t) = *(*t2);
+	}
+	else if (*(*t2) >= 0)
+		*(*t) = *(*t2);
 }

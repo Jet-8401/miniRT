@@ -23,6 +23,7 @@ FILES = minirt.c \
 		light.c \
 		utils2.c \
 		vec3D_utils.c \
+		vec3D_utils2.c \
 		cylinder_utils.c
 SOURCES = $(addprefix sources/,$(FILES))
 OUT = bins/

@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 14:31:08 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/09 18:01:06 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:08:54 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_destroy_display(t_scene *display)
 	mlx_destroy_image(display->mlx.mlx, display->mlx.img.img);
 	mlx_destroy_window(display->mlx.mlx, display->mlx.win);
 	mlx_destroy_display(display->mlx.mlx);
-	gc_free(display->mlx.mlx);
+	free(display->mlx.mlx);
 }
 
 int	init_mlx_window(t_mlx *mlx)

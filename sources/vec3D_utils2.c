@@ -1,30 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   vec3D_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/01 23:18:15 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/11 11:09:55 by akinzeli         ###   ########.fr       */
+/*   Created: 2024/09/11 11:15:26 by akinzeli          #+#    #+#             */
+/*   Updated: 2024/09/11 11:26:23 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-t_u8b	check_data(int n, int min, int max)
+double	vec3_dot(t_vec3 *a, t_vec3 *b)
 {
-	if (n > max)
-		return (max);
-	else if (n < min)
-		return (min);
-	return (n);
-}
-
-uint32_t	convert_rgb(t_mlx *mlx, t_rgb rgb)
-{
-	if (mlx->img.big_endian)
-		return ((rgb.r << 24) | (rgb.g << 16) | (rgb.b << 8));
-	else
-		return ((rgb.r << 16) | (rgb.g << 8) | rgb.b);
+	return ((a->x * b->x) + (a->y * b->y) + (a->z * b->z));
 }

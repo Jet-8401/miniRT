@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/09 18:11:51 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:25:57 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ int	parser_check_capitals(const char *line)
 	return (0);
 }
 
-int (*check_identifiers(const char *line))(t_scene *n, char **split)
+int	(*check_identifiers(const char *line))(t_scene *n, char **split)
 {
 	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
 	int			id;
 	long		id_len;
-	static int (*functions[6])(t_scene *, char **) = {ambient_init, camera_init,
-		light_init, sphere_init, plane_init, cylinder_init};
+	static int	(*functions[6])(t_scene *, char **) = {ambient_init,
+		camera_init, light_init, sphere_init, plane_init, cylinder_init};
 
 	id = 0;
 	while (id < 6)
@@ -47,9 +47,9 @@ int (*check_identifiers(const char *line))(t_scene *n, char **split)
 
 int	ft_parse_line(t_scene *scene, const char *line)
 {
-	int		(* initiator)(t_scene * n, char **);
-	int			result;
-	char			**split;
+	int		(*initiator)(t_scene *n, char **);
+	int		result;
+	char	**split;
 
 	if (parser_check_capitals(line) == -1)
 		return (-1);

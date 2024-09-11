@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:03:10 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/09 18:00:12 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:32:18 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,6 @@ t_vec3	add_vec3(t_vec3 a, t_vec3 b)
 	added.y = a.y + b.y;
 	added.z = a.z + b.z;
 	return (added);
-}
-
-t_vec3	new_vector(double x, double y, double z)
-{
-	t_vec3	new;
-
-	new.x = x;
-	new.y = y;
-	new.z = z;
-	return (new);
 }
 
 double	vec3_length(t_vec3 vec)

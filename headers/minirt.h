@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/09 18:13:04 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:59:54 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,16 @@
 # include "../libs/libft-gc/libft-gc.h"
 # include "../libs/mlx/mlx.h"
 # include "utils.h"
-# include <math.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <float.h>
-# include <stdio.h> // for perror !
-# include <stdbool.h>
-# include <inttypes.h>
-# include <sys/time.h>
 # include <X11/X.h>
 # include <X11/keysym.h>
+# include <fcntl.h>
+# include <inttypes.h>
+# include <math.h>
+# include <stdbool.h>
+# include <stdio.h> // for perror !
+# include <stdlib.h>
+# include <sys/time.h>
+# include <unistd.h>
 
 # define PROG_NAME "minirt: "
 
@@ -47,26 +46,27 @@
 # define HEIGHT 1080
 # define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
+# define DBL_MAX 1.7976931348623158e+308
 
 typedef struct s_scene
 {
-	struct s_ambient
+	struct		s_ambient
 	{
 		float	light_ratio;
 		t_rgb	color;
-	}	*ambient;
-	struct s_cam
+	} *ambient;
+	struct		s_cam
 	{
 		t_vec3	pos;
 		t_vec3	dir;
 		t_u8b	fov;
-	}	*cam;
+	} *cam;
 	t_light		*light;
 	t_object	*object;
 	t_mlx		mlx;
 	t_screen	screen;
 	t_render	render;
-}	t_scene;
+}				t_scene;
 
 /******************************************************************************\
  *                          function declarations                             *
@@ -74,8 +74,7 @@ typedef struct s_scene
 
 // parsing.c
 int				parser_check_capitals(const char *line);
-int				(*check_identifiers(const char *line))(t_scene *n,
-					char **split);
+int	(*check_identifiers(const char *line))(t_scene *n, char **split);
 int				ft_parse_line(t_scene *scene, const char *line);
 int				ft_parsing(t_scene *scene, const char *file_scene);
 int				ft_check_scene(t_scene *scene);
@@ -105,12 +104,13 @@ int				check_numbers_value(char **numbers, bool have_floating_point);
 // props_init.c
 int				ambient_init(t_scene *scene, char **args);
 int				camera_init(t_scene *scene, char **args);
-int				light_init(t_scene *scene, char **args);
 
 // forms_init.c
+int				light_init(t_scene *scene, char **args);
 int				sphere_init(t_scene *scene, char **args);
 int				plane_init(t_scene *scene, char **args);
 int				cylinder_init(t_scene *scene, char **args);
+void			cylinder_disk_init(t_scene *scene, t_object *cylinder);
 
 // element_init.c
 int				set_ratio(char *ratio, float *new_ratio);
@@ -134,6 +134,10 @@ void			ft_destroy_display(t_scene *display);
 // render.c
 void			init_camera(t_scene *scene);
 int				render_scene(t_scene *scene);
+void			new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color);
+void			init_ray(t_scene *scene, t_ray_view *prime_ray, float x,
+					float y);
+void			pixel_draw(t_scene *scene, t_render *render);
 
 // 3Dvect.c
 t_vec3			merge_vect(t_vec3 a, t_vec3 b);
@@ -146,7 +150,6 @@ double			dot(t_vec3 a, t_vec3 b);
 t_vec3			sub_vec3(t_vec3 a, t_vec3 b);
 t_vec3			mult_vec3(t_vec3 a, double b);
 t_vec3			add_vec3(t_vec3 a, t_vec3 b);
-t_vec3			new_vector(double x, double y, double z);
 double			vec3_length(t_vec3 vec);
 
 // vec3D_util.c
@@ -155,10 +158,11 @@ void			vec3_add(t_vec3 *a, t_vec3 *b, t_vec3 *result);
 void			vec3_scale(t_vec3 *a, double scalar);
 void			vec3_cross(t_vec3 *a, t_vec3 *b, t_vec3 *result);
 void			vec3_normalize(t_vec3 *vec);
+
+// vec3D_utils2.c
 double			vec3_dot(t_vec3 *a, t_vec3 *b);
 
 // color_vect.c
-t_rgb			mult_color_vec4(t_rgb color, t_rgb color2);
 t_vec3			vec3_ambiant(t_rgb col, t_rgb color, float light_ratio);
 t_rgb			mult_rgb(t_rgb ambiant, double intensity);
 t_rgb			add_rgb(t_rgb a, t_rgb b);
@@ -193,8 +197,8 @@ int				close_window(t_scene *display);
 int				key_handler(int keycode, t_scene *scene);
 
 // utils2.c
-int				color_rgb(t_rgb color);
 t_u8b			check_data(int n, int min, int max);
+uint32_t		convert_rgb(t_mlx *mlx, t_rgb rgb);
 
 // ft_atof.c
 double			ft_atof(char *str);
@@ -207,5 +211,6 @@ void			check_cylinder_data(t_ray_view *ray, t_object *cylinder,
 					double *t);
 bool			calculation(double *t, double *t2, t_ray_view *ray,
 					t_object *cylinder);
+void			solve_calculation(double **t, double **t2, t_equation *eq);
 
 #endif
