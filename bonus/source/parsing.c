@@ -6,11 +6,11 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/11 16:37:58 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:55:29 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minirt.h"
+#include "../header/minirt.h"
 
 int	parser_check_capitals(const char *line)
 {
@@ -27,14 +27,14 @@ int	parser_check_capitals(const char *line)
 
 int	(*check_identifiers(const char *line))(t_scene *n, char **split)
 {
-	static char	*identifiers[6] = {"A", "C", "L", "sp", "pl", "cy"};
+	static char	*identifiers[7] = {"A", "C", "L", "sp", "pl", "cy", "tr"};
 	int			id;
 	long		id_len;
-	static int	(*functions[6])(t_scene *, char **) = {ambient_init,
-		camera_init, light_init, sphere_init, plane_init, cylinder_init};
+	static int	(*functions[7])(t_scene *, char **) = {ambient_init,
+		camera_init, light_init, sphere_init, plane_init, cylinder_init, triangle_init};
 
 	id = 0;
-	while (id < 6)
+	while (id < 7)
 	{
 		id_len = ft_strlen(identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0

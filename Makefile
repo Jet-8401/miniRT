@@ -27,7 +27,7 @@ FILES = minirt.c \
 		vec3D_utils2.c \
 		cylinder_utils.c
 
-FILES_BONUS = $(wildcard sources/bonus/*.c)
+FILES_BONUS = $(wildcard bonus/source/*.c)
 SOURCES = $(addprefix sources/,$(FILES))
 SOURCES_BONUS = $(FILES_BONUS)
 OUT = bins/
@@ -39,7 +39,7 @@ LIBS_DIRS = libs/libft-gc
 LIBS = libs/mlx/libmlx.a libs/libft-gc/libft-gc.a
 
 CFLAGS = -g -O3 -Wall -Werror -Wextra -Wpedantic 
-FLAGS = -Llibs/mlx -L/usr/lib -lmlx -lXext -lX11 -lm -I/usr/include -
+FLAGS = -Llibs/mlx -L/usr/lib -lmlx -lXext -lX11 -lm -I/usr/include 
 
 .SECONDEXPANSION:
 
@@ -52,7 +52,7 @@ $(NAME): $(BINS)
 	make -C libs/mlx
 	$(CC) $^ $(FLAGS) -o $@ $(LIBS)
 
-$(NAME_BONUS): $(BINS_BONUS)
+$(NAME_BONUS): $(BINS_BONUS) 
 	make -C libs/mlx
 	$(CC) $^ $(FLAGS) -o $@ $(LIBS)
 
