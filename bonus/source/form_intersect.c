@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:06:55 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/11 16:24:56 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/12 14:31:23 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ bool intersect_triangle(t_ray_view *ray, t_object *triangle, t_hit *hit)
 	if (hit->t < 0)
 		return (false);
 	hit->norm = triangle->c;
+	vec3_normalize(&hit->norm);
 	hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
 	if (inside_triangle(triangle, &hit->hit))
 		return (true);

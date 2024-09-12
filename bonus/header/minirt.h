@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/11 16:06:46 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:45:00 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ int				set_normalized_vector3d(t_vec3 *vec, char *coordinate);
 
 // add_list.c
 void			add_object(t_scene *scene, t_object *object);
+void add_light(t_scene *scene, t_light *light);
 
 // mlx_init.c
 int				init_mlx_all(t_scene *scene);
@@ -215,5 +216,7 @@ void			check_cylinder_data(t_ray_view *ray, t_object *cylinder,
 bool			calculation(double *t, double *t2, t_ray_view *ray,
 					t_object *cylinder);
 void			solve_calculation(double **t, double **t2, t_equation *eq);
+
+void print_all_light(t_light *light);
 
 #endif

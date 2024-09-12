@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:52:05 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/11 16:24:56 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:57:15 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int	light_init(t_scene *scene, char **args)
 		return (ft_err("Bad coordinate light", 0), -1);
 	if (set_ratio(args[2], &light->brightness) == -1)
 		return (ft_err("Bad light ratio", 0), -1);
-	scene->light = light;
+	if (set_rgb(args[3], &light->color) == -1)
+		return (ft_err("Bad rgb light", 0), -1);
+	add_light(scene, light);
+	//scene->light = light;
 	return (0);
 }
 
