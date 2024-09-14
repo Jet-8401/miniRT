@@ -72,15 +72,19 @@ float	fps_count(t_fpscounter *counter)
 	return (1e6 / result);
 }
 
+// delete for later
 void	render_time_display(t_mlx *display)
 {
+	static char		*string;
 	static uint64_t	previous_snapshot;
 	uint64_t		new_snapshot;
 
 	new_snapshot = get_time();
-	mlx_string_put(display->mlx, display->win, 0, 22, WHITE,
-		ft_itoa(new_snapshot - previous_snapshot));
+	string = ft_itoa(new_snapshot - previous_snapshot);
+	mlx_string_put(display->mlx, display->win, 0, 22, WHITE, string);
 	previous_snapshot = new_snapshot;
+	gc_free(string);
+	return ;
 }
 
 void	fps_display(t_mlx *display)
@@ -88,7 +92,8 @@ void	fps_display(t_mlx *display)
 	static char	*string;
 
 	string = ft_itoa(fps_count(display->fps_counter));
-	mlx_string_put(display->mlx, display->win, 0, 10, WHITE, string);
+	mlx_string_put(display->mlx, display->win, 0, 10, WHITE, "FPS: ");
+	mlx_string_put(display->mlx, display->win, 30, 10, WHITE, string);
 	gc_free(string);
-	string = NULL;
+	return ;
 }

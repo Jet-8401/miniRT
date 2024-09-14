@@ -13,6 +13,7 @@
 #ifndef UTILS_H
 # define UTILS_H
 
+#include <pthread.h>
 # include <stdint.h>
 # include <stdlib.h>
 

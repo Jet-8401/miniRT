@@ -18,6 +18,7 @@
 # include "utils.h"
 # include <X11/X.h>
 # include <X11/keysym.h>
+#include <bits/pthreadtypes.h>
 # include <fcntl.h>
 # include <inttypes.h>
 # include <math.h>
@@ -26,6 +27,8 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <pthread.h>
+# include <semaphore.h>
 
 # define PROG_NAME "minirt: "
 
@@ -37,13 +40,16 @@
 # define ERR_MLX_WINDOW "cannot create mlx window"
 # define ERR_RENDER_IMG "an error ocured while creating mlx image"
 # define ERR_COUNTER_INIT "impossible to init fps counter"
+# define ERR_THREAD_INIT "impossible to init the rendering threads"
+# define ERR_SEMAPHORE_INIT "an error occured at the creation of a semaphore"
+# define ERR_MUTEX_INIT "an error occured at the creation of a mutex"
 
 # ifndef M_PI
 #  define M_PI 3.1415926535897932384626433832
 # endif
 
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 600
+# define HEIGHT 600
 # define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
 # define DBL_MAX 1.7976931348623158e+308
@@ -65,8 +71,28 @@ typedef struct s_scene
 	t_object	*object;
 	t_mlx		mlx;
 	t_screen	screen;
-	t_render	render;
 }				t_scene;
+
+typedef struct s_render_thread
+{
+	pthread_t					thread_id;
+	uint64_t					pixel_offset;
+	uint64_t					pixel_index;
+	uint64_t					pixel_length;
+	t_render					render;
+	t_scene						*scene;
+	pthread_mutex_t				render_lock;
+	struct s_threads_container	*container;
+}	t_render_thread;
+
+typedef struct s_threads_container
+{
+	uint16_t			threads_number;
+	t_render_thread		*threads;
+	sem_t				image_rendering;
+	sem_t				threads_routines;
+	t_scene				*scene;
+}	t_threads_container;
 
 /******************************************************************************\
  *                          function declarations                             *
@@ -100,6 +126,15 @@ int				ft_strlen2(char **argv);
 // parsing_checker.c
 int				check_value(char *number, bool have_floating_point);
 int				check_numbers_value(char **numbers, bool have_floating_point);
+
+// threads_init.c
+int				threads_init(t_scene *scene, t_threads_container *container,
+					uint16_t threads_number, uint64_t rendering_pixels);
+void			wait_threads_routines(t_threads_container *container);
+void			threads_display(t_mlx *mlx, t_threads_container *threads);
+
+// threads_render.c
+void			*thread_routine(void *container);
 
 // props_init.c
 int				ambient_init(t_scene *scene, char **args);
@@ -135,7 +170,7 @@ void			ft_destroy_display(t_scene *display);
 
 // render.c
 void			init_camera(t_scene *scene);
-int				render_scene(t_scene *scene);
+int				render_scene(t_threads_container *threads);
 void			new_mlx_pixel_put(t_mlx *mlx, int x, int y, int color);
 void			init_ray(t_scene *scene, t_ray_view *prime_ray, float x,
 					float y);

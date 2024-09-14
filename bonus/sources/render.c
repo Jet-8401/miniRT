@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../header/minirt.h"
+#include <pthread.h>
 
 void	init_camera(t_scene *scene)
 {
@@ -65,6 +66,7 @@ void	init_ray(t_scene *scene, t_ray_view *prime_ray, float x, float y)
 	vec3_normalize(&prime_ray->direction);
 }
 
+/*
 void	pixel_draw(t_scene *scene, t_render *render)
 {
 	uint64_t	x;
@@ -85,13 +87,26 @@ void	pixel_draw(t_scene *scene, t_render *render)
 		y++;
 	}
 }
+*/
 
-int	render_scene(t_scene *scene)
+int	render_scene(t_threads_container *threads)
 {
-	pixel_draw(scene, &scene->render);
-	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win,
-		scene->mlx.img.img, 0, 0);
-	fps_display(&scene->mlx);
-	render_time_display(&scene->mlx);
+	uint16_t	i;
+
+	i = 0;
+	while (i++ < threads->threads_number)
+	{
+		//printf("waiting for thread #%d\n", i); // debug
+		pthread_mutex_lock(&threads->threads[i].render_lock);
+	}
+	mlx_put_image_to_window(threads->scene->mlx.mlx, threads->scene->mlx.win,
+		threads->scene->mlx.img.img, 0, 0);
+	fps_display(&threads->scene->mlx);
+	threads_display(&threads->scene->mlx, threads);
+	while (i-- > 0)
+	{
+		pthread_mutex_unlock(&threads->threads[i].render_lock);
+		sem_post(&threads->image_rendering);
+	}
 	return (0);
 }
