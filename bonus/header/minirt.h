@@ -18,11 +18,11 @@
 # include "utils.h"
 # include <X11/X.h>
 # include <X11/keysym.h>
-#include <bits/pthreadtypes.h>
 # include <fcntl.h>
 # include <inttypes.h>
 # include <math.h>
 # include <stdbool.h>
+# include <stdint.h>
 # include <stdio.h> // for perror !
 # include <stdlib.h>
 # include <sys/time.h>
@@ -48,8 +48,8 @@
 #  define M_PI 3.1415926535897932384626433832
 # endif
 
-# define WIDTH 600
-# define HEIGHT 600
+# define WIDTH 1920
+# define HEIGHT 1080
 # define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
 # define DBL_MAX 1.7976931348623158e+308
@@ -76,12 +76,13 @@ typedef struct s_scene
 typedef struct s_render_thread
 {
 	pthread_t					thread_id;
-	uint64_t					pixel_offset;
-	uint64_t					pixel_index;
+	uint64_t					x_coords;
+	uint64_t					y_coords;
 	uint64_t					pixel_length;
 	t_render					render;
 	t_scene						*scene;
-	pthread_mutex_t				render_lock;
+	sem_t						render_lock;
+	sem_t						thread_lock;
 	struct s_threads_container	*container;
 }	t_render_thread;
 
@@ -89,8 +90,6 @@ typedef struct s_threads_container
 {
 	uint16_t			threads_number;
 	t_render_thread		*threads;
-	sem_t				image_rendering;
-	sem_t				threads_routines;
 	t_scene				*scene;
 }	t_threads_container;
 
