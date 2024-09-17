@@ -12,6 +12,15 @@
 
 #include "../header/minirt.h"
 
+static void	calculate_pixel(t_render_thread *thread, uint64_t *x, uint64_t *y)
+{
+	init_ray(thread->scene, &thread->render.prime_ray, (float)*x, (float)*y);
+	thread->render.color_ambiant = convert_rgb(&thread->scene->mlx,
+			ambiant_color(&thread->render, thread->scene));
+	new_mlx_pixel_put(&thread->scene->mlx, *x, *y,
+		thread->render.color_ambiant);
+}
+
 static void	thread_render(t_render_thread *thread)
 {
 	uint64_t	x;
@@ -24,16 +33,14 @@ static void	thread_render(t_render_thread *thread)
 	{
 		while (x < thread->scene->screen.width)
 		{
-			init_ray(thread->scene, &thread->render.prime_ray, (float)x, (float)y);
-			thread->render.color_ambiant = convert_rgb(&thread->scene->mlx,
-					ambiant_color(&thread->render, thread->scene));
-			((uint32_t *) thread->scene->mlx.img.addr)
-				[x + y * thread->scene->screen.width] = thread->render.color_ambiant;
+			calculate_pixel(thread, &x, &y);
 			x++;
 			thread->pixel_index++;
+			if (thread->pixel_index < thread->pixel_length)
+				continue ;
+			sem_post(&thread->render_lock);
+			return ;
 		}
-		if (thread->pixel_index >= thread->pixel_length)
-			break ;
 		x = 0;
 		y++;
 	}

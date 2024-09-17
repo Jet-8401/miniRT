@@ -12,6 +12,8 @@
 
 #include "../header/minirt.h"
 
+#define SETTERS 7
+
 int	parser_check_capitals(const char *line)
 {
 	static char	capitals[25];
@@ -27,14 +29,15 @@ int	parser_check_capitals(const char *line)
 
 int	(*check_identifiers(const char *line))(t_scene *n, char **split)
 {
-	static char	*identifiers[7] = {"A", "C", "L", "sp", "pl", "cy", "tr"};
+	static char	*identifiers[SETTERS] = {"A", "C", "L", "sp", "pl", "cy", "tr"};
 	int			id;
 	long		id_len;
-	static int	(*functions[7])(t_scene *, char **) = {ambient_init,
-		camera_init, light_init, sphere_init, plane_init, cylinder_init, triangle_init};
+	static int	(*functions[SETTERS])(t_scene *, char **) = {ambient_init,
+		camera_init, light_init, sphere_init, plane_init, cylinder_init,
+		triangle_init};
 
 	id = 0;
-	while (id < 7)
+	while (id < SETTERS)
 	{
 		id_len = ft_strlen(identifiers[id]);
 		if (ft_strncmp(identifiers[id], line, id_len) == 0

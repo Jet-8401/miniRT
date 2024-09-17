@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../header/minirt.h"
-#include <semaphore.h>
 
 static int	locks_init(t_render_thread *th)
 {
@@ -21,17 +20,42 @@ static int	locks_init(t_render_thread *th)
 	return (0);
 }
 
-int	threads_init(t_scene *scene, t_threads_container *container,
-	uint16_t threads_number, uint64_t rendering_pixels)
+static bool	set_thread(t_threads_container *container, t_scene *scene,
+	uint8_t t, double delta)
 {
-	uint16_t		t;
-	uint64_t		pixel_index;
-	uint64_t		delta;
-	t_render_thread	*th;
+	static uint64_t		pixel_index = 0;
+	t_render_thread		*th;
 
+	th = &container->threads[t];
+	if (locks_init(th) == -1)
+		return (ft_err(ERR_SEMAPHORE_INIT, 1), 0);
+	th->id = t;
+	th->container = container;
+	th->y_coords = pixel_index / scene->screen.width;
+	th->x_coords = pixel_index - (th->y_coords * scene->screen.width);
+	th->pixel_length = delta;
+	printf("thread #%d (x;y) from (%ld;%ld)", t, th->x_coords, th->y_coords);
+	printf(" (%lf ptp)\n", delta);
+	th->scene = scene;
+	pixel_index += delta;
+	if (pthread_create(&th->thread_id, NULL, thread_routine, th) == -1)
+		return (ft_err(ERR_THREAD_INIT, 1), 0);
+	t++;
+	return (1);
+}
+
+int	threads_init(t_scene *scene, t_threads_container *container,
+	uint8_t threads_number)
+{
+	uint8_t			t;
+	double_t		delta;
+	uint64_t		rendering_pixels;
+
+	rendering_pixels = scene->screen.height * scene->screen.width;
+	if (threads_number == 0)
+		return (ft_err(ERR_THREAD_NUMBER_ZERO, 0), -1);
 	t = 0;
-	pixel_index = 0;
-	delta = rendering_pixels / threads_number;
+	delta = round((double) rendering_pixels / threads_number);
 	container->threads_number = threads_number;
 	container->do_exit = 0;
 	container->threads = gc_calloc(sizeof(t_render_thread) * threads_number);
@@ -39,27 +63,9 @@ int	threads_init(t_scene *scene, t_threads_container *container,
 		return (ft_err(ERR_THREAD_INIT, 1), -1);
 	if (pthread_mutex_init(&container->data_lock, NULL) == -1)
 		return (ft_err(ERR_MUTEX_INIT, 1), -1);
-	printf("height=%ld * width=%ld = %ld pixels\n", scene->screen.height,
-		scene->screen.width, rendering_pixels);
-	printf("%ld / %d(threads) = %f\n", rendering_pixels, threads_number,
-		(float) rendering_pixels / threads_number);
 	while (t < threads_number)
-	{
-		th = &container->threads[t];
-		if (locks_init(th) == -1)
-			return (ft_err(ERR_SEMAPHORE_INIT, 1), -1);
-		th->container = container;
-		th->x_coords = pixel_index / scene->screen.width;
-		th->y_coords = pixel_index / scene->screen.height;
-		th->pixel_length = delta;
-		printf("thread #%d (x;y) (%ld;%ld)", t, th->x_coords, th->y_coords);
-		printf(" (%ld ptp)\n", delta);
-		th->scene = scene;
-		pixel_index += delta;
-		if (pthread_create(&th->thread_id, NULL, thread_routine, th) == -1)
-			return (ft_err(ERR_THREAD_INIT, 1), -1);
-		t++;
-	}
+		if (!set_thread(container, scene, t++, delta))
+			return (-1);
 	return (0);
 }
 

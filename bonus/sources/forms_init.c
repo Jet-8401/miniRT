@@ -28,7 +28,6 @@ int	light_init(t_scene *scene, char **args)
 	if (set_rgb(args[3], &light->color) == -1)
 		return (ft_err("Bad rgb light", 0), -1);
 	add_light(scene, light);
-	//scene->light = light;
 	return (0);
 }
 

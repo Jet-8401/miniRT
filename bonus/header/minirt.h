@@ -18,7 +18,6 @@
 # include "utils.h"
 # include <X11/X.h>
 # include <X11/keysym.h>
-#include <bits/pthreadtypes.h>
 # include <fcntl.h>
 # include <math.h>
 # include <pthread.h>
@@ -43,13 +42,14 @@
 # define ERR_THREAD_INIT "impossible to init the rendering threads"
 # define ERR_SEMAPHORE_INIT "an error occured at the creation of a semaphore"
 # define ERR_MUTEX_INIT "an error occured at the creation of a mutex"
+# define ERR_THREAD_NUMBER_ZERO "you cannot set the threads number to 0"
 
 # ifndef M_PI
 #  define M_PI 3.1415926535897932384626433832
 # endif
 
-# define WIDTH 800
-# define HEIGHT 800
+# define WIDTH	600
+# define HEIGHT 600
 # define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
 # define DBL_MAX 1.7976931348623158e+308
@@ -77,6 +77,7 @@ typedef struct s_scene
 typedef struct s_render_thread
 {
 	pthread_t					thread_id;
+	uint8_t						id;
 	uint64_t					x_coords;
 	uint64_t					y_coords;
 	uint64_t					pixel_length;
@@ -90,7 +91,7 @@ typedef struct s_render_thread
 
 typedef struct s_threads_container
 {
-	uint16_t			threads_number;
+	uint8_t				threads_number;
 	t_render_thread		*threads;
 	t_scene				*scene;
 	bool				do_exit;
@@ -132,7 +133,7 @@ int				check_numbers_value(char **numbers, bool have_floating_point);
 
 // threads_init.c
 int				threads_init(t_scene *scene, t_threads_container *container,
-					uint16_t threads_number, uint64_t rendering_pixels);
+					uint8_t threads_number);
 void			threads_display(t_mlx *mlx, t_threads_container *threads);
 
 // threads_render.c
