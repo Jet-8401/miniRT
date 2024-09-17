@@ -57,7 +57,8 @@ bool	intersect_shadow(t_render *render, t_scene *scene, t_hit *hit)
 bool	does_intersect(t_render *render, t_object *obj, t_hit *hit)
 {
 	static bool	(*intersections[5])(t_ray_view*, t_object*, t_hit*) = {
-		intersect_sphere, intersect_plane, intersect_cylinder, intersect_disk, intersect_triangle
+		intersect_sphere, intersect_plane, intersect_cylinder, intersect_disk,
+		intersect_triangle
 	};
 
 	return (intersections[obj->type](&render->prime_ray, obj, hit));

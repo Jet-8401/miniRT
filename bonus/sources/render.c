@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../header/minirt.h"
+#include <semaphore.h>
 
 void	init_camera(t_scene *scene)
 {
@@ -65,47 +66,20 @@ void	init_ray(t_scene *scene, t_ray_view *prime_ray, float x, float y)
 	vec3_normalize(&prime_ray->direction);
 }
 
-/*
-void	pixel_draw(t_scene *scene, t_render *render)
-{
-	uint64_t	x;
-	uint64_t	y;
-
-	y = 0;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			init_ray(scene, &render->prime_ray, (float)x, (float)y);
-			render->color_ambiant = convert_rgb(&scene->mlx,
-					ambiant_color(render, scene));
-			new_mlx_pixel_put(&scene->mlx, x, y, render->color_ambiant);
-			x++;
-		}
-		y++;
-	}
-}
-*/
-
 int	render_scene(t_threads_container *threads)
 {
-	/*
-	uint16_t	i;
+	uint16_t	t;
 
-	i = 0;
-	while (i < threads->threads_number)
-	{
-		//printf("waiting for thread #%d to render\n", i);
-		sem_wait(&threads->threads[i].render_lock);
-		i++;
-	}
-	*/
+	t = 0;
+	while (t < threads->threads_number)
+		sem_wait(&threads->threads[t++].render_lock);
 	mlx_put_image_to_window(threads->scene->mlx.mlx, threads->scene->mlx.win,
-	threads->scene->mlx.img.img, 0, 0);
+		threads->scene->mlx.img.img, 0, 0);
 	fps_display(&threads->scene->mlx);
 	threads_display(&threads->scene->mlx, threads);
-	//while (i-- > 0)
-	//	sem_post(&threads->threads[i].thread_lock);
+	vec3_add(&threads->scene->cam->movements, &threads->scene->cam->pos,
+		&threads->scene->cam->pos);
+	while (t-- > 0)
+		sem_post(&threads->threads[t].thread_lock);
 	return (0);
 }

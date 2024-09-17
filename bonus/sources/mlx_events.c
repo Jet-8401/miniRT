@@ -12,32 +12,58 @@
 
 #include "../header/minirt.h"
 
-#define MOVING_RATIO 0.5f
+#define MOVING_RATIO 1.2f
 
-int	close_window(t_scene *display)
+int	close_window(t_threads_container *container)
 {
-	ft_destroy_display(display);
+	uint16_t	t;
+
+	t = 0;
+	container->do_exit = true;
+	while (t < container->threads_number)
+		pthread_join(container->threads[t].thread_id, NULL);
+	ft_destroy_display(container->scene);
 	gc_dump(NULL);
 	exit(0);
 	return (0);
 }
 
-int	key_handler(int keycode, t_scene *scene)
+static void check_movements(int keycode, int method, t_vec3 *movs)
+{
+	double		*axis;
+	bool		neg_value;
+
+	axis = NULL;
+	neg_value = false;
+	if (keycode == 'z' || keycode == 's')
+		axis = &movs->z;
+	else if (keycode == 'q' || keycode == 'd')
+		axis = &movs->x;
+	else if (keycode == ' ' || keycode == 'c')
+		axis = &movs->y;
+	if (!axis)
+		return ;
+	if (method == KeyRelease)
+	{
+		*axis = 0;
+		return ;
+	}
+	if (keycode == 's' || keycode == 'q' || keycode == 'c')
+		neg_value = true;
+	*axis = (MOVING_RATIO * ((neg_value * -2) + 1));
+}
+
+int	key_press(int keycode, t_threads_container *container)
 {
 	printf("keycode=%d\n", keycode);
-	if (keycode == 65451)
-		scene->cam->pos.z += 0.5;
-	else if (keycode == 65453)
-		scene->cam->pos.z -= 0.5;
-	else if (keycode == 65361)
-		scene->cam->pos.x -= MOVING_RATIO;
-	else if (keycode == 65363)
-		scene->cam->pos.x += MOVING_RATIO;
-	else if (keycode == 65362)
-		scene->cam->pos.y += MOVING_RATIO;
-	else if (keycode == 65364)
-		scene->cam->pos.y -= MOVING_RATIO;
-	else if (keycode == XK_Escape)
-		close_window(scene);
+	check_movements(keycode, KeyPress, &container->scene->cam->movements);
+	if (keycode == XK_Escape)
+		close_window(container);
+	return (0);
+}
+
+int	key_release(int keycode, t_threads_container *container)
+{
+	check_movements(keycode, KeyRelease, &container->scene->cam->movements);
 	return (0);
 }

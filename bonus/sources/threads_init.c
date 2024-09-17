@@ -11,15 +11,13 @@
 /* ************************************************************************** */
 
 #include "../header/minirt.h"
-#include <pthread.h>
-#include <stdbool.h>
+#include <semaphore.h>
 
-static int init_threads_locks(t_render_thread *thread)
+static int	locks_init(t_render_thread *th)
 {
-	if (sem_init(&thread->render_lock, 0, 0) == -1
-		|| sem_init(&thread->thread_lock, 0, 1) == -1
-	)
-		return (ft_err(ERR_MUTEX_INIT, 1), -1);
+	if (sem_init(&th->render_lock, 0, 0) == -1
+		|| sem_init(&th->thread_lock, 0, 1) == -1)
+		return (-1);
 	return (0);
 }
 
@@ -35,13 +33,20 @@ int	threads_init(t_scene *scene, t_threads_container *container,
 	pixel_index = 0;
 	delta = rendering_pixels / threads_number;
 	container->threads_number = threads_number;
+	container->do_exit = 0;
 	container->threads = gc_calloc(sizeof(t_render_thread) * threads_number);
 	if (!container->threads)
 		return (ft_err(ERR_THREAD_INIT, 1), -1);
+	if (pthread_mutex_init(&container->data_lock, NULL) == -1)
+		return (ft_err(ERR_MUTEX_INIT, 1), -1);
+	printf("height=%ld * width=%ld = %ld pixels\n", scene->screen.height,
+		scene->screen.width, rendering_pixels);
+	printf("%ld / %d(threads) = %f\n", rendering_pixels, threads_number,
+		(float) rendering_pixels / threads_number);
 	while (t < threads_number)
 	{
 		th = &container->threads[t];
-		if (init_threads_locks(th) == -1)
+		if (locks_init(th) == -1)
 			return (ft_err(ERR_SEMAPHORE_INIT, 1), -1);
 		th->container = container;
 		th->x_coords = pixel_index / scene->screen.width;
@@ -56,20 +61,6 @@ int	threads_init(t_scene *scene, t_threads_container *container,
 		t++;
 	}
 	return (0);
-}
-
-void	wait_threads_routines(t_threads_container *container)
-{
-	uint16_t	routines_done;
-
-	routines_done = 0;
-	while (routines_done++ < container->threads_number)
-	{
-		printf("waiting routine of threads (%d/%d)\n", routines_done,
-			container->threads_number);
-	}
-	printf("all threads routines have been done !\n");
-	return ;
 }
 
 void	threads_display(t_mlx *mlx, t_threads_container *threads)

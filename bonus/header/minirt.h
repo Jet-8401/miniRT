@@ -18,16 +18,16 @@
 # include "utils.h"
 # include <X11/X.h>
 # include <X11/keysym.h>
+#include <bits/pthreadtypes.h>
 # include <fcntl.h>
-# include <inttypes.h>
 # include <math.h>
+# include <pthread.h>
 # include <stdbool.h>
 # include <stdint.h>
 # include <stdio.h> // for perror !
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
-# include <pthread.h>
 # include <semaphore.h>
 
 # define PROG_NAME "minirt: "
@@ -48,8 +48,8 @@
 #  define M_PI 3.1415926535897932384626433832
 # endif
 
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 800
+# define HEIGHT 800
 # define WHITE 2147483647
 # define FPS_SNAPSHOT_SAMPLES 50
 # define DBL_MAX 1.7976931348623158e+308
@@ -65,6 +65,7 @@ typedef struct s_scene
 	{
 		t_vec3	pos;
 		t_vec3	dir;
+		t_vec3	movements;
 		t_u8b	fov;
 	} *cam;
 	t_light		*light;
@@ -79,6 +80,7 @@ typedef struct s_render_thread
 	uint64_t					x_coords;
 	uint64_t					y_coords;
 	uint64_t					pixel_length;
+	uint64_t					pixel_index;
 	t_render					render;
 	t_scene						*scene;
 	sem_t						render_lock;
@@ -91,6 +93,8 @@ typedef struct s_threads_container
 	uint16_t			threads_number;
 	t_render_thread		*threads;
 	t_scene				*scene;
+	bool				do_exit;
+	pthread_mutex_t		data_lock;
 }	t_threads_container;
 
 /******************************************************************************\
@@ -129,7 +133,6 @@ int				check_numbers_value(char **numbers, bool have_floating_point);
 // threads_init.c
 int				threads_init(t_scene *scene, t_threads_container *container,
 					uint16_t threads_number, uint64_t rendering_pixels);
-void			wait_threads_routines(t_threads_container *container);
 void			threads_display(t_mlx *mlx, t_threads_container *threads);
 
 // threads_render.c
@@ -231,8 +234,9 @@ t_rgb			light_handler(t_scene *scene, t_render *render, t_hit *hit);
 bool			new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render);
 
 // mlx_events.c
-int				close_window(t_scene *display);
-int				key_handler(int keycode, t_scene *scene);
+int				close_window(t_threads_container *thread_container);
+int				key_press(int keycode, t_threads_container *container);
+int				key_release(int keycode, t_threads_container *container);
 
 // utils2.c
 t_u8b			check_data(int n, int min, int max);
