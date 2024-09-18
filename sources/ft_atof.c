@@ -39,6 +39,8 @@ void	ft_atof_bis(char *str, long double *res, int *neg)
 		*neg = 1;
 		str++;
 	}
+	if (*str == '+')
+		str++;
 	while (*str)
 	{
 		if (dote)

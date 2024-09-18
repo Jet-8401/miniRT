@@ -30,7 +30,6 @@ int	init_mlx_all(t_scene *scene)
 	mlx->fps_counter = gc_calloc(sizeof(t_fpscounter));
 	if (!mlx->fps_counter)
 		return (ft_err(ERR_COUNTER_INIT, 0), -1);
-	fps_counter_init(mlx->fps_counter, FPS_SNAPSHOT_SAMPLES);
 	init_camera(scene);
 	return (0);
 }

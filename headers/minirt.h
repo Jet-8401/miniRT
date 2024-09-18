@@ -19,12 +19,10 @@
 # include <X11/X.h>
 # include <X11/keysym.h>
 # include <fcntl.h>
-# include <inttypes.h>
 # include <math.h>
 # include <stdbool.h>
 # include <stdio.h> // for perror !
 # include <stdlib.h>
-# include <sys/time.h>
 # include <unistd.h>
 
 # define PROG_NAME "minirt: "
@@ -42,10 +40,8 @@
 #  define M_PI 3.1415926535897932384626433832
 # endif
 
-# define WIDTH 1920
-# define HEIGHT 1080
-# define WHITE 2147483647
-# define FPS_SNAPSHOT_SAMPLES 50
+# define WIDTH 600
+# define HEIGHT 600
 # define DBL_MAX 1.7976931348623158e+308
 
 typedef struct s_scene
@@ -175,13 +171,6 @@ bool			intersect_cylinder(t_ray_view *ray, t_object *cylinder,
 					t_hit *hit);
 bool			intersect_disk(t_ray_view *ray, t_object *disk, t_hit *hit);
 
-// fps_counter.c
-int				fps_counter_init(t_fpscounter *counter, t_u8b samples);
-uint64_t		get_time(void);
-float			fps_count(t_fpscounter *counter);
-void			render_time_display(t_mlx *display);
-void			fps_display(t_mlx *display);
-
 // intersect.c
 bool			intersect(t_render *render, t_object *obj, t_hit *hit);
 bool			intersect_shadow(t_render *render, t_scene *scene, t_hit *hit);
@@ -207,10 +196,5 @@ void			ft_atof_bis(char *str, long double *res, int *neg);
 // cylinder_utils.c
 bool			intersect_cylinder_math(t_ray_view *ray, t_object *cylinder,
 					t_hit *hit);
-void			check_cylinder_data(t_ray_view *ray, t_object *cylinder,
-					double *t);
-bool			calculation(double *t, double *t2, t_ray_view *ray,
-					t_object *cylinder);
-void			solve_calculation(double **t, double **t2, t_equation *eq);
 
 #endif

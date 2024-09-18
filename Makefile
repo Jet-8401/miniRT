@@ -20,7 +20,6 @@ FILES = minirt.c \
 		3Dvect2.c \
 		color_vect.c \
 		form_intersect.c \
-		fps_counter.c \
 		intersect.c \
 		light.c \
 		utils2.c \
@@ -29,6 +28,7 @@ FILES = minirt.c \
 		cylinder_utils.c
 
 FILES_BONUS := $(FILES) \
+		fps_counter.c \
 		threads_render.c \
 		threads_init.c
 

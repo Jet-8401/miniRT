@@ -91,7 +91,5 @@ int	render_scene(t_scene *scene)
 	pixel_draw(scene, &scene->render);
 	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win,
 		scene->mlx.img.img, 0, 0);
-	fps_display(&scene->mlx);
-	render_time_display(&scene->mlx);
 	return (0);
 }
