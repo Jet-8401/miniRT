@@ -152,7 +152,7 @@ void			cylinder_disk_init(t_scene *scene, t_object *cylinder);
 // element_init.c
 int				set_ratio(char *ratio, float *new_ratio);
 int				set_rgb(char *rgb, t_rgb *color);
-int				set_float_value(char *size, float *value);
+int				set_float_value(char *size, float *value, bool is_unsigned);
 int				set_fov(char *fov, t_u8b *new_fov);
 
 // element_init2.c

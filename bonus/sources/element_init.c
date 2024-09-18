@@ -46,11 +46,13 @@ int	set_rgb(char *rgb, t_rgb *color)
 	return (0);
 }
 
-int	set_float_value(char *size, float *value)
+int	set_float_value(char *size, float *value, bool is_unsigned)
 {
 	if (check_value(size, true) == -1)
 		return (-1);
-	*value = (float)ft_atof(size);
+	*value = (float) ft_atof(size);
+	if (is_unsigned && *value < 0)
+		return (-1);
 	return (0);
 }
 

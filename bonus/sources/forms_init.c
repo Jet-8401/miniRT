@@ -42,8 +42,8 @@ int	sphere_init(t_scene *scene, char **args)
 		return (parser_error("Bad arguments number sphere"), -1);
 	if (set_vector3d(&sphere->pos, args[1]) == -1)
 		return (parser_error("Bad argument coordinate sphere"), -1);
-	if (set_float_value(args[2], &sphere->diameter) == -1)
-		return (parser_error("Bad height sphere"), -1);
+	if (set_float_value(args[2], &sphere->diameter, true) == -1)
+		return (parser_error("Bad sphere radius"), -1);
 	if (set_rgb(args[3], &sphere->color) == -1)
 		return (parser_error("Bad rgb arguments sphere"), -1);
 	sphere->radius = sphere->diameter / 2;
@@ -108,9 +108,9 @@ int	cylinder_init(t_scene *scene, char **args)
 		return (parser_error("Bad coordinate cylinder"), -1);
 	if (set_normalized_vector3d(&cylinder->dir, args[2]) == -1)
 		return (parser_error("Bad 3d vector cylinder"), -1);
-	if (set_float_value(args[3], &cylinder->diameter) == -1)
+	if (set_float_value(args[3], &cylinder->diameter, true) == -1)
 		return (parser_error("Bad diameter"), -1);
-	if (set_float_value(args[4], &cylinder->height) == -1)
+	if (set_float_value(args[4], &cylinder->height, true) == -1)
 		return (parser_error("Bad height cylinder"), -1);
 	if (set_rgb(args[5], &cylinder->color) == -1)
 		return (parser_error("Bad rgb cylinder"), -1);
