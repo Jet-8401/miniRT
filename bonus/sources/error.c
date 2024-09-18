@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:17:20 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/11 16:24:56 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:04:02 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_err(const char *line, char perror_invoc)
 {
+	if (write(1, "Error\n", 6) == -1)
+		return ;
 	if (write(2, PROG_NAME, ft_strlen(PROG_NAME)) == -1)
 		return ;
 	if (perror_invoc)

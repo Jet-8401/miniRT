@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 01:45:02 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/11 16:24:56 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:42:03 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@
 
 int	close_window(t_threads_container *container)
 {
-	uint16_t	t;
-
-	t = 0;
 	pthread_mutex_lock(&container->data_lock);
 	container->do_exit = true;
 	pthread_mutex_unlock(&container->data_lock);
