@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:15:48 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/11 16:37:58 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:53:36 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int	ft_parse_line(t_scene *scene, const char *line)
 	int		result;
 	char	**split;
 
+	if (ft_strnstr(line, ",,", ft_strlen(line)))
+		return (ft_err(ERR_COMMAS, 0), -1);
 	if (parser_check_capitals(line) == -1)
 		return (-1);
 	initiator = check_identifiers(line);

@@ -20,13 +20,13 @@ int	light_init(t_scene *scene, char **args)
 	if (!light)
 		return (-1);
 	if (ft_strlen2(args) != 4)
-		return (ft_err("Bad arguments number light", 0), -1);
+		return (parser_error("Bad arguments number light"), -1);
 	if (set_vector3d(&light->pos, args[1]) == -1)
-		return (ft_err("Bad coordinate light", 0), -1);
+		return (parser_error("Bad coordinate light"), -1);
 	if (set_ratio(args[2], &light->brightness) == -1)
-		return (ft_err("Bad light ratio", 0), -1);
+		return (parser_error("Bad light ratio"), -1);
 	if (set_rgb(args[3], &light->color) == -1)
-		return (ft_err("Bad rgb light", 0), -1);
+		return (parser_error("Bad rgb light"), -1);
 	add_light(scene, light);
 	return (0);
 }
@@ -39,13 +39,13 @@ int	sphere_init(t_scene *scene, char **args)
 	if (!sphere)
 		return (-1);
 	if (ft_strlen2(args) != 4)
-		return (ft_err("Bad arguments number sphere", 0), -1);
+		return (parser_error("Bad arguments number sphere"), -1);
 	if (set_vector3d(&sphere->pos, args[1]) == -1)
-		return (ft_err("Bad argument coordinate sphere", 0), -1);
+		return (parser_error("Bad argument coordinate sphere"), -1);
 	if (set_float_value(args[2], &sphere->diameter) == -1)
-		return (ft_err("Bad height sphere", 0), -1);
+		return (parser_error("Bad height sphere"), -1);
 	if (set_rgb(args[3], &sphere->color) == -1)
-		return (ft_err("Bad rgb arguments sphere", 0), -1);
+		return (parser_error("Bad rgb arguments sphere"), -1);
 	sphere->radius = sphere->diameter / 2;
 	sphere->type = SPHERE;
 	add_object(scene, sphere);
@@ -60,13 +60,13 @@ int	plane_init(t_scene *scene, char **args)
 	if (!plane)
 		return (-1);
 	if (ft_strlen2(args) != 4)
-		return (ft_err("Bad arguments number plane", 0), -1);
+		return (parser_error("Bad arguments number plane"), -1);
 	if (set_vector3d(&plane->pos, args[1]) == -1)
-		return (ft_err("Bad argument coordinate sphere", 0), -1);
+		return (parser_error("Bad argument coordinate sphere"), -1);
 	if (set_normalized_vector3d(&plane->dir, args[2]) == -1)
-		return (ft_err("Bad 3d vector plane", 0), -1);
+		return (parser_error("Bad 3d vector plane"), -1);
 	if (set_rgb(args[3], &plane->color) == -1)
-		return (ft_err("Bad rgb plane", 0), -1);
+		return (parser_error("Bad rgb plane"), -1);
 	plane->type = PLANE;
 	vec3_normalize(&plane->dir);
 	add_object(scene, plane);
@@ -103,17 +103,17 @@ int	cylinder_init(t_scene *scene, char **args)
 	if (!cylinder)
 		return (-1);
 	if (ft_strlen2(args) != 6)
-		return (ft_err("Bad arguments number cylinder", 0), -1);
+		return (parser_error("Bad arguments number cylinder"), -1);
 	if (set_vector3d(&cylinder->pos, args[1]) == -1)
-		return (ft_err("Bad coordinate cylinder", 0), -1);
+		return (parser_error("Bad coordinate cylinder"), -1);
 	if (set_normalized_vector3d(&cylinder->dir, args[2]) == -1)
-		return (ft_err("Bad 3d vector cylinder", 0), -1);
+		return (parser_error("Bad 3d vector cylinder"), -1);
 	if (set_float_value(args[3], &cylinder->diameter) == -1)
-		return (ft_err("Bad diameter", 0), -1);
+		return (parser_error("Bad diameter"), -1);
 	if (set_float_value(args[4], &cylinder->height) == -1)
-		return (ft_err("Bad height cylinder", 0), -1);
+		return (parser_error("Bad height cylinder"), -1);
 	if (set_rgb(args[5], &cylinder->color) == -1)
-		return (ft_err("Bad rgb cylinder", 0), -1);
+		return (parser_error("Bad rgb cylinder"), -1);
 	cylinder->radius = cylinder->diameter / 2;
 	cylinder->type = CYLINDER;
 	vec3_normalize(&cylinder->dir);

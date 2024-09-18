@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:37:50 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/11 17:45:00 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:53:07 by jullopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 
 # define ERR_USAGE "./miniRT <scene>.rt"
 # define ERR_FILE_EXT "not a .rt extension"
+# define ERR_COMMAS "No separators between two commas"
 # define ERR_UNKNOWN_ID "unrecognized identifier"
 # define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
 # define ERR_MLX_PTR "cannot connect to X server"

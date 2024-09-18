@@ -14,9 +14,8 @@
 
 void	ft_err(const char *line, char perror_invoc)
 {
-	if (write(1, "Error\n", 6) == -1)
-		return ;
-	if (write(2, PROG_NAME, ft_strlen(PROG_NAME)) == -1)
+	if (write(2, PROG_NAME, ft_strlen(PROG_NAME)) == -1
+		|| write(2, "Error\n", 6) == -1)
 		return ;
 	if (perror_invoc)
 	{
@@ -41,24 +40,13 @@ int	parser_err_line(int n)
 	return (line = n);
 }
 
-int	parser_err_col(int n)
-{
-	static int	col;
-
-	if (n == -1)
-		return (col);
-	return (col = n);
-}
-
 void	parser_error(const char *message)
 {
 	const char	*error;
-	char		*convs[2];
+	char		*convs;
 
-	convs[0] = ft_itoa(parser_err_line(-1));
-	convs[1] = ft_itoa(parser_err_col(-1));
-	error = strs_join((const char *[]){"line: ", convs[0], " col: ", convs[1],
-			" ", message, NULL});
+	convs = ft_itoa(parser_err_line(-1));
+	error = strs_join((const char *[]){"line: ", convs, " ", message, NULL});
 	ft_err(error, 0);
 	gc_dump(&convs[0]);
 }

@@ -54,6 +54,8 @@ int	ft_parse_line(t_scene *scene, const char *line)
 	int		result;
 	char	**split;
 
+	if (ft_strnstr(line, ",,", ft_strlen(line)))
+		return (ft_err(ERR_COMMAS, 0), -1);
 	if (parser_check_capitals(line) == -1)
 		return (-1);
 	initiator = check_identifiers(line);

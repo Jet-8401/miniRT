@@ -29,6 +29,7 @@
 
 # define ERR_USAGE "./miniRT <scene>.rt"
 # define ERR_FILE_EXT "not a .rt extension"
+# define ERR_COMMAS "No separators between two commas"
 # define ERR_UNKNOWN_ID "unrecognized identifier"
 # define ERR_MULTIPLE_IDENTIFIERS "file contain duplicate identifiers"
 # define ERR_MLX_PTR "cannot connect to X server"
