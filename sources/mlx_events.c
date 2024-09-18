@@ -12,8 +12,6 @@
 
 #include "../headers/minirt.h"
 
-#define MOVING_RATIO 0.5f
-
 int	close_window(t_scene *display)
 {
 	ft_destroy_display(display);
@@ -24,19 +22,7 @@ int	close_window(t_scene *display)
 
 int	key_handler(int keycode, t_scene *scene)
 {
-	if (keycode == 65451)
-		scene->cam->pos.z += 0.5;
-	else if (keycode == 65453)
-		scene->cam->pos.z -= 0.5;
-	else if (keycode == 65361)
-		scene->cam->pos.x -= MOVING_RATIO;
-	else if (keycode == 65363)
-		scene->cam->pos.x += MOVING_RATIO;
-	else if (keycode == 65362)
-		scene->cam->pos.y += MOVING_RATIO;
-	else if (keycode == 65364)
-		scene->cam->pos.y -= MOVING_RATIO;
-	else if (keycode == XK_Escape)
+	if (keycode == XK_Escape)
 		close_window(scene);
 	return (0);
 }

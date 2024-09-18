@@ -29,6 +29,7 @@ FILES = minirt.c \
 
 FILES_BONUS := $(FILES) \
 		fps_counter.c \
+		triangle_utils.c \
 		threads_render.c \
 		threads_init.c
 

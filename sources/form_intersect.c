@@ -31,7 +31,7 @@ bool	intersect_sphere(t_ray_view *ray, t_object *sphere, t_hit *hit)
 	hit->t2 = (-hit->eq.b + sqrt(hit->eq.delta)) / 2.0f;
 	if (hit->t < 0.0f && hit->t2 < 0.0f)
 		return (false);
-	if (hit->t < 0.0f)
+	if (hit->t < 0.0f && hit->t2 > 0.01f)
 		hit->t = hit->t2;
 	hit_point = ray->direction;
 	vec3_scale(&hit_point, hit->t);

@@ -40,8 +40,8 @@
 #  define M_PI 3.1415926535897932384626433832
 # endif
 
-# define WIDTH 600
-# define HEIGHT 600
+# define WIDTH 300
+# define HEIGHT 300
 # define DBL_MAX 1.7976931348623158e+308
 
 typedef struct s_scene
