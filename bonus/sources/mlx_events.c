@@ -58,7 +58,6 @@ static void	check_movements(int keycode, int method, t_vec3 *movs)
 
 int	key_press(int keycode, t_threads_container *container)
 {
-	printf("keycode=%d\n", keycode);
 	if (keycode == XK_Escape)
 		return (close_window(container));
 	check_movements(keycode, KeyPress, &container->scene->cam->movements);

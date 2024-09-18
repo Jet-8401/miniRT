@@ -102,49 +102,24 @@ bool	intersect_cylinder(t_ray_view *ray, t_object *cylinder, t_hit *hit)
 	return (false);
 }
 
-bool intersect_triangle(t_ray_view *ray, t_object *triangle, t_hit *hit)
+bool	intersect_triangle(t_ray_view *ray, t_object *triangle, t_hit *hit)
 {
-	double d;
+	double	d;
 	double	det;
 
 	hit->norm = triangle->c;
 	normalize_bis(&hit->norm);
 	det = vec3_dot(&ray->direction, &hit->norm);
 	if (det > 0)
-		return false;
+		return (false);
 	if (fabs(det) < 1e-8)
 		return (false);
 	d = -dot(triangle->v0, hit->norm);
 	hit->t = -(dot(ray->origin, hit->norm) + d) / det;
 	if (hit->t < 0)
-		return false;
+		return (false);
 	hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
 	if (inside_triangle(triangle, &hit->hit))
 		return (true);
 	return (false);
-}
-
-bool inside_triangle(t_object *triangle, t_vec3 *P)
-{
-	t_vec3	C;
-	t_vec3 vp0;
-	t_vec3 vp1;
-	t_vec3 vp2;
-
-	triangle->edge0 = sub_vec3(triangle->v1, triangle->v0);
-	vp0 = sub_vec3(*P, triangle->v0);
-	C = merge_vect(triangle->edge0, vp0);
-	if (vec3_dot(&triangle->c, &C) < 0)
-		return (false);
-	triangle->edge1 = sub_vec3(triangle->v2, triangle->v1);
-	vp1 = sub_vec3(*P, triangle->v1);
-	C = merge_vect(triangle->edge1, vp1);
-	if (vec3_dot(&triangle->c, &C) < 0)
-		return (false);
-	triangle->edge2 = sub_vec3(triangle->v0, triangle->v2);
-	vp2 = sub_vec3(*P, triangle->v2);
-	C = merge_vect(triangle->edge2, vp2);
-	if (vec3_dot(&triangle->c, &C) < 0)
-		return (false);
-	return (true);
 }

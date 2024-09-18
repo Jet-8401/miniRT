@@ -13,7 +13,8 @@
 #include "../header/minirt.h"
 
 // check the height of the cylinder
-static void	check_cylinder_height(t_ray_view *ray, t_object *cylinder, double *t)
+static void	check_cylinder_height(t_ray_view *ray, t_object *cylinder,
+	double *t)
 {
 	t_vec3	q;
 	t_vec3	temp;

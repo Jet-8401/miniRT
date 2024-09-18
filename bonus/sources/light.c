@@ -27,33 +27,24 @@ t_rgb	ambiant_color(t_render *render, t_scene *scene)
 t_rgb	light_handler(t_scene *scene, t_render *render, t_hit *hit)
 {
 	double	d;
-	t_light	*tmp_light;
-	t_rgb tmp_color;
 
-	tmp_light = scene->light;
 	render->ambiant_light = vect_to_rgb(vec3_ambiant(hit->object->color,
 				scene->ambient->color, scene->ambient->light_ratio));
-	if (tmp_light != NULL)
+	if (scene->light != NULL)
 	{
-		while (tmp_light)
-		{
-			if (dot(hit->norm, render->prime_ray.direction) > 0)
-				hit->norm = mult_vec3(hit->norm, -1);
-			d = dot(hit->norm, new_normalized(sub_vec3(tmp_light->pos,
-							hit->hit)));
-			if (d < 0)
-				d = 0;
-			tmp_color = vect_to_rgb(vec3_ambiant(hit->object->color,
-						tmp_light->color, d * tmp_light->brightness));
-			if (new_shadow_ray(scene, hit, render))
-				tmp_color = mult_rgb(tmp_color,
-						scene->ambient->light_ratio);
-			tmp_color = add_rgb(tmp_color, render->ambiant_light);
-			render->color = tmp_color;
-			tmp_light = tmp_light->next;
-		}
+		if (dot(hit->norm, render->prime_ray.direction) > 0)
+			hit->norm = mult_vec3(hit->norm, -1);
+		d = dot(hit->norm, new_normalized(sub_vec3(scene->light->pos,
+						hit->hit)));
+		if (d < 0)
+			d = 0;
+		render->color = vect_to_rgb(vec3_ambiant(hit->object->color,
+					(t_rgb){255, 255, 255}, d * scene->light->brightness));
+		if (new_shadow_ray(scene, hit, render))
+			render->color = mult_rgb(render->color,
+					scene->ambient->light_ratio);
 	}
-	return (render->color);
+	return (add_rgb(render->color, render->ambiant_light));
 }
 
 bool	new_shadow_ray(t_scene *scene, t_hit *hit, t_render *render)

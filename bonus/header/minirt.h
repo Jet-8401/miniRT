@@ -139,7 +139,7 @@ void			*thread_routine(void *container);
 // props_init.c
 int				ambient_init(t_scene *scene, char **args);
 int				camera_init(t_scene *scene, char **args);
-int triangle_init(t_scene *scene, char **args);
+int				triangle_init(t_scene *scene, char **args);
 
 // forms_init.c
 int				light_init(t_scene *scene, char **args);
@@ -160,7 +160,7 @@ int				set_normalized_vector3d(t_vec3 *vec, char *coordinate);
 
 // add_list.c
 void			add_object(t_scene *scene, t_object *object);
-void add_light(t_scene *scene, t_light *light);
+void			add_light(t_scene *scene, t_light *light);
 
 // mlx_init.c
 int				init_mlx_all(t_scene *scene);
@@ -211,8 +211,8 @@ bool			intersect_plane(t_ray_view *ray, t_object *plane, t_hit *hit);
 bool			intersect_cylinder(t_ray_view *ray, t_object *cylinder,
 					t_hit *hit);
 bool			intersect_disk(t_ray_view *ray, t_object *disk, t_hit *hit);
-bool intersect_triangle(t_ray_view *ray, t_object *triangle, t_hit *hit);
-bool inside_triangle(t_object *triangle, t_vec3 *P);
+bool			intersect_triangle(t_ray_view *ray, t_object *tr, t_hit *hit);
+bool			inside_triangle(t_object *triangle, t_vec3 *P);
 
 // fps_counter.c
 int				fps_counter_init(t_fpscounter *counter, t_u8b samples);
@@ -247,7 +247,5 @@ void			ft_atof_bis(char *str, long double *res, int *neg);
 // cylinder_utils.c
 bool			intersect_cylinder_math(t_ray_view *ray, t_object *cylinder,
 					t_hit *hit);
-
-void print_all_light(t_light *light);
 
 #endif

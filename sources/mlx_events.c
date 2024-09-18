@@ -24,7 +24,6 @@ int	close_window(t_scene *display)
 
 int	key_handler(int keycode, t_scene *scene)
 {
-	printf("keycode=%d\n", keycode);
 	if (keycode == 65451)
 		scene->cam->pos.z += 0.5;
 	else if (keycode == 65453)

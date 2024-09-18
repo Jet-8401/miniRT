@@ -27,7 +27,7 @@ void	add_object(t_scene *scene, t_object *object)
 	}
 }
 
-void add_light(t_scene *scene, t_light *light)
+void	add_light(t_scene *scene, t_light *light)
 {
 	t_light	*tmp;
 

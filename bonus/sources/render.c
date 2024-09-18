@@ -75,7 +75,8 @@ int	render_scene(t_threads_container *threads)
 	t = 0;
 	while (t < threads->threads_number)
 	{
-		pthread_create(&threads->threads[t].thread_id, NULL, thread_routine, &threads->threads[t]);
+		pthread_create(&threads->threads[t].thread_id, NULL, thread_routine,
+			&threads->threads[t]);
 		t++;
 	}
 	t = 0;

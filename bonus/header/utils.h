@@ -46,15 +46,15 @@ typedef struct s_object
 {
 	t_vec3				pos;
 	t_vec3				dir;
-	t_vec3 				v0;
-	t_vec3 				v1;
-	t_vec3 				v2;
-	t_vec3 				a;
-	t_vec3 				b;
-	t_vec3 				c;
-	t_vec3 				edge0;
-	t_vec3 				edge1;
-	t_vec3 				edge2;
+	t_vec3				v0;
+	t_vec3				v1;
+	t_vec3				v2;
+	t_vec3				a;
+	t_vec3				b;
+	t_vec3				c;
+	t_vec3				edge0;
+	t_vec3				edge1;
+	t_vec3				edge2;
 	t_rgb				color;
 	float				diameter;
 	float				height;

@@ -46,9 +46,9 @@ int	camera_init(t_scene *scene, char **args)
 	return (0);
 }
 
-int triangle_init(t_scene *scene, char **args)
+int	triangle_init(t_scene *scene, char **args)
 {
-	t_object *triangle;
+	t_object	*triangle;
 
 	triangle = gc_calloc(sizeof(t_object));
 	if (!triangle)

@@ -15,21 +15,21 @@
 int	main(int argc, char *argv[])
 {
 	t_scene				scene;
-	t_threads_container	container;
-	container.scene = &scene;
+	t_threads_container	cont;
 
+	cont.scene = &scene;
 	if (argc != 2)
 		return (ft_err(ERR_USAGE, 0), 0);
 	if (ft_parsing(&scene, argv[1]) == -1)
 		return (gc_dump(NULL), 0);
 	if (init_mlx_all(&scene) == -1)
 		return (gc_dump(NULL), 0);
-	if (threads_init(&scene, &container, 32) == -1)
+	if (threads_init(&scene, &cont, 32) == -1)
 		return (gc_dump(NULL), 0);
-	mlx_hook(scene.mlx.win, 17, 0, close_window, &container);
-	mlx_hook(scene.mlx.win, KeyPress, KeyPressMask, key_press, &container);
-	mlx_hook(scene.mlx.win, KeyRelease, KeyReleaseMask, key_release, &container);
-	mlx_loop_hook(scene.mlx.mlx, &render_scene, &container);
+	mlx_hook(scene.mlx.win, 17, 0, close_window, &cont);
+	mlx_hook(scene.mlx.win, KeyPress, KeyPressMask, key_press, &cont);
+	mlx_hook(scene.mlx.win, KeyRelease, KeyReleaseMask, key_release, &cont);
+	mlx_loop_hook(scene.mlx.mlx, &render_scene, &cont);
 	mlx_loop(scene.mlx.mlx);
 	return (0);
 }
