@@ -12,14 +12,6 @@
 
 #include "../header/minirt.h"
 
-static int	locks_init(t_render_thread *th)
-{
-	if (sem_init(&th->render_lock, 0, 0) == -1
-		|| sem_init(&th->thread_lock, 0, 1) == -1)
-		return (-1);
-	return (0);
-}
-
 static bool	set_thread(t_threads_container *container, t_scene *scene,
 	uint8_t t, double delta)
 {
@@ -27,19 +19,13 @@ static bool	set_thread(t_threads_container *container, t_scene *scene,
 	t_render_thread		*th;
 
 	th = &container->threads[t];
-	if (locks_init(th) == -1)
-		return (ft_err(ERR_SEMAPHORE_INIT, 1), 0);
 	th->id = t;
 	th->container = container;
 	th->y_coords = pixel_index / scene->screen.width;
 	th->x_coords = pixel_index - (th->y_coords * scene->screen.width);
 	th->pixel_length = delta;
-	printf("thread #%d (x;y) from (%ld;%ld)", t, th->x_coords, th->y_coords);
-	printf(" (%lf ptp)\n", delta);
 	th->scene = scene;
 	pixel_index += delta;
-	if (pthread_create(&th->thread_id, NULL, thread_routine, th) == -1)
-		return (ft_err(ERR_THREAD_INIT, 1), 0);
 	t++;
 	return (1);
 }

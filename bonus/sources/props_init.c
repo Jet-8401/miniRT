@@ -66,7 +66,7 @@ int triangle_init(t_scene *scene, char **args)
 	triangle->type = TRIANGLE;
 	triangle->a = sub_vec3(triangle->v1, triangle->v0);
 	triangle->b = sub_vec3(triangle->v2, triangle->v0);
-	vec3_cross(&triangle->a, &triangle->b, &triangle->c);
+	triangle->c = merge_vect(triangle->a, triangle->b);
 	add_object(scene, triangle);
 	return (0);
 }

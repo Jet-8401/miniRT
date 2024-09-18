@@ -13,7 +13,7 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-#include <pthread.h>
+# include <pthread.h>
 # include <stdint.h>
 # include <stdlib.h>
 
@@ -123,6 +123,16 @@ typedef struct s_ray_view
 	t_vec3				direction;
 }						t_ray_view;
 
+typedef struct s_equation
+{
+	double				a;
+	double				b;
+	double				c;
+	double				delta;
+	t_vec3				origin;
+	t_vec3				temp;
+}						t_equation;
+
 typedef struct s_hit
 {
 	double				t;
@@ -130,6 +140,7 @@ typedef struct s_hit
 	t_vec3				hit;
 	t_vec3				norm;
 	t_object			*object;
+	t_equation			eq;
 }						t_hit;
 
 typedef struct s_render
@@ -141,15 +152,5 @@ typedef struct s_render
 	t_rgb				ambiant_light;
 	t_rgb				color;
 }						t_render;
-
-typedef struct s_equation
-{
-	double				a;
-	double				b;
-	double				c;
-	double				delta;
-	t_vec3				origin;
-	t_vec3				temp;
-}						t_equation;
 
 #endif

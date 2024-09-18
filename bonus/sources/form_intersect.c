@@ -18,19 +18,21 @@
  */
 bool	intersect_sphere(t_ray_view *ray, t_object *sphere, t_hit *hit)
 {
-	double	b;
-	double	c;
-	double	delta;
 	t_vec3	origin;
 	t_vec3	hit_point;
 
 	vec3_subtract(&ray->origin, &sphere->pos, &origin);
-	b = 2.0f * vec3_dot(&origin, &ray->direction);
-	c = vec3_dot(&origin, &origin) - sphere->radius * sphere->radius;
-	delta = b * b - 4.0f * c;
-	if (delta < 0.0f)
+	hit->eq.b = 2.0f * vec3_dot(&origin, &ray->direction);
+	hit->eq.c = vec3_dot(&origin, &origin) - sphere->radius * sphere->radius;
+	hit->eq.delta = hit->eq.b * hit->eq.b - 4.0f * hit->eq.c;
+	if (hit->eq.delta < 0.0f)
 		return (false);
-	hit->t = (-b - sqrt(delta)) / 2.0f;
+	hit->t = (-hit->eq.b - sqrt(hit->eq.delta)) / 2.0f;
+	hit->t2 = (-hit->eq.b + sqrt(hit->eq.delta)) / 2.0f;
+	if (hit->t < 0.0f && hit->t2 < 0.0f)
+		return (false);
+	if (hit->t < 0.0f)
+		hit->t = hit->t2;
 	hit_point = ray->direction;
 	vec3_scale(&hit_point, hit->t);
 	vec3_add(&hit_point, &ray->origin, &hit->hit);
@@ -80,15 +82,13 @@ bool	intersect_disk(t_ray_view *ray, t_object *disk, t_hit *hit)
 
 bool	intersect_cylinder(t_ray_view *ray, t_object *cylinder, t_hit *hit)
 {
-	t_hit	t;
 	t_vec3	q;
 	t_vec3	temp;
 
-	if (intersect_cylinder_math(ray, cylinder, &t))
+	if (intersect_cylinder_math(ray, cylinder, hit))
 	{
-		hit->t = t.t;
 		temp = ray->direction;
-		vec3_scale(&temp, t.t);
+		vec3_scale(&temp, hit->t);
 		vec3_add(&ray->origin, &temp, &hit->hit);
 		vec3_subtract(&hit->hit, &cylinder->pos, &q);
 		temp = cylinder->dir;
@@ -104,16 +104,20 @@ bool	intersect_cylinder(t_ray_view *ray, t_object *cylinder, t_hit *hit)
 
 bool intersect_triangle(t_ray_view *ray, t_object *triangle, t_hit *hit)
 {
+	double d;
 	double	det;
 
-	det = vec3_dot(&ray->direction, &triangle->c);
-	if (fabs(det) < 1e-6)
-		return (false);
-	hit->t = dot(sub_vec3(triangle->v0, ray->origin), triangle->c) / det;
-	if (hit->t < 0)
-		return (false);
 	hit->norm = triangle->c;
-	vec3_normalize(&hit->norm);
+	normalize_bis(&hit->norm);
+	det = vec3_dot(&ray->direction, &hit->norm);
+	if (det > 0)
+		return false;
+	if (fabs(det) < 1e-8)
+		return (false);
+	d = -dot(triangle->v0, hit->norm);
+	hit->t = -(dot(ray->origin, hit->norm) + d) / det;
+	if (hit->t < 0)
+		return false;
 	hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
 	if (inside_triangle(triangle, &hit->hit))
 		return (true);

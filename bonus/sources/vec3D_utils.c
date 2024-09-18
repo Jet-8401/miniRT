@@ -38,7 +38,7 @@ void	vec3_scale(t_vec3 *a, double scalar)
 
 void	vec3_cross(t_vec3 *a, t_vec3 *b, t_vec3 *result)
 {
-	result->x = a->x * b->z - a->z * b->y;
+	result->x = a->y * b->z - a->z * b->y;
 	result->y = a->z * b->x - a->x * b->z;
 	result->z = a->x * b->y - a->y * b->x;
 	return ;

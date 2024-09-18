@@ -24,13 +24,6 @@ int	close_window(t_threads_container *container)
 	pthread_mutex_lock(&container->data_lock);
 	container->do_exit = true;
 	pthread_mutex_unlock(&container->data_lock);
-	while (t < container->threads_number)
-	{
-		pthread_join(container->threads[t].thread_id, NULL);
-		sem_destroy(&container->threads[t].render_lock);
-		sem_destroy(&container->threads[t].thread_lock);
-		t++;
-	}
 	pthread_mutex_destroy(&container->data_lock);
 	ft_destroy_display(container->scene);
 	gc_dump(NULL);

@@ -36,15 +36,13 @@ static void	thread_render(t_render_thread *thread)
 			calculate_pixel(thread, &x, &y);
 			x++;
 			thread->pixel_index++;
-			if (thread->pixel_index < thread->pixel_length)
-				continue ;
-			sem_post(&thread->render_lock);
-			return ;
+			if (thread->pixel_index >= thread->pixel_length)
+				return ;
 		}
 		x = 0;
 		y++;
 	}
-	sem_post(&thread->render_lock);
+	return ;
 }
 
 void	*thread_routine(void *arg)
@@ -52,17 +50,13 @@ void	*thread_routine(void *arg)
 	t_render_thread	*thread;
 
 	thread = arg;
-	while (1)
+	thread_render(thread);
+	pthread_mutex_lock(&thread->container->data_lock);
+	if (thread->container->do_exit)
 	{
-		sem_wait(&thread->thread_lock);
-		thread_render(thread);
-		pthread_mutex_lock(&thread->container->data_lock);
-		if (thread->container->do_exit)
-		{
-			pthread_mutex_unlock(&thread->container->data_lock);
-			exit(0);
-		}
 		pthread_mutex_unlock(&thread->container->data_lock);
+		return (NULL);
 	}
+	pthread_mutex_unlock(&thread->container->data_lock);
 	return (NULL);
 }

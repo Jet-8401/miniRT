@@ -24,7 +24,7 @@ int	main(int argc, char *argv[])
 		return (gc_dump(NULL), 0);
 	if (init_mlx_all(&scene) == -1)
 		return (gc_dump(NULL), 0);
-	if (threads_init(&scene, &container, 8) == -1)
+	if (threads_init(&scene, &container, 32) == -1)
 		return (gc_dump(NULL), 0);
 	mlx_hook(scene.mlx.win, 17, 0, close_window, &container);
 	mlx_hook(scene.mlx.win, KeyPress, KeyPressMask, key_press, &container);

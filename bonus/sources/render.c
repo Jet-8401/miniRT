@@ -12,6 +12,8 @@
 
 #include "../header/minirt.h"
 #include <semaphore.h>
+#include <strings.h>
+#include <unistd.h>
 
 void	init_camera(t_scene *scene)
 {
@@ -72,14 +74,18 @@ int	render_scene(t_threads_container *threads)
 
 	t = 0;
 	while (t < threads->threads_number)
-		sem_wait(&threads->threads[t++].render_lock);
+	{
+		pthread_create(&threads->threads[t].thread_id, NULL, thread_routine, &threads->threads[t]);
+		t++;
+	}
+	t = 0;
+	while (t < threads->threads_number)
+		pthread_join(threads->threads[t++].thread_id, NULL);
 	mlx_put_image_to_window(threads->scene->mlx.mlx, threads->scene->mlx.win,
 		threads->scene->mlx.img.img, 0, 0);
 	fps_display(&threads->scene->mlx);
 	threads_display(&threads->scene->mlx, threads);
 	vec3_add(&threads->scene->cam->movements, &threads->scene->cam->pos,
 		&threads->scene->cam->pos);
-	while (t-- > 0)
-		sem_post(&threads->threads[t].thread_lock);
 	return (0);
 }
