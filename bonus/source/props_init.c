@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 12:55:57 by jullopez          #+#    #+#             */
-/*   Updated: 2024/09/11 16:25:37 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/18 12:51:09 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int triangle_init(t_scene *scene, char **args)
 	triangle->type = TRIANGLE;
 	triangle->a = sub_vec3(triangle->v1, triangle->v0);
 	triangle->b = sub_vec3(triangle->v2, triangle->v0);
-	vec3_cross(&triangle->a, &triangle->b, &triangle->c);
+	triangle->c = merge_vect(triangle->a, triangle->b);
 	add_object(scene, triangle);
 	return (0);
 }

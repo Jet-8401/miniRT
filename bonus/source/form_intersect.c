@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 23:06:55 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/12 14:31:23 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:52:58 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,18 @@ bool	intersect_sphere(t_ray_view *ray, t_object *sphere, t_hit *hit)
 	if (delta < 0.0f)
 		return (false);
 	hit->t = (-b - sqrt(delta)) / 2.0f;
-	hit_point = ray->direction;
-	vec3_scale(&hit_point, hit->t);
-	vec3_add(&hit_point, &ray->origin, &hit->hit);
-	vec3_subtract(&hit->hit, &sphere->pos, &hit->norm);
-	vec3_normalize(&hit->norm);
-	return (true);
+	if (hit->t > 0)
+	{
+		hit_point = ray->direction;
+		vec3_scale(&hit_point, hit->t);
+		vec3_add(&hit_point, &ray->origin, &hit->hit);
+		vec3_subtract(&hit->hit, &sphere->pos, &hit->norm);
+		if (vec3_dot(&hit->norm, &ray->direction) > 0)
+				vec3_scale(&hit->norm, -1);
+		vec3_normalize(&hit->norm);
+		return (true);
+	}
+	return (false);
 }
 
 bool	intersect_plane(t_ray_view *ray, t_object *plane, t_hit *hit)
@@ -104,16 +110,20 @@ bool	intersect_cylinder(t_ray_view *ray, t_object *cylinder, t_hit *hit)
 
 bool intersect_triangle(t_ray_view *ray, t_object *triangle, t_hit *hit)
 {
+	double d;
 	double	det;
 
-	det = vec3_dot(&ray->direction, &triangle->c);
-	if (fabs(det) < 1e-6)
-		return (false);
-	hit->t = dot(sub_vec3(triangle->v0, ray->origin), triangle->c) / det;
-	if (hit->t < 0)
-		return (false);
 	hit->norm = triangle->c;
-	vec3_normalize(&hit->norm);
+	normalize_bis(&hit->norm);
+	det = vec3_dot(&ray->direction, &hit->norm);
+	if (det > 0)
+		return false;
+	if (fabs(det) < 1e-8)
+		return (false);
+	d = -dot(triangle->v0, hit->norm);
+	hit->t = -(dot(ray->origin, hit->norm) + d) / det;
+	if (hit->t < 0)
+		return false;
 	hit->hit = add_vec3(ray->origin, mult_vec3(ray->direction, hit->t));
 	if (inside_triangle(triangle, &hit->hit))
 		return (true);
@@ -144,3 +154,6 @@ bool inside_triangle(t_object *triangle, t_vec3 *P)
 		return (false);
 	return (true);
 }
+	
+
+

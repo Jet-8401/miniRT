@@ -6,7 +6,7 @@
 /*   By: akinzeli <akinzeli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:59:10 by akinzeli          #+#    #+#             */
-/*   Updated: 2024/09/09 18:00:49 by akinzeli         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:17:03 by akinzeli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	ft_atof_bis(char *str, long double *res, int *neg)
 		*neg = 1;
 		str++;
 	}
+	if (*str == '+')
+		str++;
 	while (*str)
 	{
 		if (dote)
